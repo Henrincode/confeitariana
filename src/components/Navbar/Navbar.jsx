@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 export default function Navbar() {
     return (
         <header className={styles.container}>
-            <nav id='Navbar' className={styles.myBox}>
+            <nav id='Navbar' className={styles.box}>
                 <div className="logo">
                     Ana Marson<span>Confeiteira</span>
                 </div>
