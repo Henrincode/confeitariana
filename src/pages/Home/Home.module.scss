@@ -1,7 +1,9 @@
-.container {
-  padding: 2rem;
-  background-color: #f9f9f9;
-  min-height: 100vh;
+@use '../../styles/mixins' as *;
+
+.body {
+  @include container;
+  flex: 1;
+  padding: 0;
 }
 
 .title {

@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom'
 
 export default function Navbar() {
     return (
-        <header className={styles.container + ' container'}>
-            <nav id='Navbar' className={`box ${styles.myBox}`}>
+        <header className={styles.container}>
+            <nav id='Navbar' className={styles.myBox}>
                 <div className="logo">
                     Ana Marson<span>Confeiteira</span>
                 </div>

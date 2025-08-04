@@ -1,10 +1,13 @@
 @use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
 
 .container {
+    @include container;
     background-color: $primary-color;
 }
 
 .myBox {
-    flex-direction: row !important;
-    justify-content: space-between !important;
+    @include box;
+    flex-direction: row;
+    justify-content: space-between;
 }
