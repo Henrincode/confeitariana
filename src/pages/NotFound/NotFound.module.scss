@@ -1,17 +1,14 @@
 @use "sass:color";
+@use '../../styles/mixins' as *;
+
+.body {
+  @include container;
+  flex: 1;
+  padding: 0;
+}
 
 $primary: #1e90ff;
 $dark: #2c3e50;
-
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 4rem 1rem;
-  min-height: 100vh;
-  background: #f0f4f8;
-}
 
 .code {
   font-size: 6rem;

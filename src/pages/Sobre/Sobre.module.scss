@@ -1,3 +1,7 @@
-.container {
-    min-height: 100vh;
+@use '../../styles/mixins' as *;
+
+.body {
+    @include container;
+    flex: 1;
+    padding: 0;
 }
