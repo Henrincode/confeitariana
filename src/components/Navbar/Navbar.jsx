@@ -1,14 +1,19 @@
 import styles from './Navbar.module.scss'
+import { Link } from 'react-router-dom'
 
 export default function Navbar() {
     return (
-        <div id='Navbar' className='container'>
-            <div className="logo">
-                Ana Marson<span>Confeiteira</span>
-            </div>
-            <div className="links">
-
-            </div>
-        </div>
+        <header className={styles.container + ' container'}>
+            <nav id='Navbar' className={`box ${styles.myBox}`}>
+                <div className="logo">
+                    Ana Marson<span>Confeiteira</span>
+                </div>
+                <div className="links">
+                    <a href="#">Cardápio</a>
+                    <a href="#">Depoimentos</a>
+                    <a href="#">Contato</a>
+                </div>
+            </nav>
+        </header>
     )
 }
