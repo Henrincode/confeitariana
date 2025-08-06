@@ -1,13 +1,26 @@
-@use '../../styles/variables' as *;
-@use '../../styles/mixins' as *;
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
 
-.container {
-    @include container;
-    background-color: $primary-color;
-}
+.header {
+  border-top: solid 4px #5c0a50;
+  border-bottom: solid 4px #5c0a50;
+  color: #fff;
+  font-family: "Merienda";
+  text-shadow: 1px 1px 3px #000;
+  background-color: rgba($primary-color, 0.8);
 
-.box {
-    @include box;
+  .logo {
+    font-size: 50px;
+  }
+
+  ul {
+    list-style: none;
+    display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    gap: 24px;
+
+    li {
+      font-size: 20px;
+    }
+  }
 }
