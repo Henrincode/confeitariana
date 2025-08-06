@@ -11,16 +11,52 @@
 
   .logo {
     font-size: 50px;
+    cursor: pointer;
+    position: relative;
+
+    transform-origin: left top;
+    transition: 100ms;
+
+    &:hover {
+      scale: 1.2;
+    }
+
+    .textoSup {
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      font-size: 18px;
+    }
   }
 
   ul {
-    list-style: none;
     display: flex;
     flex-direction: row;
+    align-items: baseline;
     gap: 24px;
 
+    list-style: none;
+
+    &:has(li:hover) li:not(:hover) {
+      opacity: 0.5;
+    }
+
     li {
+      transform-origin: bottom center;
+      transition: 100ms;
       font-size: 20px;
+
+      &:hover {
+        z-index: 101;
+        scale: 1.5;
+
+        filter: drop-shadow(0px 0px 10px #000);
+      }
+
+      i {
+        font-size: 40px;
+      }
     }
   }
 }
