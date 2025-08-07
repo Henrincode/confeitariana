@@ -2,6 +2,10 @@
 @use "../../styles/mixins" as *;
 
 .header {
+  position: fixed;
+  top: 0;
+  z-index: 100;
+
   border-top: solid 4px #5c0a50;
   border-bottom: solid 4px #5c0a50;
   color: #fff;

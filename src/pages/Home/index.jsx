@@ -1,10 +1,12 @@
-import styles from './Home.module.scss'
+import styles from "./Home.module.scss";
+import CardBlur from "../../components/CardBlur";
 
 export default function Home() {
-    return (
-        <div className={styles.body}>
-            <h1 className={styles.title}>Bem-vindo à Home</h1>
-            <p className={styles.description}>Essa é a página inicial do site.</p>
-        </div>
-    )
+  return (
+    <div className={styles.body}>
+      <CardBlur className=' container'>
+        <div className={styles.bemVindo + ' box row'}>aaa</div>
+      </CardBlur>
+    </div>
+  );
 }
