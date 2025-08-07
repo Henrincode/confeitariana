@@ -1,4 +1,4 @@
-@use '../../styles/mixins' as *;
+@use "../../styles/mixins" as *;
 
 .body {
   @include container;
@@ -8,5 +8,47 @@
 }
 
 .bemVindo {
-  padding-top: 122px;
+  justify-content: space-between;
+  gap: 20px;
+
+  padding-top: 120px;
+
+  color: #fff;
+  font-family: "Poppins";
+
+  .mensagem {
+    // margin: 20px;
+    padding: 10px;
+
+    border-radius: 10px;
+
+    box-shadow: 0 0 10px #000;
+    text-shadow: 0 0 3px #000, 1px 1px 3px #000;
+
+    background-color: rgba(92, 17, 94, 0.315);
+  }
+
+  h2 {
+    font-family: "Merienda";
+    font-size: 32px;
+  }
+
+  p {
+    margin-top: 10px;
+
+    font-family: "Poppins";
+    font-weight: 300;
+    font-size: 24px;
+  }
+
+  .confeiteira {
+    display: flex;
+    flex-direction: row;
+    align-items: end;
+  }
+
+  .confeiteira img {
+    display: block;
+    margin-bottom: -10px;
+  }
 }
