@@ -10,7 +10,7 @@ export default function CardBlur({ className = "", children, img = imgPadrao }) 
         src={img}
         aria-hidden="true"
       />
-      <div className={styles.filtroBlur + " " + className}>{children}......................</div>
+      <div className={styles.filtroBlur + " " + className}>{children}</div>
     </div>
   );
 }
