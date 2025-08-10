@@ -1,10 +1,7 @@
 import styles from "./CardBlur.module.scss";
+import imgPadrao from "./img.jpeg";
 
-export default function CardBlur({
-  className = "",
-  children,
-  img = "/src/components/CardBlur/img.jpeg",
-}) {
+export default function CardBlur({ className = "", children, img = imgPadrao }) {
   return (
     <div className={styles.cardBlur}>
       <img
@@ -13,7 +10,7 @@ export default function CardBlur({
         src={img}
         aria-hidden="true"
       />
-      <div className={styles.filtroBlur + ' ' + className}>{children}</div>
+      <div className={styles.filtroBlur + " " + className}>{children}......................</div>
     </div>
   );
 }
