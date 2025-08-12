@@ -1,6 +1,7 @@
 import styles from "./Home.module.scss";
 import CardBlur from "../../components/CardBlur";
 import Divider from "../../components/Divider";
+import Categorias from "../../components/Categorias";
 
 export default function Home() {
   return (
@@ -23,7 +24,9 @@ export default function Home() {
           </div>
         </div>
       </CardBlur>
-      <Divider titulo='#Categorias' />
+      <Divider titulo="#Categorias" />
+      <Categorias />
+      <Divider titulo="#Depoimentos" />
     </div>
   );
 }

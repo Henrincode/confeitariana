@@ -3,11 +3,11 @@
 .body {
   @include container;
   justify-content: start;
-  // align-items: center;
   flex: 1;
 }
 
 .bemVindo {
+  flex-wrap: nowrap;
   justify-content: space-between;
   gap: 20px;
 
@@ -17,7 +17,6 @@
   font-family: "Poppins";
 
   .mensagem {
-    // margin: 20px;
     padding: 10px;
 
     border-radius: 10px;
@@ -45,6 +44,7 @@
     display: flex;
     flex-direction: row;
     align-items: end;
+    align-self: flex-end;
   }
 
   .confeiteira img {
