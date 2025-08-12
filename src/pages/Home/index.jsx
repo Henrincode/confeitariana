@@ -2,6 +2,7 @@ import styles from "./Home.module.scss";
 import CardBlur from "../../components/CardBlur";
 import Divider from "../../components/Divider";
 import Categorias from "../../components/Categorias";
+import Depoimentos from '../../components/Depoimentos'
 
 export default function Home() {
   return (
@@ -27,6 +28,7 @@ export default function Home() {
       <Divider titulo="#Categorias" />
       <Categorias />
       <Divider titulo="#Depoimentos" />
+      <Depoimentos max={4} />
     </div>
   );
 }

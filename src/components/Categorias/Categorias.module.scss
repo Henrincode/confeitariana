@@ -1,8 +1,19 @@
 @use "../../styles/mixins" as *;
+
 .categorias {
+  cursor: pointer;
   flex-wrap: wrap;
   justify-content: center;
   gap: 20px 40px;
+
+  transition: 200ms;
+
+  &:hover {
+    border-radius: 10px;
+    background-color: rgb(255, 230, 255);
+    box-shadow: 0 0 10px #333;
+transform: translateY(-10px);
+  }
 }
 .categoria {
   color: rgb(250, 80, 180);
