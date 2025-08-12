@@ -1,0 +1,25 @@
+@use "../../styles/mixins" as *;
+.categorias {
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px 40px;
+}
+.categoria {
+  color: rgb(250, 80, 180);
+
+  img {
+    display: block;
+    width: 200px;
+    border-radius: 10%;
+    object-fit: cover;
+    object-position: center center;
+    aspect-ratio: 1 / 1;
+    filter: saturate(1.5);
+  }
+
+  h2 {
+    font-size: 20px;
+    text-align: center;
+    font-family: "Merienda";
+  }
+}
