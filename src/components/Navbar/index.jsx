@@ -10,7 +10,7 @@ export default function Navbar() {
         </div>
         <ul className="links">
           <li>
-            <a href="#">Cardápio</a>
+            <Link to='/cardapio'>Cardápio</Link>
           </li>
           <li>
             <a href="#">Depoimentos</a>

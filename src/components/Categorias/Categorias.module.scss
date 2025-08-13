@@ -3,8 +3,10 @@
 .categorias {
   cursor: pointer;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-around;
   gap: 20px 40px;
+
+  margin: 0 10px;
 
   transition: 200ms;
 
