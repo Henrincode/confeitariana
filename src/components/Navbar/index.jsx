@@ -10,13 +10,13 @@ export default function Navbar() {
         </div>
         <ul className="links">
           <li>
-            <Link to='/cardapio'>Cardápio</Link>
+            <Link to="/cardapio">Cardápio</Link>
           </li>
           <li>
-            <a href="#">Depoimentos</a>
+            <Link to="/depoimentos">Depoimentos</Link>
           </li>
           <li>
-            <a href="#">Contato</a>
+            <Link to='/contato'>Contato</Link>
           </li>
           <li>
             <a
