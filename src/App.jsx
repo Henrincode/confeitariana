@@ -4,7 +4,7 @@ import Footer from "./components/Footer";
 
 import Layout from "./pages/layout";
 import Home from "./pages/Home/";
-import Sobre from "./pages/Sobre/";
+import Cardapio from "./pages/Cardapio/";
 import NotFound from "./pages/NotFound/";
 
 function App() {
@@ -14,7 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
-            <Route path="/sobre" element={<Sobre />} />
+            <Route path="/cardapio" element={<Cardapio />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
