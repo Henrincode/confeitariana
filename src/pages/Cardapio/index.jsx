@@ -4,11 +4,12 @@ import DBprodut from "../../data/produtos.json";
 import DBcat from "../../data/categorias.json";
 
 // Pega a ID da categoria e retorna seu nome
-function nomeCategoria(id) {
-  return DBcat.find((categoria) => categoria.id === id).nome;
-}
 
 export default function Cardapio() {
+  const nomeCategoria = id => {
+    return DBcat.find(categoria => categoria.id === id).nome;
+  };
+
   return (
     <div className={styles.body}>
       <div className={styles.titulo + " container"}>
