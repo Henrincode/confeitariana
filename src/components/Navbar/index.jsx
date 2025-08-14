@@ -6,7 +6,7 @@ export default function Navbar() {
     <header className={styles.header + " container"}>
       <nav id="navbar" className={styles.navbar + " box row pad"}>
         <div className={styles.logo}>
-          Ana Marson<span className={styles.textoSup}>Confeiteira</span>
+          <Link to='/'>Ana Marson<span className={styles.textoSup}>Confeiteira</span></Link>
         </div>
         <ul className="links">
           <li>
