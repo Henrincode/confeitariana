@@ -10,15 +10,17 @@
 @mixin box {
   @include container;
   max-width: 1200px;
-  padding: 10px;
+  // padding: 10px;
 }
 
 @mixin row {
   flex-direction: row;
-  justify-content: space-between
+  justify-content: space-between;
 }
 
 @mixin body-local {
   @include container;
+  justify-content: start;
   flex: 1;
+  padding-bottom: 20px;
 }

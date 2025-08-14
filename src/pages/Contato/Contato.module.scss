@@ -1,0 +1,96 @@
+@use "../../styles/mixins" as *;
+
+.body {
+  @include body-local;
+}
+
+.titulo {
+  padding-top: 120px;
+}
+
+.msg-contato {
+  max-width: 800px;
+  padding: 10px;
+  border-radius: 10px;
+  color: aliceblue;
+  background-color: #023e8a;
+}
+
+.form {
+  gap: 20px;
+  .linha {
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .campo {
+    flex: 1;
+    width: 100%;
+  }
+
+  label {
+    padding-left: 10px;
+    color: #444;
+    font-family: "Poppins";
+    font-size: 24px;
+    width: 100%;
+    font-weight: 300;
+    white-space: nowrap;
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    padding: 10px;
+
+    border: solid 2px #e0aaff;
+    border-radius: 10px;
+
+    color: #444;
+    font-size: 20px;
+    font-family: "Poppins";
+
+    background-color: #f8ebff;
+
+    resize: none;
+    outline: none;
+  }
+
+  input:hover,
+  textarea:hover {
+    background-color: #e0aaff;
+  }
+
+  input::placeholder {
+    color: #999;
+  }
+
+  input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px #f8ebff inset !important;
+    -webkit-text-fill-color: #444 !important;
+  }
+
+  button {
+    cursor: pointer;
+    padding: 10px 20px;
+    border: 0;
+    border-radius: 10px;
+
+    color: #fff;
+    font-size: 30px;
+    font-family: "Poppins";
+    font-weight: 800;
+
+    background-color: #bb45ff;
+  }
+
+  button:hover {
+    background-color: #a200ff;
+  }
+
+  /* @MEDIA */
+  @media (max-width: 920px) {
+    .linha {
+      flex-direction: column;
+    }
+  }
+}

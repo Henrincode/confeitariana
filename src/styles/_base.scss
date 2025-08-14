@@ -40,6 +40,10 @@ a {
   @include row;
 }
 
+.pad {
+  padding: 10px
+}
+
 .layout {
   @include container;
   min-height: 100vh;
