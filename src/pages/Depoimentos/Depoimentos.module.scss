@@ -1,11 +1,9 @@
 @use "../../styles/mixins" as *;
 
 .body {
-  @include container;
-  justify-content: start;
-  flex: 1;
+  @include body-local;
 }
 
 .titulo {
-    padding-top: 120px;
+  padding-top: 120px;
 }

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export default function Navbar() {
   return (
     <header className={styles.header + " container"}>
-      <nav id="navbar" className={styles.navbar + " box row"}>
+      <nav id="navbar" className={styles.navbar + " box row pad"}>
         <div className={styles.logo}>
           Ana Marson<span className={styles.textoSup}>Confeiteira</span>
         </div>
@@ -16,7 +16,7 @@ export default function Navbar() {
             <Link to="/depoimentos">Depoimentos</Link>
           </li>
           <li>
-            <Link to='/contato'>Contato</Link>
+            <Link to="/contato">Contato</Link>
           </li>
           <li>
             <a

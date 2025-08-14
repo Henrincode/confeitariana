@@ -5,7 +5,7 @@ import { charMax } from "../../utils";
 export default function Categorias() {
   return (
     <>
-      <div className={styles.categorias + " box row"}>
+      <div className={styles.categorias + " box row pad"}>
         {DBcat.map(({ id, capa, nome }) => (
           <div key={id} className={styles.categoria}>
             <div className="imagem">
