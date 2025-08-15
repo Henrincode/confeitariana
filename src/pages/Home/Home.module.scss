@@ -9,6 +9,7 @@
   justify-content: space-between;
   gap: 20px;
 
+  padding: 20px;
   padding-top: 120px;
 
   color: #fff;
@@ -43,8 +44,9 @@
     flex-direction: row;
     align-items: end;
     align-self: flex-end;
+    margin-bottom: -20px;
   }
-
+  
   .confeiteira img {
     display: block;
   }
