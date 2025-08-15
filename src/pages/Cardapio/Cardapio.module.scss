@@ -8,20 +8,25 @@
   }
 }
 
+.produto {
+}
+
 .lista {
-  justify-content: space-around;
+  justify-content: center;
   flex-wrap: wrap;
-  gap: 20px 20px;
-
+  gap: 20px 40px;
+  
   padding: 0 10px;
-
+  
   img {
     display: block;
     width: 200px;
     aspect-ratio: 4/5;
     // height: 450px;
-
+    
     border-radius: 25px;
+    // border: solid 3px aliceblue;
+    box-shadow: 0 0 10px #888;
 
     object-fit: cover;
     object-position: center center;

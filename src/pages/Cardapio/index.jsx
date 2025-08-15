@@ -2,6 +2,7 @@ import { charMax } from "../../utils";
 import styles from "./Cardapio.module.scss";
 import DBprodut from "../../data/produtos.json";
 import DBcat from "../../data/categorias.json";
+import Divider from '../../components/Divider'
 
 // Pega a ID da categoria e retorna seu nome
 
@@ -13,6 +14,9 @@ export default function Cardapio() {
   return (
     <div className={styles.body}>
       <div className={styles.titulo + " container"}>
+        
+      </div>
+      <div className="container">
         {/* Lista de categorias */}
         {DBcat.map((categoria) => {
           // Se categoria não tiver produto pula para a próxima categoria (loop)
@@ -20,8 +24,8 @@ export default function Cardapio() {
             return;
 
           return (
-            <div>
-              {categoria.nome} <br />
+            <div className="box">
+              <Divider titulo={categoria.nome} />
               {/* Lista de produtos */}
               <div className={styles.lista + " box row"}>
                 {DBprodut.filter(
@@ -33,7 +37,7 @@ export default function Cardapio() {
                   return (
                     <div key={produto.id} className={styles.produto}>
                       <img src={"img/cardapio/" + produto.img} />
-                      <div class={styles.idp}>#{produto.id}</div>
+                      <div class={styles.idp}>cod {produto.id}</div>
                       {/* <div className={styles.categoria}>{nomeCat}</div> */}
                     </div>
                   );

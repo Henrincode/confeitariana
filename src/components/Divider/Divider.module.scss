@@ -1,6 +1,7 @@
 @use "../../styles/mixins" as *;
 
 .divider {
+  flex: 1;
   gap: 20px;
   padding: 10px 10px;
 
