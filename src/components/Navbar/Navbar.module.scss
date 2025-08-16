@@ -64,3 +64,47 @@
     }
   }
 }
+
+.btnList {
+  cursor: pointer;
+  display: none;
+  padding: 8px;
+  border-radius: 10px;
+  text-shadow: none;
+  background-color: #fff;
+  
+  i {
+    color: #333;
+    font-size: 24px;
+  }
+
+  &:hover {
+    background-color: pink;
+  }
+}
+
+
+@media (max-width: 900px) {
+  .collapse {
+    display: none;
+
+  }
+  
+  .btnList {
+    display: block;
+  }
+
+  .mostrarMenu {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: pink;
+
+    ul {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}
