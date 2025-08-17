@@ -14,10 +14,11 @@
     border-radius: 10px;
     background-color: rgb(255, 230, 255);
     box-shadow: 0 0 10px #333;
-transform: translateY(-10px);
+    transform: translateY(-10px);
   }
 }
 .categoria {
+  width: auto;
   color: rgb(250, 80, 180);
 
   img {
@@ -34,5 +35,14 @@ transform: translateY(-10px);
     font-size: 20px;
     text-align: center;
     font-family: "Merienda";
+  }
+}
+
+@media (max-width: 500px) {
+  .categoria {
+
+    img {
+      width: 90%;
+    }
   }
 }

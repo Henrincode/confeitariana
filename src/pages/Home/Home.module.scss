@@ -46,8 +46,14 @@
     align-self: flex-end;
     margin-bottom: -20px;
   }
-  
+
   .confeiteira img {
     display: block;
+  }
+
+  @media (max-width: 900px) {
+    .confeiteira {
+      display: none;
+    }
   }
 }

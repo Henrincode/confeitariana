@@ -8,22 +8,19 @@
   }
 }
 
-.produto {
-}
-
 .lista {
   justify-content: center;
   flex-wrap: wrap;
   gap: 20px 40px;
-  
+
   padding: 0 10px;
-  
+
   img {
     display: block;
     width: 200px;
     aspect-ratio: 4/5;
     // height: 450px;
-    
+
     border-radius: 25px;
     // border: solid 3px aliceblue;
     box-shadow: 0 0 10px #888;
@@ -31,6 +28,10 @@
     object-fit: cover;
     object-position: center center;
     filter: saturate(1.5);
+  }
+
+  .produto {
+    width: auto;
   }
 
   .idp {
@@ -45,5 +46,13 @@
     text-align: center;
     font-weight: 600;
     font-family: "Merienda";
+  }
+}
+
+@media (max-width: 500px) {
+  .lista {
+    img {
+      width: 90%;
+    }
   }
 }

@@ -7,10 +7,8 @@ export default function Categorias() {
     <>
       <div className={styles.categorias + " box row pad"}>
         {DBcat.map(({ id, capa, nome }) => (
-          <div key={id} className={styles.categoria}>
-            <div className="imagem">
+          <div key={id} className={styles.categoria + " box"}>
               <img src={`/img${capa}`} alt="" />
-            </div>
             <h2 className="titulo">{charMax(nome, 15)}</h2>
           </div>
         ))}
