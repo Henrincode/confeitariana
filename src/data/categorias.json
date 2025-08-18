@@ -2,51 +2,61 @@
   {
     "id": 1,
     "nome": "Bolos de Aniversário",
+    "slug": "bolos-de-aniversario",
     "capa": "/misc/bolo-001.jpg"
   },
   {
     "id": 2,
     "nome": "Bolos Infantis",
+    "slug": "bolos-infantis",
     "capa": "/misc/bolo-004.jpg"
   },
   {
     "id": 3,
     "nome": "Docinhos de Festa",
+    "slug": "docinhos-de-festa",
     "capa": "/misc/docefesta-001.jpg"
   },
   {
     "id": 4,
     "nome": "Bolos Tradicionais",
+    "slug": "bolos-tradicionais",
     "capa": "/misc/bolo-002.jpg"
   },
   {
     "id": 5,
     "nome": "Panificação",
+    "slug": "panificacao",
     "capa": "/misc/pao-001.jpg"
   },
   {
     "id": 6,
     "nome": "Sobremesas",
+    "slug": "sobremesas",
     "capa": "/misc/sobremesa-001.jpg"
   },
   {
     "id": 7,
     "nome": "Bolos de Travessa",
+    "slug": "bolos-de-travessa",
     "capa": "/misc/bolo-003.jpg"
   },
   {
     "id": 8,
     "nome": "Pavês",
+    "slug": "paves",
     "capa": "/misc/pave-001.jpg"
   },
   {
     "id": 9,
     "nome": "Panetones e Choc...",
+    "slug": "panetones-e-choc",
     "capa": "/misc/panetone-001.jpg"
   },
   {
     "id": 10,
     "nome": "Ovos de Páscoa",
+    "slug": "ovos-de-pascoa",
     "capa": "/misc/pascoa-001.jpg"
   }
 ]

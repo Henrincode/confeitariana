@@ -17,6 +17,7 @@ function App() {
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="/cardapio" element={<Cardapio />} />
+            <Route path="/cardapio/:linkcat?" element={<Cardapio />} />
             <Route path="/depoimentos" element={<Depoimentos />} />
             <Route path="/contato" element={<Contato />} />
             <Route path="*" element={<NotFound />} />

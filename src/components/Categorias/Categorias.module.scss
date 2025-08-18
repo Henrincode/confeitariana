@@ -1,7 +1,7 @@
 @use "../../styles/mixins" as *;
 
 .categorias {
-  cursor: pointer;
+  // cursor: pointer;
   flex-wrap: wrap;
   justify-content: space-around;
   gap: 20px 40px;
@@ -10,16 +10,21 @@
 
   transition: 200ms;
 
-  &:hover {
-    border-radius: 10px;
-    background-color: rgb(255, 230, 255);
-    box-shadow: 0 0 10px #333;
-    transform: translateY(-10px);
-  }
+  // &:hover {
+  //   border-radius: 10px;
+  //   background-color: rgb(255, 230, 255);
+  //   box-shadow: 0 0 10px #333;
+  //   transform: translateY(-10px);
+  // }
 }
 .categoria {
   width: auto;
   color: rgb(250, 80, 180);
+  transition: transform 200ms;
+
+  &:hover {
+    transform: translateY(-10px);
+  }
 
   img {
     display: block;
@@ -40,7 +45,6 @@
 
 @media (max-width: 500px) {
   .categoria {
-
     img {
       width: 90%;
     }

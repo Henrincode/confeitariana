@@ -3,12 +3,17 @@ import { Link } from "react-router-dom";
 import { useEffect } from "react";
 
 export default function Navbar() {
+  //
   useEffect(() => {
-    const handleClick = (e) => {
+    const handleClick = e => {
       const btnList = e.target.closest("." + styles.btnList);
       const collapse = document.querySelector("." + styles.collapse);
       if (btnList) {
-        collapse.classList.toggle(styles.mostrarMenu)
+        collapse.classList.toggle(styles.mostrarMenu);
+      }
+
+      if (!btnList) {
+        collapse.classList.remove(styles.mostrarMenu)
       }
     };
 
