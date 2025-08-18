@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar/";
 import Footer from "./components/Footer";
 
-import Layout from "./pages/layout";
+import Layout from "./pages/Layout";
 import Home from "./pages/Home/";
 import Cardapio from "./pages/Cardapio/";
 import Depoimentos from "./pages/Depoimentos/";
