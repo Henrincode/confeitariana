@@ -37,7 +37,7 @@ Bootstrap, WordPress, Linux, Docker, Supabase, instalação do site como app no 
 ## Acesso ao Projeto 🌐
 
 Você pode ver o projeto online:
-[www.confeitariana.vercel.app](https://www.confeitariana.vercel.app)
+[confeitariana.vercel.app](https://confeitariana.vercel.app)
 
 Ou instalar e rodar localmente:
 
