@@ -338,3 +338,39 @@ CREATE INDEX idx_client_birthday ON ana_clients (EXTRACT(MONTH FROM birth_date))
 CREATE INDEX idx_recipe_items_product ON ana_product_recipe_items(id_product_fk);
 CREATE INDEX idx_recipe_items_supply ON ana_product_recipe_items(id_supply_fk);
 ```
+
+### Pupulando tabelas
+
+```sql
+-- ==========================================================
+-- POPULAÇÃO INICIAL (SETUP DO SISTEMA)
+-- ==========================================================
+
+-- 1. Cargos Padrão
+INSERT INTO ana_auth_staff_roles (name) VALUES 
+('Administrador'), ('Gerente'), ('Vendedor'), ('Produção');
+
+-- 2. Status de Fatura
+INSERT INTO ana_invoice_status (name) VALUES 
+('Pendente'), ('Pago'), ('Cancelado'), ('Em Separação'), ('Entregue');
+
+-- 3. Tipos de Fatura
+INSERT INTO ana_invoice_types (name) VALUES 
+('Venda'), ('Compra');
+
+-- 4. Tipos de Movimentação Financeira
+INSERT INTO ana_payment_types (name) VALUES 
+('Entrada (Receita)'), ('Saída (Despesa)');
+
+-- 5. Métodos de Pagamento
+INSERT INTO ana_payment_methods (name) VALUES 
+('Dinheiro'), ('Pix'), ('Cartão de Crédito'), ('Cartão de Débito'), ('Boleto');
+
+-- 6. Status de Pagamento
+INSERT INTO ana_payment_status (name) VALUES 
+('Aguardando'), ('Confirmado'), ('Estornado');
+
+-- 7. Unidades de Medida
+INSERT INTO ana_units (short_name, full_name) VALUES 
+('un', 'Unidade'), ('kg', 'Quilograma'), ('g', 'Grama'), ('L', 'Litro'), ('pack', 'Pack');
+```
