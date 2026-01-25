@@ -31,98 +31,310 @@ O projeto utiliza **PostgreSQL** (via Supabase) com uma estrutura normalizada de
 
 ## Estrutura do banco de dados
 
+Para ver o fluxograma do banco [clique aqui!](https://dbdiagram.io/e/696d62b3d6e030a02462527c/696db5aad6e030a02467400d)
+
+### Criando tabelas
+
 ```sql
--- 1. Ativar extensões necessárias
-CREATE EXTENSION IF NOT EXISTS citext;
+-- ==========================================================
+-- 1. CONFIGURAÇÕES INICIAIS
+-- ==========================================================
 
--- 2. Criar tabelas independentes (Nível 1)
-CREATE TABLE tb_ana_users (
-    id_user BIGSERIAL PRIMARY KEY,
-    username CITEXT NOT NULL UNIQUE,
-    pass_hash TEXT,
-    name VARCHAR(255),
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    deleted_at TIMESTAMPTZ
-);
+-- O comportamento Case-Insensitive será tratado via índices funcionais LOWER().
 
-CREATE TABLE tb_ana_clients (
-    id_client BIGSERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL UNIQUE,
-    details TEXT,
-    email VARCHAR(255),
-    phone VARCHAR(20),
-    whatsapp VARCHAR(20),
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    deleted_at TIMESTAMPTZ
-);
+-- ==========================================================
+-- 2. NÍVEL 1: TABELAS BASE (DIMENSÕES)
+-- ==========================================================
 
-CREATE TABLE tb_ana_categories (
-    id_category BIGSERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    parent_id BIGINT REFERENCES tb_ana_categories(id_category),
-    image_url TEXT,
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    deleted_at TIMESTAMPTZ
-);
-
-CREATE TABLE tb_ana_unity_types (
-    id_unity_type BIGSERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
-    abreviation VARCHAR(10) NOT NULL,
-    allows_decimal BOOLEAN NOT NULL DEFAULT FALSE
-);
-
--- 3. Criar tabelas dependentes (Nível 2)
-CREATE TABLE tb_ana_addresses (
-    id_address BIGSERIAL PRIMARY KEY,
-    id_client_fk BIGINT NOT NULL REFERENCES tb_ana_clients(id_client) ON DELETE CASCADE,
-    zip VARCHAR(20),
-    street VARCHAR(255),
-    number VARCHAR(20),
-    extra VARCHAR(100),
-    district VARCHAR(100),
-    city VARCHAR(100),
-    state VARCHAR(50),
-    country VARCHAR(50) DEFAULT 'Brasil',
+-- Cargos e Níveis de Acesso: Define as permissões do sistema.
+CREATE TABLE ana_auth_staff_roles (
+    id_auth_staff_role BIGSERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE TABLE tb_ana_products (
-    id_product BIGSERIAL PRIMARY KEY,
-    id_category_fk BIGINT NOT NULL REFERENCES tb_ana_categories(id_category),
-    id_unity_type_fk BIGINT NOT NULL REFERENCES tb_ana_unity_types(id_unity_type),
+-- Gestão de Acesso: Armazena credenciais e níveis de permissão.
+CREATE TABLE ana_auth_staff (
+    id_auth_staff BIGSERIAL PRIMARY KEY,
+    username VARCHAR(255) NOT NULL UNIQUE, -- Tratado com índice LOWER para login.
+    pass_hash TEXT NOT NULL,
+    name VARCHAR(255),
+    id_auth_staff_role_fk BIGINT NOT NULL REFERENCES ana_auth_staff_roles(id_auth_staff_role),
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ
+);
+
+-- Segmentação de Clientes: Grupos como 'VIP', 'Corporativo' ou 'Revenda'.
+CREATE TABLE ana_client_categories (
+    id_client_category BIGSERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Entidades de Consumo: Cadastro central de clientes.
+CREATE TABLE ana_clients (
+    id_client BIGSERIAL PRIMARY KEY,
+    id_client_category_fk BIGINT REFERENCES ana_client_categories(id_client_category),
     name VARCHAR(255) NOT NULL,
+    email VARCHAR(255), -- Tratado com índice LOWER para buscas/CRM.
+    phone VARCHAR(20),
+    whatsapp VARCHAR(20),
+    birth_date DATE,
     details TEXT,
-    price NUMERIC(10,2),
     image_url TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     deleted_at TIMESTAMPTZ
 );
 
-CREATE TABLE tb_ana_sales (
-    id_sale BIGSERIAL PRIMARY KEY,
-    id_client_fk BIGINT NOT NULL REFERENCES tb_ana_clients(id_client),
-    total_price DECIMAL(10,2) DEFAULT 0,
-    status VARCHAR(50) DEFAULT 'aguardando', 
+-- Localidades de Clientes: Suporta múltiplos endereços.
+CREATE TABLE ana_client_addresses (
+    id_client_address BIGSERIAL PRIMARY KEY,
+    id_client_fk BIGINT NOT NULL REFERENCES ana_clients(id_client) ON DELETE CASCADE,
+    address_name VARCHAR(100), 
     zip VARCHAR(20),
     street VARCHAR(255),
     number VARCHAR(20),
-    extra VARCHAR(100),
     district VARCHAR(100),
     city VARCHAR(100),
     state VARCHAR(50),
-    country VARCHAR(50) DEFAULT 'Brasil',
+    country_code CHAR(2) DEFAULT 'BR',
+    details TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     deleted_at TIMESTAMPTZ
 );
 
--- 4. Criar itens da venda (Nível 3)
-CREATE TABLE tb_ana_sale_items (
-    id_sale_items BIGSERIAL PRIMARY KEY,
-    id_sale_fk BIGINT NOT NULL REFERENCES tb_ana_sales(id_sale) ON DELETE CASCADE,
-    id_product_fk BIGINT NOT NULL REFERENCES tb_ana_products(id_product),
-    quantity DECIMAL(10,3) NOT NULL,
-    unit_price DECIMAL(10,2) NOT NULL,
-    subtotal DECIMAL(10,2) NOT NULL
+-- Cadeia de Suprimentos: Parceiros comerciais para compra de insumos.
+CREATE TABLE ana_suppliers (
+    id_supplier BIGSERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    cnpj VARCHAR(20),
+    cpf VARCHAR(20),
+    contact_name VARCHAR(100),
+    email VARCHAR(255), -- Tratado com índice LOWER.
+    phone VARCHAR(20),
+    whatsapp VARCHAR(20),
+    zip VARCHAR(20),
+    street VARCHAR(255),
+    number VARCHAR(20),
+    district VARCHAR(100),
+    city VARCHAR(100),
+    state VARCHAR(50),
+    country_code CHAR(2) DEFAULT 'BR',
+    details TEXT,
+    image_url TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ
 );
+
+-- Tesouraria: Controle de saldos em bancos ou caixas.
+CREATE TABLE ana_banks (
+    id_bank BIGSERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    account_name VARCHAR(100),
+    balance_initial NUMERIC(10,2) DEFAULT 0,
+    details TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ
+);
+
+-- Fluxo de Trabalho: Status da fatura.
+CREATE TABLE ana_invoice_status (
+    id_invoice_status BIGSERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL UNIQUE,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ
+);
+
+-- Identidade Visual: Marcas de produtos e insumos.
+CREATE TABLE ana_brands (
+    id_brand BIGSERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE,
+    image_url TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ
+);
+
+-- Padronização de Medidas (kg, g, un, etc).
+CREATE TABLE ana_units (
+    id_unit BIGSERIAL PRIMARY KEY,
+    short_name VARCHAR(10) NOT NULL UNIQUE, 
+    full_name VARCHAR(50), 
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Organização de Insumos.
+CREATE TABLE ana_supply_categories (
+    id_supply_category BIGSERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    id_parent_fk BIGINT REFERENCES ana_supply_categories(id_supply_category),
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Catálogo de Insumos.
+CREATE TABLE ana_supplies (
+    id_supply BIGSERIAL PRIMARY KEY,
+    id_supply_category_fk BIGINT NOT NULL REFERENCES ana_supply_categories(id_supply_category),
+    id_brand_fk BIGINT REFERENCES ana_brands(id_brand),
+    id_unit_fk BIGINT NOT NULL REFERENCES ana_units(id_unit),
+    name VARCHAR(100) NOT NULL,
+    size_value NUMERIC(10,3),
+    image_url TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ
+);
+
+-- Árvore de Produtos Finais.
+CREATE TABLE ana_product_categories (
+    id_product_category BIGSERIAL PRIMARY KEY,
+    id_parent_fk BIGINT REFERENCES ana_product_categories(id_product_category),
+    name VARCHAR(100) NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Modalidades Financeiras.
+CREATE TABLE ana_payment_methods (
+    id_payment_method BIGSERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE
+);
+
+-- Status do pagamento
+CREATE TABLE ana_payment_status (
+    id_payment_status BIGSERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE
+);
+
+-- ==========================================================
+-- 3. NÍVEL 2: PRODUTOS E FATURAMENTO
+-- ==========================================================
+
+-- Portfólio de Vendas.
+CREATE TABLE ana_products (
+    id_product BIGSERIAL PRIMARY KEY,
+    id_product_category_fk BIGINT NOT NULL REFERENCES ana_product_categories(id_product_category),
+    id_brand_fk BIGINT REFERENCES ana_brands(id_brand),
+    id_unit_fk BIGINT NOT NULL REFERENCES ana_units(id_unit),
+    name VARCHAR(255) NOT NULL,
+    price_original NUMERIC(10,2) NOT NULL DEFAULT 0,
+    price_discount NUMERIC(10,2) DEFAULT 0,
+    price_cost NUMERIC(10,2) NOT NULL DEFAULT 0,
+    image_url TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ
+);
+
+-- Tipo de invoice "Venda" "Compra"
+CREATE TABLE ana_invoice_types (
+    id_invoice_type BIGSERIAL PRIMARY KEY,
+    name varchar(255) NOT NULL UNIQUE,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Documento Fiscal/Comercial: Compras e Vendas.
+CREATE TABLE ana_invoices (
+    id_invoice BIGSERIAL PRIMARY KEY,
+    id_invoice_type_fk BIGINT REFERENCES ana_invoice_types(id_invoice_type), 
+    id_client_fk BIGINT REFERENCES ana_clients(id_client) ON DELETE RESTRICT,
+    id_supplier_fk BIGINT REFERENCES ana_suppliers(id_supplier) ON DELETE RESTRICT,
+    id_invoice_status_fk BIGINT NOT NULL REFERENCES ana_invoice_status(id_invoice_status),
+    id_auth_staff_fk BIGINT NOT NULL REFERENCES ana_auth_staff(id_auth_staff),
+    price_original NUMERIC(10,2) NOT NULL DEFAULT 0,
+    price_discount NUMERIC(10,2) NOT NULL DEFAULT 0,
+    price_final NUMERIC(10,2) NOT NULL DEFAULT 0,
+    details TEXT, 
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    delivered_at TIMESTAMPTZ,
+    deleted_at TIMESTAMPTZ,
+    CONSTRAINT check_invoice_owner CHECK (
+        (id_client_fk IS NOT NULL AND id_supplier_fk IS NULL) OR
+        (id_client_fk IS NULL AND id_supplier_fk IS NOT NULL)
+    )
+);
+
+-- ==========================================================
+-- 4. NÍVEL 3: DETALHAMENTO (ITENS E FINANCEIRO)
+-- ==========================================================
+
+-- Itens vendidos.
+CREATE TABLE ana_invoice_product_items (
+    id_invoice_product_item BIGSERIAL PRIMARY KEY,
+    id_invoice_fk BIGINT NOT NULL REFERENCES ana_invoices(id_invoice) ON DELETE CASCADE,
+    id_product_fk BIGINT NOT NULL REFERENCES ana_products(id_product),
+    quantity NUMERIC(10,3) NOT NULL,
+    price_unit NUMERIC(10,2) NOT NULL,
+    price_final NUMERIC(10,2) NOT NULL
+);
+
+-- Itens comprados.
+CREATE TABLE ana_invoice_supply_items (
+    id_invoice_supply_item BIGSERIAL PRIMARY KEY,
+    id_invoice_fk BIGINT NOT NULL REFERENCES ana_invoices(id_invoice) ON DELETE CASCADE,
+    id_supply_fk BIGINT NOT NULL REFERENCES ana_supplies(id_supply),
+    quantity NUMERIC(10,3) NOT NULL,
+    price_unit NUMERIC(10,2) NOT NULL,
+    price_final NUMERIC(10,2) NOT NULL
+);
+
+-- Tipos de pagamentos "entrada", "saída"
+CREATE TABLE ana_payment_types (
+    id_payment_type BIGSERIAL PRIMARY KEY,
+    name varchar(255) NOT NULL UNIQUE,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Conciliação Bancária.
+CREATE TABLE ana_payments (
+    id_payment BIGSERIAL PRIMARY KEY,
+    id_invoice_fk BIGINT NOT NULL REFERENCES ana_invoices(id_invoice) ON DELETE CASCADE,
+    id_payment_method_fk BIGINT NOT NULL REFERENCES ana_payment_methods(id_payment_method),
+    id_bank_fk BIGINT NOT NULL REFERENCES ana_banks(id_bank),
+    id_payment_status_fk BIGINT NOT NULL REFERENCES ana_payment_status(id_payment_status),
+    id_payment_type_fk BIGINT NOT NULL REFERENCES ana_payment_types(id_payment_type),
+    payment_name VARCHAR(100), 
+    amount NUMERIC(10,2) NOT NULL,
+    details TEXT,
+    paid_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Receita Técnica (BOM).
+CREATE TABLE ana_product_recipe_items (
+    id_product_fk BIGINT NOT NULL REFERENCES ana_products(id_product) ON DELETE CASCADE,
+    id_supply_fk BIGINT NOT NULL REFERENCES ana_supplies(id_supply) ON DELETE CASCADE,
+    PRIMARY KEY (id_product_fk, id_supply_fk)
+);
+
+-- Logística de Entrega (Snapshot).
+CREATE TABLE ana_invoice_addresses (
+    id_invoice_address BIGSERIAL PRIMARY KEY,
+    id_invoice_fk BIGINT NOT NULL UNIQUE REFERENCES ana_invoices(id_invoice) ON DELETE CASCADE,
+    zip VARCHAR(20),
+    street VARCHAR(255),
+    number VARCHAR(20),
+    district VARCHAR(100),
+    city VARCHAR(100),
+    state VARCHAR(50),
+    country_code CHAR(2) DEFAULT 'BR',
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ
+);
+
+-- ==========================================================
+-- 5. ÍNDICES DE PERFORMANCE (VELOCIDADE BILIONÁRIA)
+-- ==========================================================
+
+-- OTIMIZAÇÃO CASE-INSENSITIVE
+-- Estes índices garantem que buscas por login e e-mail sejam rápidas mesmo com milhões de linhas.
+-- Importante: Em suas queries, use WHERE LOWER(coluna) = LOWER('valor')
+CREATE INDEX idx_staff_username_lower ON ana_auth_staff (LOWER(username));
+CREATE INDEX idx_clients_email_lower ON ana_clients (LOWER(email));
+CREATE INDEX idx_suppliers_email_lower ON ana_suppliers (LOWER(email));
+
+-- Buscas Frequentes
+CREATE INDEX idx_inv_client ON ana_invoices(id_client_fk) WHERE id_client_fk IS NOT NULL;
+CREATE INDEX idx_inv_supplier ON ana_invoices(id_supplier_fk) WHERE id_supplier_fk IS NOT NULL;
+CREATE INDEX idx_inv_status ON ana_invoices(id_invoice_status_fk);
+CREATE INDEX idx_client_birthday ON ana_clients (EXTRACT(MONTH FROM birth_date));
+
+-- Engenharia de Receita
+CREATE INDEX idx_recipe_items_product ON ana_product_recipe_items(id_product_fk);
+CREATE INDEX idx_recipe_items_supply ON ana_product_recipe_items(id_supply_fk);
 ```
