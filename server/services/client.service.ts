@@ -71,6 +71,16 @@ export async function findCategories() {
     return categories
 }
 
+// Existy
+
+export async function existsCategory(name: string){
+    const [category] = await sql`
+    select name from ana_client_categories
+    where LOWER(name) = LOWER(${name})
+    `
+    return !!category
+}
+
 // CREATE
 export async function createCategorie(name: string) {
     const [category] = await sql`
@@ -88,6 +98,7 @@ const clientService = {
     create,
     findAddresses,
     findCategories,
+    existsCategory,
     createCategorie
 }
 

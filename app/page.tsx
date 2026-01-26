@@ -1,6 +1,7 @@
-import Image from "next/image";
+import clientService from "@/server/services/client.service";
 
-export default function Home() {
+export default async function Home() {
+
   return (
     <div className="flex flex-col justify-center items-center h-dvh bg-amber-100">
       <img className="w-100" src="/cookie-01.png" alt="" />

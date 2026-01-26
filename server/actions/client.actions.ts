@@ -1,4 +1,4 @@
-'user server'
+'use server'
 import clientService from "@/server/services/client.service";
 import { revalidateTag } from "next/cache";
 
@@ -8,6 +8,7 @@ interface ActionState {
     client?: any
 }
 
+// creat
 export async function createClient(_: ActionState, formData: FormData) {
     const name = formData.get('name')?.toString().trim() ?? null
     const category = Number(formData.get('category'))
@@ -35,7 +36,29 @@ export async function createClient(_: ActionState, formData: FormData) {
         // @ts-expect-error — bug de tipagem do Next 16 (revalidateTag aceita 1 arg em runtime)
         revalidateTag('clients')
         return { success: true }
-    } catch {
+    } catch(error) {
+        console.error(error)
         return { success: false, error: 'Erro ao criar cliente' }
+    }
+}
+
+// CATEGORIES
+
+// CREAT
+export async function createClientCategory(_: ActionState, formData: FormData) {
+    const name = formData.get('name')?.toString().trim() || null
+
+    if (!name) return { success: false, error: 'Nome precisa ser preenchido.' }
+
+    if(await clientService.existsCategory(name)) return {success: false, error: 'Nome já existe'}
+
+    try {
+        await clientService.createCategorie(name)
+        // @ts-expect-error — bug de tipagem do Next 16 (revalidateTag aceita 1 arg em runtime)
+        revalidateTag('clients')
+        return { success: true }
+    } catch(error) {
+        console.error(error)
+        return {success: false, error: 'Erro ao criar categoria'}
     }
 }
