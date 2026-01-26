@@ -1,4 +1,5 @@
 import sql from '@/server/db'
+import { unstable_cache } from 'next/cache'
 
 interface CreateClientParans {
     name: string
@@ -15,21 +16,25 @@ interface CreateClientParans {
 // --- CLIENTS
 // 
 
-// Find
-export async function find() {
-    const clients = await sql`
-        select name from ana_clients
-    `
-    return clients
-}
+// FIND
+const find = unstable_cache(
+    async () => await sql`select name from ana_clients`,
+    ['client-find'],
+    { tags: ['clients'] }
+)
 
-export async function findById(id: number) {
-    const [client] = await sql`
-        select name from ana_clients where id_client = ${id}
-    `
-    if (!client) throw Error('Cliente não encontrado')
-    return client
-}
+// FIND BY ID
+export const findById = (id: number) => unstable_cache(
+    async () => {
+        const [client] = await sql`
+            select name from ana_clients where id_client = ${id}
+        `;
+        if (!client) throw Error('Cliente não encontrado');
+        return client;
+    },
+    [`client-find-by-id-${id}`],
+    { tags: ['clients', `client-${id}`] }
+)()
 
 // CREATE
 export async function create({ name, category, email, phone, whatsapp, birth_date, details, image_url }: CreateClientParans) {

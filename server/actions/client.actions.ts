@@ -1,5 +1,6 @@
 'user server'
 import clientService from "@/server/services/client.service";
+import { revalidateTag } from "next/cache";
 
 interface ActionState {
     success?: boolean
@@ -31,6 +32,8 @@ export async function createClient(_: ActionState, formData: FormData) {
 
     try {
         await clientService.create(client)
+        // @ts-expect-error — bug de tipagem do Next 16 (revalidateTag aceita 1 arg em runtime)
+        revalidateTag('clients')
         return { success: true }
     } catch {
         return { success: false, error: 'Erro ao criar cliente' }
