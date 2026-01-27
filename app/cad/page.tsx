@@ -6,8 +6,8 @@ export default async function Cad() {
     const clientCategoryes = await clientService.findCategories()
 
     return (
-        <>
+        <div className="">
             <FormClientCat categoryes={clientCategoryes} />
-        </>
+        </div>
     )
 }

@@ -3,7 +3,7 @@ import clientService from "@/server/services/client.service";
 export default async function Home() {
 
   return (
-    <div className="flex flex-col justify-center items-center h-dvh p-3 bg-amber-100">
+    <div className="flex flex-col justify-center items-center p-3">
       <img className="w-100" src="/cookie-01.png" alt="" />
       <h1 className="mb-2 font-bold text-5xl text-pink-400">Confeitariana</h1>
       <form className="
