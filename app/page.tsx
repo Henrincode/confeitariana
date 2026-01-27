@@ -3,14 +3,15 @@ import clientService from "@/server/services/client.service";
 export default async function Home() {
 
   return (
-    <div className="flex flex-col justify-center items-center h-dvh bg-amber-100">
+    <div className="flex flex-col justify-center items-center h-dvh p-3 bg-amber-100">
       <img className="w-100" src="/cookie-01.png" alt="" />
-      <h1 className="mb-2 font-bold text-6xl text-pink-400">Confeitariana</h1>
+      <h1 className="mb-2 font-bold text-5xl text-pink-400">Confeitariana</h1>
       <form className="
         flex
         flex-col
         gap-2
-        w-100
+        max-w-100
+        w-full
         p-2
         rounded-2xl
         bg-pink-300
