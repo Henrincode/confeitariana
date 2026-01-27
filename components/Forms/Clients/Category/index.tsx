@@ -1,6 +1,6 @@
 'use client'
 
-import { createClientCategory } from "@/server/actions/client.actions"
+import { createClientCategory } from "@/server/actions/client.action"
 import { useActionState } from "react"
 
 interface ActionState {

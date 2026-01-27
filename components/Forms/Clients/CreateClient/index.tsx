@@ -1,6 +1,6 @@
 'use client'
 
-import { createClient } from "@/server/actions/client.actions"
+import { createClient } from "@/server/actions/client.action"
 import Link from "next/link"
 import { useActionState } from "react"
 
