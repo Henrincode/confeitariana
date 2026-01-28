@@ -76,6 +76,9 @@ CREATE TABLE ana_clients (
     id_client BIGSERIAL PRIMARY KEY,
     id_client_category_fk BIGINT REFERENCES ana_client_categories(id_client_category),
     name VARCHAR(255) NOT NULL,
+    contact_name VARCHAR(100),
+    CPF VARCHAR(255),
+    CNPJ VARCHAR(255),
     email VARCHAR(255), -- Tratado com índice LOWER para buscas/CRM.
     phone VARCHAR(20),
     whatsapp VARCHAR(20),
@@ -90,36 +93,50 @@ CREATE TABLE ana_clients (
 CREATE TABLE ana_client_addresses (
     id_client_address BIGSERIAL PRIMARY KEY,
     id_client_fk BIGINT NOT NULL REFERENCES ana_clients(id_client) ON DELETE CASCADE,
-    address_name VARCHAR(100), 
-    zip VARCHAR(20),
-    street VARCHAR(255),
-    number VARCHAR(20),
-    district VARCHAR(100),
-    city VARCHAR(100),
-    state VARCHAR(50),
-    country_code CHAR(2) DEFAULT 'BR',
-    details TEXT,
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    deleted_at TIMESTAMPTZ
+    name VARCHAR(100),                     -- Apelido do local (Ex: Trabalho, Casa, Academia)
+    zip VARCHAR(20),                       -- CEP ou código postal da localidade
+    number VARCHAR(20),                    -- Número do imóvel ou lote na via principal
+    street VARCHAR(255),                   -- Nome da via pública principal (Rua, Avenida)
+    district VARCHAR(100),                 -- Bairro ou região administrativa
+    city VARCHAR(100),                     -- Município do endereço
+    state VARCHAR(50),                     -- Estado ou província
+    country_code CHAR(2) DEFAULT 'BR',     -- Código do país em formato ISO (Padrão Brasil)
+
+    condominium VARCHAR(100),              -- Nome do Condomínio (Ex: Residencial Flores)
+    building_block VARCHAR(20),            -- Bloco / Torre
+    unit_number VARCHAR(20),               -- Número do Apto / Número da Casa interna
+    internal_street VARCHAR(255),          -- Rua interna (para condomínios grandes de casas)
+
+    details TEXT,                          -- Ponto de referência ou instruções de entrega
+    created_at TIMESTAMPTZ DEFAULT NOW(),  -- Registro de data/hora da criação do cadastro
+    deleted_at TIMESTAMPTZ                 -- Data de exclusão para controle de Soft Delete
 );
 
 -- Cadeia de Suprimentos: Parceiros comerciais para compra de insumos.
 CREATE TABLE ana_suppliers (
     id_supplier BIGSERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    cnpj VARCHAR(20),
-    cpf VARCHAR(20),
     contact_name VARCHAR(100),
+    cpf VARCHAR(20),
+    cnpj VARCHAR(20),
     email VARCHAR(255), -- Tratado com índice LOWER.
     phone VARCHAR(20),
     whatsapp VARCHAR(20),
+
     zip VARCHAR(20),
-    street VARCHAR(255),
     number VARCHAR(20),
+    street VARCHAR(255),
     district VARCHAR(100),
     city VARCHAR(100),
     state VARCHAR(50),
     country_code CHAR(2) DEFAULT 'BR',
+
+    condominium VARCHAR(100),              -- Nome do Condomínio (Ex: Residencial Flores)
+    building_block VARCHAR(20),            -- Bloco / Torre
+    unit_number VARCHAR(20),               -- Número do Apto / Número da Casa interna
+    internal_street VARCHAR(255),          -- Rua interna (para condomínios grandes de casas)
+    details TEXT,                          -- Ponto de referência ou instruções de entrega
+
     details TEXT,
     image_url TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW(),
@@ -157,16 +174,16 @@ CREATE TABLE ana_brands (
 -- Padronização de Medidas (kg, g, un, etc).
 CREATE TABLE ana_units (
     id_unit BIGSERIAL PRIMARY KEY,
+    name VARCHAR(50), 
     short_name VARCHAR(10) NOT NULL UNIQUE, 
-    full_name VARCHAR(50), 
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- Organização de Insumos.
 CREATE TABLE ana_supply_categories (
     id_supply_category BIGSERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
     id_parent_fk BIGINT REFERENCES ana_supply_categories(id_supply_category),
+    name VARCHAR(100) NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -284,9 +301,9 @@ CREATE TABLE ana_payment_types (
 -- Conciliação Bancária.
 CREATE TABLE ana_payments (
     id_payment BIGSERIAL PRIMARY KEY,
+    id_bank_fk BIGINT NOT NULL REFERENCES ana_banks(id_bank),
     id_invoice_fk BIGINT NOT NULL REFERENCES ana_invoices(id_invoice) ON DELETE CASCADE,
     id_payment_method_fk BIGINT NOT NULL REFERENCES ana_payment_methods(id_payment_method),
-    id_bank_fk BIGINT NOT NULL REFERENCES ana_banks(id_bank),
     id_payment_status_fk BIGINT NOT NULL REFERENCES ana_payment_status(id_payment_status),
     id_payment_type_fk BIGINT NOT NULL REFERENCES ana_payment_types(id_payment_type),
     payment_name VARCHAR(100), 
@@ -307,12 +324,18 @@ CREATE TABLE ana_invoice_addresses (
     id_invoice_address BIGSERIAL PRIMARY KEY,
     id_invoice_fk BIGINT NOT NULL UNIQUE REFERENCES ana_invoices(id_invoice) ON DELETE CASCADE,
     zip VARCHAR(20),
-    street VARCHAR(255),
     number VARCHAR(20),
+    street VARCHAR(255),
     district VARCHAR(100),
     city VARCHAR(100),
     state VARCHAR(50),
     country_code CHAR(2) DEFAULT 'BR',
+
+    condominium VARCHAR(100),              -- Nome do Condomínio (Ex: Residencial Flores)
+    building_block VARCHAR(20),            -- Bloco / Torre
+    unit_number VARCHAR(20),               -- Número do Apto / Número da Casa interna
+    internal_street VARCHAR(255),          -- Rua interna (para condomínios grandes de casas)
+    details TEXT,                          -- Ponto de referência ou instruções de entrega
     created_at TIMESTAMPTZ DEFAULT NOW(),
     deleted_at TIMESTAMPTZ
 );
