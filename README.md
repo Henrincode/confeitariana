@@ -135,9 +135,8 @@ CREATE TABLE ana_suppliers (
     building_block VARCHAR(20),            -- Bloco / Torre
     unit_number VARCHAR(20),               -- Número do Apto / Número da Casa interna
     internal_street VARCHAR(255),          -- Rua interna (para condomínios grandes de casas)
-    details TEXT,                          -- Ponto de referência ou instruções de entrega
 
-    details TEXT,
+    details TEXT,                          -- Ponto de referência ou instruções de entrega
     image_url TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     deleted_at TIMESTAMPTZ
