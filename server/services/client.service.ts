@@ -18,7 +18,7 @@ interface CreateClientParans {
 
 // FIND
 const find = unstable_cache(
-    async () => await sql`select name from ana_clients`,
+    async () => await sql`select * from ana_clients`,
     ['client-find'],
     { tags: ['clients'] }
 )
@@ -27,7 +27,7 @@ const find = unstable_cache(
 export const findById = (id: number) => unstable_cache(
     async () => {
         const [client] = await sql`
-            select name from ana_clients where id_client = ${id}
+            select * from ana_clients where id_client = ${id}
         `;
         if (!client) throw Error('Cliente não encontrado');
         return client;
