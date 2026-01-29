@@ -12,6 +12,7 @@ interface State {
 const initialState: State = {}
 
 export default function FormCreateClient({ classBody, classForm, clients, categories }: any) {
+    const [isPeople, setIsPeople] = useState(!clients.contact_name)
     const [moreAddress, setMoreAddress] = useState(false)
     const [stateCreateClient, formCreateClient] = useActionState(createClient, initialState)
 
@@ -36,6 +37,16 @@ export default function FormCreateClient({ classBody, classForm, clients, catego
                 ))}
             </ul>
 
+            <div className="flex flex-row gap-4 w-fit px-2 pt-2 ml-5 mt-6 rounded-t-2xl text-white bg-pink-400">
+                <div>
+                    <input id="radio-pessoa" name="teste" type="radio" checked={isPeople} onChange={(e) => e.target.checked && setIsPeople(true)} className="accent-pink-600" /> <label htmlFor="radio-pessoa">Pessoa</label>
+                </div>
+                <div>
+                    <input id="radio-empresa" name="teste" type="radio" checked={!isPeople}
+                    onChange={(e) => e.target.checked && setIsPeople(false)} className="accent-pink-600" /> <label htmlFor="radio-empresa">Empresa</label>
+                </div>
+            </div>
+
             <div className={`
             ${classForm}
             grid
@@ -43,7 +54,6 @@ export default function FormCreateClient({ classBody, classForm, clients, catego
             items-center
             gap-2
             p-2
-            mt-4
 
             [&_.col]:flex
             [&_.col]:flex-col
@@ -62,10 +72,16 @@ export default function FormCreateClient({ classBody, classForm, clients, catego
             [&_.campo]:rounded-2xl
             [&_.campo]:bg-pink-50
         `}>
-                <div className="col col-3">
-                    <label htmlFor="name" className="f-label">Nome</label>
+                <div className={`col ${isPeople ? 'col-3' : 'col-2'}`}>
+                    <label htmlFor="name" className="f-label">{isPeople ? 'Nome' : 'Nome da empresa'}</label>
                     <input name="name" id="name" type="text" className="campo" />
                 </div>
+                {isPeople || (
+                    <div className="col col-1">
+                        <label htmlFor="contact_name" className="f-label">Responsável</label>
+                        <input name="contact_name" id="contact_name" type="text" className="campo" />
+                    </div>
+                )}
                 <div className="col col-1">
                     <label htmlFor="categories" className="f-label">Categoria</label>
                     <select name="category" id="categories" className="campo">
@@ -74,7 +90,7 @@ export default function FormCreateClient({ classBody, classForm, clients, catego
                         ))}
                     </select>
                 </div>
-                <div className="col col-1">
+                <div className="col col-2">
                     <label htmlFor="email" className="f-label">E-Mail</label>
                     <input name="email" id="email" type="email" className="campo" />
                 </div>
@@ -85,6 +101,14 @@ export default function FormCreateClient({ classBody, classForm, clients, catego
                 <div className="col col-1">
                     <label htmlFor="whatsapp" className="f-label">Whatsapp</label>
                     <input name="whatsapp" id="whatsapp" type="number" min={0} className="campo" />
+                </div>
+                <div className="col col-2">
+                    <label htmlFor="birth_date" className="f-label">CNPJ</label>
+                    <input name="birth_date" id="birth_date" type="text" className="campo" />
+                </div>
+                <div className="col col-1">
+                    <label htmlFor="birth_date" className="f-label">CPF</label>
+                    <input name="birth_date" id="birth_date" type="text" className="campo" />
                 </div>
                 <div className="col col-1">
                     <label htmlFor="birth_date" className="f-label">Aniversário</label>
@@ -101,7 +125,7 @@ export default function FormCreateClient({ classBody, classForm, clients, catego
 
                 <div className={`col-4 grid duration-300 overflow-hidden ${moreAddress ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
                     <div className="overflow-hidden">
-                        <p className="h-1000 bg-amber-50">Selecionado</p>
+                        <p className="bg-amber-50">Selecionado</p>
                     </div>
                 </div>
             </div>

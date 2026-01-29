@@ -15,26 +15,26 @@ export default async function ClientePage({ params }: Props) {
     const client = await clientService.findById(id)
     return (
         <div id="clientePerfil" className="box">
-            <div className="flex flex-row justify-between items-center px-10">
+            {/* <div className="flex flex-row justify-between items-center px-10">
                 <p className="text-6xl text-pink-500">Perfil de cliente</p>
                 <Link href="../clientes" className="flex flex-row items-center px-2 py-1 rounded-lg text-2xl text-pink-500 bg-pink-200 border border-pink-500/70">
                     <IoArrowBack /> Voltar à lista
                 </Link>
 
-            </div>
+            </div> */}
 
             <div className="mt-6 rounded-t-4xl rounded-b-xl shadow-2xl shadow-black/50 overflow-hidden" >
-                <div className="flex flex-row justify-between items-center gap-10 p-10 bg-pink-200">
+                <div className="flex flex-row justify-between items-center gap-10 p-10 bg-pink-400">
                     <img
                         src={`https://api.dicebear.com/9.x/avataaars-neutral/svg?seed=${client.name}`}
                         alt="avatar" className="w-50 border-4 shadow-lg shadow-black/30 border-white rounded-full"
                     />
                     <div id="nome" className="flex-1">
-                        <div className="flex flex-row items-center gap-2 text-6xl">
-                            <div className="">{client.name}</div>
+                        <div className="flex flex-row items-center gap-2 text-6xl text-white">
+                            <div className="text-shadow-lg text-shadow-black/20">{client.name}</div>
                             <div className="px-2 py-1 rounded-full font-semibold text-sm text-white bg-pink-500">{client.category}</div>
                         </div>
-                        <div className="flex flex-row items-center gap-2 text-2xl text-gray-500">
+                        <div className="flex flex-row items-center gap-2 text-2xl text-pink-900">
                             <FaFingerprint /> id: {client.id_client}
                         </div>
                     </div>
@@ -43,7 +43,7 @@ export default async function ClientePage({ params }: Props) {
                     </Link>
                 </div>
 
-                <div className="h-100 bg-white">
+                <div className="bg-white">
 
                     {/* Dados */}
                     <div className="
@@ -55,7 +55,7 @@ export default async function ClientePage({ params }: Props) {
 
                         [&_ul]:flex
                         [&_ul]:flex-col
-                        [&_ul]:gap-2
+                        [&_ul]:gap-4
 
                         [&_.list-tittle]:flex
                         [&_.list-tittle]:flex-row
@@ -100,7 +100,7 @@ export default async function ClientePage({ params }: Props) {
 
                         {/* Documentação */}
                         <div>
-                            <div className="list-tittle"><FaAddressCard /> Dados pessoais</div>
+                            <div className="list-tittle"><FaAddressCard /> Documentos</div>
                             <ul>
                                 <li>
                                     <div className="list-subtittle">CPF</div>
@@ -109,6 +109,10 @@ export default async function ClientePage({ params }: Props) {
                                 <li>
                                     <div className="list-subtittle">CNPJ</div>
                                     <div className="list-info">{client.cnpj ? client.cnpj : 'Não informado'}</div>
+                                </li>
+                                <li>
+                                    <div className="list-subtittle">Conta criada</div>
+                                    <div className="list-info">{new Date(client.created_at).toLocaleDateString(navigator.language, { timeZone: 'UTC' })}</div>
                                 </li>
                             </ul>
                         </div>
