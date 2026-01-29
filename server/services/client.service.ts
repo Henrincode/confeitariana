@@ -27,7 +27,13 @@ const find = unstable_cache(
 export const findById = (id: number) => unstable_cache(
     async () => {
         const [client] = await sql`
-            select * from ana_clients where id_client = ${id}
+            select
+                cl.*,
+                ca.name category
+            from ana_clients cl
+            inner join ana_client_categories ca
+                on cl.id_client_category_fk = ca.id_client_category
+            where id_client = ${id}
         `;
         if (!client) throw Error('Cliente não encontrado');
         return client;
