@@ -34,7 +34,7 @@ export default function FormCreateClient({ classBody, classForm, clients, catego
                 ))}
             </ul>
 
-            <div className="flex flex-row gap-4 w-fit px-2 pt-2 ml-5 mt-6 rounded-t-2xl text-white bg-pink-400">
+            <div className="flex flex-row gap-4 w-fit px-2 pt-2 mx-auto sm:ml-5 mt-6 rounded-t-2xl text-white bg-pink-400">
                 <div>
                     <input id="radio-pessoa" name="teste" type="radio" checked={isPeople} onChange={(e) => e.target.checked && setIsPeople(true)} className="accent-pink-600" /> <label htmlFor="radio-pessoa">Pessoa</label>
                 </div>
@@ -54,10 +54,13 @@ export default function FormCreateClient({ classBody, classForm, clients, catego
 
             [&_.col]:flex
             [&_.col]:flex-col
-            [&_.col]:col-span-4
+            [&_.col-1]:col-span-4
             [&_.col-1]:sm:col-span-1
+            [&_.col-2]:col-span-4
             [&_.col-2]:sm:col-span-2
+            [&_.col-3]:col-span-4
             [&_.col-3]:sm:col-span-3
+            [&_.col-4]:col-span-4
             [&_.col-4]:sm:col-span-4
 
             [&_.f-label]:pl-2
@@ -85,6 +88,7 @@ export default function FormCreateClient({ classBody, classForm, clients, catego
                         <input name="contact_name" id="contact_name" type="text" className="campo" />
                     </div>
                 )}
+                <div className="col-4 sm:hidden h-2 mt-2 rounded-full bg-pink-300"></div>
                 <div className="col col-1">
                     <label htmlFor="categories" className="f-label">Categoria</label>
                     <select name="category" id="categories" className="campo">
@@ -117,13 +121,13 @@ export default function FormCreateClient({ classBody, classForm, clients, catego
                     <label htmlFor="birth_date" className="f-label">Aniversário</label>
                     <input name="birth_date" id="birth_date" type="date" className="campo" />
                 </div>
-                <div className="col">
+                <div className="col col-4">
                     <label htmlFor="details" className="f-label">Detalhes</label>
                     <textarea name="details" id="details" rows={7} placeholder="ex: Alérgico a tal produto, não fica em casa a tarde, esposa de fulano." className="campo resize-none"></textarea>
                 </div>
 
                 {/* Endereço */}
-                <div className="col mt-2">
+                <div className="col col-4 mt-2">
                     <label htmlFor="moreAddress" className="block w-fit px-2 py-1 mx-auto rounded-2xl text-pink-800 bg-white cursor-pointer select-none">
                         Cadastrar endereço agora?
                         </label>
@@ -164,7 +168,7 @@ export default function FormCreateClient({ classBody, classForm, clients, catego
                             </div>
 
                             {/* Condomínio */}
-                            <div className="col mt-6 rounded-bl-md border-b-2 border-pink-300 overflow-hidden">
+                            <div className="col col-4 mt-6 rounded-bl-md border-b-2 border-pink-300 overflow-hidden">
                                 <div className="w-fit px-2 py-1 rounded-t-xl text-white bg-pink-300">Condomínio</div>
                             </div>
 
@@ -186,11 +190,11 @@ export default function FormCreateClient({ classBody, classForm, clients, catego
                             </div>
 
                             {/* detalhes */}
-                            <div className="col mt-6 rounded-bl-md border-b-2 border-pink-300 overflow-hidden">
+                            <div className="col col-4 mt-6 rounded-bl-md border-b-2 border-pink-300 overflow-hidden">
                                 <div className="w-fit px-2 py-1 rounded-t-xl text-white bg-pink-300">Detalhes do endereço</div>
                             </div>
                             
-                            <textarea className="col campo resize-none" name="details" rows={7} placeholder="ex: Ao lado da igreja ABC, esquina com a rua abc, deixar na portaria."></textarea>
+                            <textarea className="col-4 campo resize-none" name="details" rows={7} placeholder="ex: Ao lado da igreja ABC, esquina com a rua abc, deixar na portaria."></textarea>
                         </div>
                     </div>
                 </div>
