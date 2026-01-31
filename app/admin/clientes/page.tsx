@@ -4,7 +4,7 @@ import Link from "next/link"
 export default async function ClientsPage() {
     const clients = await clientService.find()
     return(
-        <ul className="box flex flex-row justify-center gap-2 mt-4">
+        <ul className="box flex flex-row justify-center flex-wrap gap-2 mt-4">
                 {clients.sort((a: any, b: any) => a.name.localeCompare(b.name)).map((c: any, i: number) => (
                     <li key={i}>
                         <Link href={`/admin/cliente/${c.id_client}`} className="flex flex-row items-center cursor-pointer select-none group">

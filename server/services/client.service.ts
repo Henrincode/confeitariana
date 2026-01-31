@@ -3,6 +3,7 @@ import { unstable_cache } from 'next/cache'
 
 interface CreateClientParans {
     name: string
+    contact_name?: string | null
     category: number | null
     email?: string | null
     phone?: string | null
@@ -10,6 +11,10 @@ interface CreateClientParans {
     birth_date?: Date | null
     details?: string | null
     image_url?: string | null
+}
+
+interface ClientReturning {
+    id_client: number
 }
 
 // 
@@ -43,10 +48,12 @@ export const findById = (id: number) => unstable_cache(
 )()
 
 // CREATE
-export async function create({ name, category, email, phone, whatsapp, birth_date, details, image_url }: CreateClientParans) {
-    const [client] = await sql`
-        insert into ana_clients (name, id_client_category_fk, email, phone, whatsapp, birth_date, details, image_url) values
-        (${name}, ${category ?? null}, ${email ?? null}, ${phone ?? null}, ${whatsapp ?? null}, ${birth_date ?? null}, ${details ?? null}, ${image_url ?? null} )
+export async function create(params: CreateClientParans): Promise<ClientReturning> {
+    const { name, contact_name, category, email, phone, whatsapp, birth_date, details, image_url } = params
+    
+    const [client] = await sql<ClientReturning[]>`
+        insert into ana_clients (name, contact_name, id_client_category_fk, email, phone, whatsapp, birth_date, details, image_url) values
+        (${name}, ${contact_name ?? null}, ${category ?? null}, ${email ?? null}, ${phone ?? null}, ${whatsapp ?? null}, ${birth_date ?? null}, ${details ?? null}, ${image_url ?? null} )
         returning *
     `
     if (!client) throw Error('Erro ao cadastrar cliente')
@@ -79,7 +86,7 @@ export async function findCategories() {
 
 // Existy
 
-export async function existsCategory(name: string){
+export async function existsCategory(name: string) {
     const [category] = await sql`
     select name from ana_client_categories
     where LOWER(name) = LOWER(${name})

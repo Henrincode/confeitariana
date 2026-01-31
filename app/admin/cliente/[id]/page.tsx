@@ -53,6 +53,10 @@ export default async function ClientePage({ params }: Props) {
                         px-10
                         py-5
 
+                        [&_.col-1]:col-span-1
+                        [&_.col-2]:col-span-2
+                        [&_.col-3]:col-span-3
+
                         [&_ul]:flex
                         [&_ul]:flex-col
                         [&_ul]:gap-4
@@ -86,7 +90,7 @@ export default async function ClientePage({ params }: Props) {
                                 </li>
                                 {client.contact_name && (
                                     <li>
-                                        <div className="list-subtittle">NOME DO CONTATO</div>
+                                        <div className="list-subtittle">CONTATO</div>
                                         <div className="list-info">{client.contact_name}</div>
                                     </li>
                                 )}
@@ -134,6 +138,14 @@ export default async function ClientePage({ params }: Props) {
                                     <div className="list-info">{client.whatsapp ? client.whatsapp : 'Não informado'}</div>
                                 </li>
                             </ul>
+                        </div>
+
+                        {/* Detalhes */}
+                        <div className="col-3">
+                            <div className="list-tittle">Detalhes</div>
+                            <div className={`${client.details || 'flex flex-row justify-center items-center'} min-h-20 p-2 border-2 rounded-xl font-light text-xl text-gray-600 border-pink-500/50 bg-pink-50 whitespace-pre-line`}>
+                            {client.details ? client.details : "Nada informado."}
+                            </div>
                         </div>
                     </div>
                 </div>

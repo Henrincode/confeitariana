@@ -14,7 +14,7 @@ export default async function Home() {
         w-full
         p-2
         rounded-2xl
-        bg-pink-300
+        bg-pink-400
 
         [&_.coluna]:flex
         [&_.coluna]:flex-row
@@ -23,11 +23,11 @@ export default async function Home() {
 
         [&_input]:w-full
         [&_input]:p-2
-        [&_input]:focus:outline-2
         [&_input]:rounded-2xl
         [&_input]:text-center
-        [&_input]:outline-pink-400
         [&_input]:hover:outline-2
+        [&_input]:focus:outline-2
+        [&_input]:outline-pink-500
         [&_input]:bg-white
         [&_input]:hover:bg-pink-100
 
@@ -36,7 +36,7 @@ export default async function Home() {
         [&_button]:rounded-2xl
         [&_button]:text-pink-800
         [&_button]:bg-pink-100
-        [&_button]:hover:bg-pink-400
+        [&_button]:hover:bg-pink-300
         [&_button]:cursor-pointer
       ">
         <input type="text" placeholder="Username" />

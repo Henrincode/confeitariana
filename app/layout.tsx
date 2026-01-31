@@ -28,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <body
         className={`${fontPoppins.className} ${geistSans.variable} ${geistMono.variable} antialiased h-dvh bg-amber-100`}
       >
