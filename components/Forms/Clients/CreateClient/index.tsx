@@ -18,7 +18,7 @@ export default function FormCreateClient({ classBody, classForm, clients, catego
 
     return (
         <form action={formCreateClient} className={classBody}>
-            <ul className="flex flex-row justify-center flex-wrap gap-2 mt-4">
+            {/* <ul className="flex flex-row justify-center flex-wrap gap-2 mt-4">
                 {clients.sort((a: any, b: any) => a.name.localeCompare(b.name)).map((c: any, i: number) => (
                     <li key={i}>
                         <Link className="flex flex-row items-center cursor-pointer select-none group" href={`/admin/cliente/${c.id_client}`}>
@@ -32,7 +32,7 @@ export default function FormCreateClient({ classBody, classForm, clients, catego
                         </Link>
                     </li>
                 ))}
-            </ul>
+            </ul> */}
 
             <div className="flex flex-row gap-4 w-fit px-2 pt-2 mx-auto sm:ml-5 mt-6 rounded-t-2xl text-white bg-pink-400">
                 <div>
