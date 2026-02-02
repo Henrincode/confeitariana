@@ -108,7 +108,12 @@ export async function createCategorie(name: string) {
 }
 
 export async function updateImage({ id_client, file }: { id_client: number, file: File }) {
-    const image_url = await storageServices.image(file)
+    const fileExt = file.name.split('.').pop()
+    const fileName = `${Math.random().toString().slice(2)}.${fileExt}`
+    const filePath = `clients/${id_client}/${fileName}`
+
+    const image_url = await storageServices.image({file, filePath})
+
     await sql`
         UPDATE ana_clients 
         SET image_url = ${image_url} 

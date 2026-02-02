@@ -140,7 +140,7 @@ export default async function ClientePage({ params }: Props) {
                         {/* Detalhes */}
                         <div className="col-3">
                             <div className="list-tittle"><CgDetailsMore /> Detalhes</div>
-                            <div className={`${client.details || 'flex flex-row justify-center items-center'} min-h-20 p-2 border-2 rounded-xl font-light text-sm sm:text-xl text-gray-600 border-pink-500/50 bg-pink-50 whitespace-pre-line`}>
+                            <div className={`${client.details || 'flex flex-row justify-center items-center'} min-h-20 p-2 mt-4 border-2 rounded-xl font-light text-sm sm:text-xl text-gray-600 border-pink-500/50 bg-pink-50 whitespace-pre-line`}>
                                 {client.details ? client.details : "Nada informado."}
                             </div>
                         </div>

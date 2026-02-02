@@ -1,7 +1,9 @@
 'use client'
 
-import { updateClientImage } from "@/server/actions/client.action"
-import { useActionState, useTransition } from "react"
+import imageCompression from 'browser-image-compression';
+import { updateClientImage } from "@/server/actions/client.action";
+import { useActionState, startTransition } from "react"; // 1. Importe o startTransition
+import Image from 'next/image';
 
 interface State {
     success?: boolean
@@ -10,42 +12,82 @@ interface State {
 
 const initialState: State = {}
 
-// Adicionei o clientId nas props para podermos enviar no FormData
 export default function UpdateImage({ name, image, clientId }: { name: string, image: string, clientId: number }) {
-    // stateUpdateImage: o retorno da sua action
-    // formUpdateImage: a função que você coloca no action do form
-    const [stateUpdateImage, formUpdateImage] = useActionState(updateClientImage, initialState)
+    // Nota: Em React 19 / Next 15, useActionState retorna [state, action, isPending]
+    const [state, formAction, isPending] = useActionState(updateClientImage, initialState)
+
+    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const imageFile = event.target.files?.[0]
+        if (!imageFile) return
+
+        const options = {
+            maxSizeMB: 1,
+            maxWidthOrHeight: 1000,
+            useWebWorker: true,
+        }
+
+        try {
+            // 1. Compacta a imagem
+            const compressedFile = await imageCompression(imageFile, options)
+
+            // 2. Cria o FormData com o arquivo otimizado
+            const formData = new FormData()
+            formData.append('image_url', compressedFile, compressedFile.name)
+            formData.append('id_client', clientId.toString())
+
+            // 3. A MÁGICA: Dispara a Action dentro de uma transition
+            // Isso remove o erro do console e ativa o estado isPending
+            startTransition(() => {
+                formAction(formData)
+            })
+
+        } catch (error) {
+            console.error("Erro ao comprimir imagem:", error)
+        }
+    };
 
     return (
-        <form action={formUpdateImage}>
-            {/* Campo escondido para enviar o ID do cliente automaticamente */}
-            <input type="hidden" name="id_client" value={clientId} />
+        <form>
+            <label
+                htmlFor="updateImage"
+                className={`relative cursor-pointer block group ${isPending ? 'opacity-50 pointer-events-none' : ''}`}
+            >
+                {image ? (
+                    <Image
+                        src={image}
+                        alt='avatar'
+                        width={200}
+                        height={200}
+                        className={`w-full sm:w-50 border-4 shadow-lg shadow-black/30 border-white/70 rounded-full aspect-square object-cover transition-all ${isPending ? 'scale-95 blur-[2px]' : 'group-hover:brightness-90'}`}
+                    />
+                ) : (
+                    <img
+                        src={`https://api.dicebear.com/9.x/avataaars-neutral/svg?seed=${name}`}
+                        alt="avatar"
+                        className={`w-full sm:w-50 border-4 shadow-lg shadow-black/30 border-white/70 rounded-full aspect-square object-cover transition-all ${isPending ? 'scale-95 blur-[2px]' : 'group-hover:brightness-90'}`}
+                    />
+                )}
 
-            <label htmlFor="updateImage" className="cursor-pointer group relative block">
-                <img
-                    src={image ? image : `https://api.dicebear.com/9.x/avataaars-neutral/svg?seed=${name}`}
-                    alt="avatar" 
-                    className="sm:w-50 border-4 shadow-lg shadow-black/30 border-white/70 rounded-full transition group-hover:opacity-75"
-                />
-                
-                <input 
-                    id="updateImage" 
-                    name="image_url" // Deve ser o mesmo nome que você usa no formData.get('image_url')
-                    type="file" 
+                {/* Overlay de carregamento opcional */}
+                {isPending && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-8 h-8 border-4 border-pink-600 border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+                )}
+
+                <input
+                    id="updateImage"
+                    type="file"
                     accept="image/*"
-                    hidden 
-                    onChange={(e) => {
-                        if (e.target.files?.[0]) {
-                            e.target.form?.requestSubmit(); // Isso dispara o formUpdateImage automaticamente
-                        }
-                    }} 
+                    hidden
+                    onChange={handleFileChange}
+                    disabled={isPending}
                 />
             </label>
 
-            {/* Feedback de erro, se houver */}
-            {stateUpdateImage?.error && (
-                <p className="text-red-500 text-xs mt-2 text-center">{stateUpdateImage.error}</p>
+            {state?.error && (
+                <p className="text-red-500 text-xs mt-2 text-center font-semibold">{state.error}</p>
             )}
         </form>
-    )
+    );
 }
