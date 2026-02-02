@@ -1,10 +1,9 @@
 import clientService from "@/server/services/client.service"
 import Link from "next/link"
 import { CgDetailsMore } from "react-icons/cg"
-import { FaAddressCard, FaEdit, FaFingerprint, FaUserCircle } from "react-icons/fa"
-import { IoMdFingerPrint } from "react-icons/io"
-import { IoArrowBack } from "react-icons/io5"
+import { FaAddressCard, FaEdit, FaUserCircle } from "react-icons/fa"
 import { RiContactsBookFill } from "react-icons/ri"
+import UpdateImage from "./_components/updateImage"
 
 interface Props {
     params: Promise<{ id: string }>
@@ -16,20 +15,10 @@ export default async function ClientePage({ params }: Props) {
     const client = await clientService.findById(id)
     return (
         <div id="clientePerfil" className="box pb-10">
-            {/* <div className="flex flex-row justify-between items-center px-10">
-                <p className="text-6xl text-pink-500">Perfil de cliente</p>
-                <Link href="../clientes" className="flex flex-row items-center px-2 py-1 rounded-lg text-2xl text-pink-500 bg-pink-200 border border-pink-500/70">
-                    <IoArrowBack /> Voltar à lista
-                </Link>
-
-            </div> */}
 
             <div className="rounded-t-4xl rounded-b-xl shadow-2xl shadow-black/50 overflow-hidden" >
                 <div className="relative flex flex-col sm:flex-row items-center gap-4 sm:gap-10 p-5 sm:p-10 bg-pink-400">
-                    <img
-                        src={`https://api.dicebear.com/9.x/avataaars-neutral/svg?seed=${client.name}`}
-                        alt="avatar" className="sm:w-50 border-4 shadow-lg shadow-black/30 border-white/70 rounded-full"
-                    />
+                    <UpdateImage clientId={client.id_client} name={client.name} image={client.image_url} />
                     <div id="name" className="flex-1 flex flex-col items-center sm:items-start">
                         <div className="flex flex-col items-center sm:items-start flex-wrap gap-2 text-white">
                             <div className="px-2 py-1 rounded-full font-semibold text-sm text-white bg-pink-500">{client.category}</div>

@@ -4,8 +4,8 @@ import { createClientCategory } from "@/server/actions/client.action"
 import { useActionState } from "react"
 
 interface ActionState {
-    error?: string
     success?: boolean
+    error?: string
 }
 
 const initialState: ActionState = {}

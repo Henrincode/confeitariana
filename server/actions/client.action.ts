@@ -38,7 +38,7 @@ export async function createClient(_: ActionState, formData: FormData) {
         newClient = await clientService.create(client)
         // @ts-expect-error — bug de tipagem do Next 16 (revalidateTag aceita 1 arg em runtime)
         revalidateTag('clients')
-        
+
     } catch (error) {
         console.error(error)
         return { success: false, error: 'Erro ao criar cliente' }
@@ -65,5 +65,28 @@ export async function createClientCategory(_: ActionState, formData: FormData) {
     } catch (error) {
         console.error(error)
         return { success: false, error: 'Erro ao criar categoria' }
+    }
+}
+
+// 
+// image_url
+// 
+
+// update
+export async function updateClientImage(_: ActionState, formData: FormData) {
+    try {
+        const id_client = Number(formData.get('id_client'))
+        const file = formData.get('image_url') as File
+        if (!file) throw new Error('Nenhuma imagem enviada.')
+
+        const url = await clientService.updateImage({ id_client, file })
+
+        // @ts-expect-error — bug de tipagem do Next 16 (revalidateTag aceita 1 arg em runtime)
+        revalidateTag('clients')
+        return { success: true }
+
+    } catch (error: any) {
+        console.error(error.message)
+        return { success: false, error: 'Erro ao enviar imagem' }
     }
 }

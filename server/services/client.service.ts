@@ -1,7 +1,9 @@
 import sql from '@/server/db'
 import { unstable_cache } from 'next/cache'
+import storageServices from './storage.service'
 
 interface CreateClientParans {
+    id_client?: number
     name: string
     contact_name?: string | null
     category: number | null
@@ -50,7 +52,7 @@ export const findById = (id: number) => unstable_cache(
 // CREATE
 export async function create(params: CreateClientParans): Promise<ClientReturning> {
     const { name, contact_name, category, email, phone, whatsapp, birth_date, details, image_url } = params
-    
+
     const [client] = await sql<ClientReturning[]>`
         insert into ana_clients (name, contact_name, id_client_category_fk, email, phone, whatsapp, birth_date, details, image_url) values
         (${name}, ${contact_name ?? null}, ${category ?? null}, ${email ?? null}, ${phone ?? null}, ${whatsapp ?? null}, ${birth_date ?? null}, ${details ?? null}, ${image_url ?? null} )
@@ -105,6 +107,15 @@ export async function createCategorie(name: string) {
     return category
 }
 
+export async function updateImage({ id_client, file }: { id_client: number, file: File }) {
+    const image_url = await storageServices.image(file)
+    await sql`
+        UPDATE ana_clients 
+        SET image_url = ${image_url} 
+        WHERE id_client = ${id_client}
+    `
+}
+
 const clientService = {
     find,
     findById,
@@ -112,7 +123,8 @@ const clientService = {
     findAddresses,
     findCategories,
     existsCategory,
-    createCategorie
+    createCategorie,
+    updateImage
 }
 
 export default clientService
