@@ -1,6 +1,6 @@
 'use server'
 import clientService from "@/server/services/client.service";
-import { revalidateTag } from "next/cache";
+import { revalidateTag, updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
 interface ActionState {
@@ -11,21 +11,26 @@ interface ActionState {
 
 // creat
 export async function createClient(_: ActionState, formData: FormData) {
-    const name = formData.get('name')?.toString().trim() ?? null
-    const contact_name = formData.get('contact_name')?.toString().trim() ?? null
-    const category = Number(formData.get('category'))
-    const email = formData.get('email')?.toString().trim() ?? null
-    const phone = formData.get('phone')?.toString().trim() ?? null
-    const whatsapp = formData.get('whatsapp')?.toString().trim() ?? null
-    const raw_birth_date = formData.get('birth_date')?.toString().trim() ?? null
 
-    const birth_date =
-        raw_birth_date && !isNaN(Date.parse(raw_birth_date))
-            ? new Date(raw_birth_date)
-            : null
+    const clean = (key: string) => {
+        const value = formData.get(key)?.toString().trim();
+        return value === "" ? null : (value ?? null);
+    }
 
-    const details = formData.get('details')?.toString().trim() ?? null
-    const image_url = formData.get('image_url')?.toString().trim() ?? null
+    const name = clean('name')
+    const contact_name = clean('contact_name')
+    const category = Number(formData.get('category')) || null
+    const email = clean('email')
+    const phone = clean('phone')
+    const whatsapp = clean('whatsapp')
+    const birth_date = (() => {
+        const date = clean('birth_date');
+        return date && !isNaN(Date.parse(date)) ? new Date(date) : null;
+    })()
+
+    const details = clean('details')
+    const image_url = clean('image_url')
+
 
     if (!name) {
         return { success: false, error: 'Nome não foi preenchido' }
@@ -34,20 +39,52 @@ export async function createClient(_: ActionState, formData: FormData) {
     const client = { name, contact_name, category, email, phone, whatsapp, birth_date, details, image_url }
     let newClient
 
+    const createAddres = formData.get('createAddress') === 'on'
+
     try {
         newClient = await clientService.create(client)
-        // @ts-expect-error — bug de tipagem do Next 16 (revalidateTag aceita 1 arg em runtime)
-        revalidateTag('clients')
+
+        if (createAddres) {
+            const id_client_fk = newClient.id_client
+            const name = clean('address_name')
+            const zip = clean('address_zip')
+            const number = clean('address_number')
+            const street = clean('address_street')
+            const district = clean('address_district')
+            const city = clean('address_city')
+            const state = clean('address_state')
+            const condominium = clean('cond_name')
+            const building_block = clean('cond_building_block')
+            const unit_number = clean('cond_uni_number')
+            const internal_street = clean('cond_street')
+
+            const address = { id_client_fk, name, zip, number, street, district, city, state, condominium, building_block, unit_number, internal_street }
+            
+            await clientService.createAddress(address)
+        }
+        updateTag('clients')
 
     } catch (error) {
         console.error(error)
         return { success: false, error: 'Erro ao criar cliente' }
     }
-    if (newClient) redirect(`/admin/cliente/${newClient.id_client}`)
-    return { success: true }
+    // if (newClient) redirect(`/admin/cliente/${newClient.id_client}`)
+    redirect(`/admin/cliente/${newClient.id_client}`)
+    // return { success: true }
 }
 
+// 
+// ADDRESS
+// 
+
+// create address
+export async function createClientAddress(_: ActionState, formData: FormData) {
+
+}
+
+// 
 // CATEGORIES
+// 
 
 // CREAT
 export async function createClientCategory(_: ActionState, formData: FormData) {

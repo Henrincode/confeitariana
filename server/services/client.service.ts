@@ -19,6 +19,22 @@ interface ClientReturning {
     id_client: number
 }
 
+interface PropsAddress {
+    id_client_fk?: number
+    name?: string | null
+    zip?: string | null
+    number?: string | null
+    street?: string | null
+    district?: string | null
+    city?: string | null
+    state?: string | null
+    condominium?: string | null
+    building_block?: string | null
+    unit_number?: string | null
+    internal_street?: string | null
+    details?: string | null
+}
+
 // 
 // --- CLIENTS
 // 
@@ -74,6 +90,15 @@ export async function findAddresses(id: number) {
     return addresses
 }
 
+// create addresses
+export async function createAddress(props: PropsAddress) {
+
+    const [address] = await sql`
+        insert into ana_client_addresses ${sql(props)}
+        returning *
+    `
+}
+
 // 
 // -- CATEGORIES
 // 
@@ -112,7 +137,7 @@ export async function updateImage({ id_client, file }: { id_client: number, file
     const fileName = `${Math.random().toString().slice(2)}.${fileExt}`
     const filePath = `clients/${id_client}/${fileName}`
 
-    const image_url = await storageServices.image({file, filePath})
+    const image_url = await storageServices.image({ file, filePath })
 
     await sql`
         UPDATE ana_clients 
@@ -129,7 +154,8 @@ const clientService = {
     findCategories,
     existsCategory,
     createCategorie,
-    updateImage
+    updateImage,
+    createAddress
 }
 
 export default clientService

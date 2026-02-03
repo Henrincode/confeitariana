@@ -13,6 +13,7 @@ export default async function ClientePage({ params }: Props) {
     const { id: idString } = await params
     const id = Number(idString)
     const client = await clientService.findById(id)
+    client.addresses = await clientService.findAddresses(id)
     return (
         <div id="clientePerfil" className="box pb-10">
 
@@ -146,6 +147,24 @@ export default async function ClientePage({ params }: Props) {
                         </div>
                     </div>
                 </div>
+            </div>
+            {/* address */}{client.addresses.length ? "tem" : "n tem"}
+            <div className=" p-5 sm:px-10 mt-10 rounded-xl shadow-2xl shadow-black/50 bg-white">
+                <div className="mb-4">Endereço</div>
+                <ul className={`${client.addresses.length ? "grid grid-cols-4" : "flex justify-center mb-4"} gap-4`}>
+                    {client.addresses.map((a: any, i: number) => (
+                        <li key={i} className="p-2 rounded-lg ring-2 text-gray-600 ring-pink-500/50 bg-pink-50">
+                            {a.name} <br /> {a.number && `${a.number}, `}{a.street}
+                        </li>
+                    ))}
+                    {client.addresses.length < 4 && (
+                        <div className="flex justify-center items-center">
+                            <div className="px-2 py-1 rounded-full ring-2 font-semibold text-sm ring-pink-800/80 text-white bg-pink-400">
+                                Adicionar {`${client.addresses.length + 1} de 4`}
+                            </div>
+                        </div>
+                    )}
+                </ul>
             </div>
         </div>
     )

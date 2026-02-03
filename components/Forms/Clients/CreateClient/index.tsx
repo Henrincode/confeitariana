@@ -128,10 +128,10 @@ export default function FormCreateClient({ classBody, classForm, clients, catego
 
                 {/* Endereço */}
                 <div className="col col-4 mt-2">
-                    <label htmlFor="moreAddress" className="block w-fit px-2 py-1 mx-auto rounded-2xl text-pink-800 bg-white cursor-pointer select-none">
+                    <label htmlFor="createAddress" className="block w-fit px-2 py-1 mx-auto rounded-2xl text-pink-800 bg-white cursor-pointer select-none">
                         Cadastrar endereço agora?
                         </label>
-                    <input id="moreAddress" hidden type="checkbox" onChange={(e) => setAddress(e.target.checked)} />
+                    <input id="createAddress" name="createAddress" hidden type="checkbox" onChange={(e) => setAddress(e.target.checked)} />
                 </div>
 
                 <div className={`col-4 grid duration-300 ${address ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
@@ -139,32 +139,32 @@ export default function FormCreateClient({ classBody, classForm, clients, catego
 
                         <div className="grid grid-cols-4 items-center gap-2">
                             <div className="col col-1">
-                                <label htmlFor="addless_name" className="f-label">Nome</label>
-                                <input name="addless_name" id="addless_name" type="text" placeholder="ex: Casa, Trabalho" className="campo" />
+                                <label htmlFor="address_name" className="f-label">Nome</label>
+                                <input name="address_name" id="address_name" type="text" placeholder="ex: Casa, Trabalho" className="campo" />
                             </div>
                             <div className="col col-1">
-                                <label htmlFor="addless_zip" className="f-label">CEP</label>
-                                <input name="addless_zip" id="addless_zip" type="number" min={0} className="campo" />
+                                <label htmlFor="address_zip" className="f-label">CEP</label>
+                                <input name="address_zip" id="address_zip" type="number" min={0} className="campo" />
                             </div>
                             <div className="col col-1">
-                                <label htmlFor="addles_state" className="f-label">Estado</label>
-                                <input name="addles_state" id="addles_state" type="text" className="campo" />
+                                <label htmlFor="address_state" className="f-label">Estado</label>
+                                <input name="address_state" id="address_state" type="text" className="campo" />
                             </div>
                             <div className="col col-1">
-                                <label htmlFor="addless_city" className="f-label">Cidade</label>
-                                <input name="addless_city" id="addless_city" type="text" className="campo" />
+                                <label htmlFor="address_city" className="f-label">Cidade</label>
+                                <input name="address_city" id="address_city" type="text" className="campo" />
                             </div>
                             <div className="col col-2">
-                                <label htmlFor="addles_street" className="f-label">Rua</label>
-                                <input name="addles_street" id="addles_street" type="text" className="campo" />
+                                <label htmlFor="address_street" className="f-label">Rua</label>
+                                <input name="address_street" id="address_street" type="text" className="campo" />
                             </div>
                             <div className="col col-1">
-                                <label htmlFor="addles_number" className="f-label">Número</label>
-                                <input name="addles_number" id="addles_number" type="number" min={0} className="campo" />
+                                <label htmlFor="address_number" className="f-label">Número</label>
+                                <input name="address_number" id="address_number" type="number" min={0} className="campo" />
                             </div>
                             <div className="col col-1">
-                                <label htmlFor="addless_district" className="f-label">Bairro</label>
-                                <input name="addless_district" id="addless_district" type="text" className="campo" />
+                                <label htmlFor="address_district" className="f-label">Bairro</label>
+                                <input name="address_district" id="address_district" type="text" className="campo" />
                             </div>
 
                             {/* Condomínio */}
