@@ -47,12 +47,10 @@ const find = unstable_cache(
 )
 
 // FIND BY ID
-export const findById = (id: number) => unstable_cache(
-    async () => {
+export const findById = unstable_cache(
+    async (id: number) => {
         const [client] = await sql`
-            select
-                cl.*,
-                ca.name category
+            select cl.*, ca.name category 
             from ana_clients cl
             inner join ana_client_categories ca
                 on cl.id_client_category_fk = ca.id_client_category
@@ -61,9 +59,10 @@ export const findById = (id: number) => unstable_cache(
         if (!client) throw Error('Cliente não encontrado');
         return client;
     },
-    [`client-find-by-id-${id}`],
-    { tags: ['clients', `client-${id}`] }
-)()
+    ['clients'],
+    { tags: ['clients'] }
+);
+
 
 // CREATE
 export async function create(params: CreateClientParans): Promise<ClientReturning> {
@@ -83,12 +82,17 @@ export async function create(params: CreateClientParans): Promise<ClientReturnin
 // 
 
 // FIND
-export async function findAddresses(id: number) {
-    const addresses = await sql`
-        select * from ana_client_addresses where id_client_fk = ${id}
-    `
-    return addresses
-}
+export const findAddresses = unstable_cache(
+    async (id: number) => {
+        const addresses = await sql`
+            select * from ana_client_addresses where id_client_fk = ${id}
+        `
+        return addresses
+    },
+    ['client-addresses'],
+    { tags: ['clients'] }
+)
+
 
 // create addresses
 export async function createAddress(props: PropsAddress) {
