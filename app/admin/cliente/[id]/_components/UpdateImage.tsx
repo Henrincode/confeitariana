@@ -2,7 +2,7 @@
 
 import imageCompression from 'browser-image-compression';
 import { updateClientImage } from "@/server/actions/client.action";
-import { useActionState, startTransition } from "react"; // 1. Importe o startTransition
+import { useActionState, startTransition, useState } from "react"; // 1. Importe o startTransition
 import Image from 'next/image';
 
 interface State {
@@ -14,9 +14,9 @@ const initialState: State = {}
 
 export default function UpdateImage({ name, image, clientId }: { name: string, image: string, clientId: number }) {
     // Nota: Em React 19 / Next 15, useActionState retorna [state, action, isPending]
-    const [state, formAction, isPending] = useActionState(updateClientImage, initialState)
+    const [stateImage, formImage, isPending] = useActionState(updateClientImage, initialState)
 
-    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const clickUpdateImage = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const imageFile = event.target.files?.[0]
         if (!imageFile) return
 
@@ -38,13 +38,13 @@ export default function UpdateImage({ name, image, clientId }: { name: string, i
             // 3. A MÁGICA: Dispara a Action dentro de uma transition
             // Isso remove o erro do console e ativa o estado isPending
             startTransition(() => {
-                formAction(formData)
+                formImage(formData)
             })
 
         } catch (error) {
             console.error("Erro ao comprimir imagem:", error)
         }
-    };
+    }
 
     return (
         <form>
@@ -80,13 +80,13 @@ export default function UpdateImage({ name, image, clientId }: { name: string, i
                     type="file"
                     accept="image/*"
                     hidden
-                    onChange={handleFileChange}
+                    onChange={clickUpdateImage}
                     disabled={isPending}
                 />
             </label>
 
-            {state?.error && (
-                <p className="text-red-500 text-xs mt-2 text-center font-semibold">{state.error}</p>
+            {stateImage?.error && (
+                <p className="text-red-500 text-xs mt-2 text-center font-semibold">{stateImage.error}</p>
             )}
         </form>
     );
