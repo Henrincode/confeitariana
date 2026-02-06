@@ -15,7 +15,7 @@ export default function ClientView({ idPage, client }: any) {
         <div id="clientePerfil" className="box pb-10">
 
             <div className="rounded-t-4xl rounded-b-xl shadow-2xl shadow-black/50 overflow-hidden" >
-                <div className="relative flex flex-col sm:flex-row items-center gap-4 sm:gap-10 p-5 sm:p-10 bg-pink-400">
+                <div className="relative flex flex-col sm:flex-row items-center gap-4 sm:gap-10 p-5 pb-10 sm:p-10 bg-pink-400">
                     <UpdateImage clientId={client.id_client} name={client.name} image={client.image_url} />
                     <div id="name" className="flex-1 flex flex-col items-center sm:items-start">
                         <div className="flex flex-col items-center sm:items-start flex-wrap gap-2 text-white">
@@ -26,9 +26,17 @@ export default function ClientView({ idPage, client }: any) {
                             <FaFingerprint /> id: {client.id_client}
                         </div> */}
                     </div>
-                    <Link href={`./${idPage}/editar`} className="sm:absolute sm:top-5 sm:right-5 flex sm:self-start flex-row items-center gap-2 px-6 py-1 rounded-full text-xl text-white bg-pink-500">
-                        <FaEdit /> Editar
-                    </Link>
+                    {/* <div className="sm:absolute sm:top-5 sm:right-5 flex sm:self-start flex-row items-center gap-2 px-6 py-1 rounded-full text-xl text-white bg-pink-500"> */}
+                    <div className="border-4 absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 flex px-4 py-1 rounded-full text-xl text-white bg-pink-400">
+                        <div className="flex flex-row gap-4 [&_input]:accent-pink-800">
+                            <label htmlFor="r-pessoa" className="whitespace-nowrap">
+                                <input id="r-pessoa" name="r-is_corporate" type="radio" /> pessoa
+                            </label>
+                            <label htmlFor="r-empresa" className="whitespace-nowrap">
+                                <input id="r-empresa" name="r-is_corporate" type="radio" /> empresa
+                            </label>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="bg-white">
@@ -39,18 +47,18 @@ export default function ClientView({ idPage, client }: any) {
                         grid-cols-3
                         gap-10
                         px-5
-                        py-5
+                        py-8
                         pb-5
                         sm:px-10
-                        sm:py-5
+                        sm:py-8
                         sm:pb-10
 
                         [&_.col-1]:col-span-3
-                        [&_.col-1]:sm:col-span-1
+                        [&_.col-1]:md:col-span-1
                         [&_.col-2]:col-span-3
-                        [&_.col-2]:sm:col-span-2
+                        [&_.col-2]:md:col-span-2
                         [&_.col-3]:col-span-3
-                        [&_.col-3]:sm:col-span-3
+                        [&_.col-3]:md:col-span-3
 
                         [&_ul]:flex
                         [&_ul]:flex-col
@@ -83,8 +91,13 @@ export default function ClientView({ idPage, client }: any) {
                     ">
 
                         {/* Dados Pessoais */}
-                        <div className="col-1">
-                            <div className="list-tittle"><FaUserCircle /> Dados Pessoais</div>
+                        <div className="col-1 group">
+
+
+                            <div className="list-tittle justify-between flex-wrap-reverse sm:flex-wrap">
+                                <div className="flex flex-row items-center gap-2"><FaUserCircle /> Dados Pessoais</div>
+
+                            </div>
                             <ul>
                                 <li>
                                     <div className="list-subtittle">NOME{client.contact_name && " DA EMPRESA"}</div>
