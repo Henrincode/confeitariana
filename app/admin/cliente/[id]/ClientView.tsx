@@ -27,15 +27,19 @@ export default function ClientView({ idPage, client }: any) {
                         </div> */}
                     </div>
                     {/* <div className="sm:absolute sm:top-5 sm:right-5 flex sm:self-start flex-row items-center gap-2 px-6 py-1 rounded-full text-xl text-white bg-pink-500"> */}
-                    <div className="border-4 absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 flex px-4 py-1 rounded-full text-xl text-white bg-pink-400">
-                        <div className="flex flex-row gap-4 [&_input]:accent-pink-800">
+                    <div className="flex flex-row items-center gap-2 whitespace-nowrap border-4 absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 px-4 py-1 rounded-full text-xl text-white bg-pink-500">
+
+                        {/* Era um botão para escolher se é pessoa ou empresa */}
+                        {/* <div className="flex flex-row gap-4 [&_input]:accent-pink-800">
                             <label htmlFor="r-pessoa" className="whitespace-nowrap">
                                 <input id="r-pessoa" name="r-is_corporate" type="radio" /> pessoa
                             </label>
                             <label htmlFor="r-empresa" className="whitespace-nowrap">
                                 <input id="r-empresa" name="r-is_corporate" type="radio" /> empresa
                             </label>
-                        </div>
+                        </div> */}
+
+                        <FaEdit /> Editar perfil
                     </div>
                 </div>
 
