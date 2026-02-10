@@ -45,39 +45,39 @@ export default function FormCreateClient({ classBody, classForm, clients, catego
             </div>
 
             <div className={`
-            ${classForm}
-            grid
-            grid-cols-4
-            items-center
-            gap-2
-            p-2
+                ${classForm}
+                grid
+                grid-cols-4
+                items-center
+                gap-2
+                p-2
 
-            [&_.col]:flex
-            [&_.col]:flex-col
-            [&_.col-1]:col-span-4
-            [&_.col-1]:sm:col-span-1
-            [&_.col-2]:col-span-4
-            [&_.col-2]:sm:col-span-2
-            [&_.col-3]:col-span-4
-            [&_.col-3]:sm:col-span-3
-            [&_.col-4]:col-span-4
-            [&_.col-4]:sm:col-span-4
+                [&_.col]:flex
+                [&_.col]:flex-col
+                [&_.col-1]:col-span-4
+                [&_.col-1]:sm:col-span-1
+                [&_.col-2]:col-span-4
+                [&_.col-2]:sm:col-span-2
+                [&_.col-3]:col-span-4
+                [&_.col-3]:sm:col-span-3
+                [&_.col-4]:col-span-4
+                [&_.col-4]:sm:col-span-4
 
-            [&_.f-label]:pl-2
-            [&_.f-label]:text-sm
-            [&_.f-label]:text-white
+                [&_.f-label]:pl-2
+                [&_.f-label]:text-sm
+                [&_.f-label]:text-white
 
-            [&_.campo]:w-full
-            [&_.campo]:h-full
-            [&_.campo]:p-2
-            [&_.campo]:rounded-2xl
-            [&_.campo]:hover:outline-2
-            [&_.campo]:focus:outline-2
-            [&_.campo]:outline-pink-500
-            [&_.campo]:text-gray-600
-            [&_.campo]:bg-white
-            [&_.campo]:hover:bg-pink-100
-        `}>
+                [&_.campo]:w-full
+                [&_.campo]:h-full
+                [&_.campo]:p-2
+                [&_.campo]:rounded-2xl
+                [&_.campo]:hover:outline-2
+                [&_.campo]:focus:outline-2
+                [&_.campo]:outline-pink-500
+                [&_.campo]:text-gray-600
+                [&_.campo]:bg-white
+                [&_.campo]:hover:bg-pink-100
+            `}>
                 <div className={`col ${isPeople ? 'col-3' : 'col-2'}`}>
                     <label htmlFor="name" className="f-label">{isPeople ? 'Nome' : 'Nome da empresa'}</label>
                     <input name="name" id="name" type="text" className="campo" />
@@ -130,7 +130,7 @@ export default function FormCreateClient({ classBody, classForm, clients, catego
                 <div className="col col-4 mt-2">
                     <label htmlFor="createAddress" className="block w-fit px-2 py-1 mx-auto rounded-2xl text-pink-800 bg-white cursor-pointer select-none">
                         Cadastrar endereço agora?
-                        </label>
+                    </label>
                     <input id="createAddress" name="createAddress" hidden type="checkbox" onChange={(e) => setAddress(e.target.checked)} />
                 </div>
 
@@ -193,7 +193,7 @@ export default function FormCreateClient({ classBody, classForm, clients, catego
                             <div className="col col-4 mt-6 rounded-bl-md border-b-2 border-pink-300 overflow-hidden">
                                 <div className="w-fit px-2 py-1 rounded-t-xl text-white bg-pink-300">Detalhes do endereço</div>
                             </div>
-                            
+
                             <textarea className="col-4 campo resize-none" name="details" rows={7} placeholder="ex: Ao lado da igreja ABC, esquina com a rua abc, deixar na portaria."></textarea>
                         </div>
                     </div>

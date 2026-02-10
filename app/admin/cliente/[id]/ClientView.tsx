@@ -6,13 +6,40 @@ import { CgDetailsMore } from "react-icons/cg"
 import { FaAddressCard, FaEdit, FaUserCircle } from "react-icons/fa"
 import { RiContactsBookFill } from "react-icons/ri"
 import { useState } from "react"
+import UpdateProfile from "./_components/UpdateProfile"
 
 export default function ClientView({ idPage, client }: any) {
     const [editing, setEditing] = useState('a')
     const [value, setValue] = useState('')
     const [botao, setBotao] = useState('b')
+    const [modal, setModal] = useState(false)
+
+    function openModal(typeModal: string) {
+        document.body.classList.add('overflow-hidden')
+
+        setModal(true)
+
+        if (typeModal === 'profile') {
+
+        }
+    }
+
+    function closeModal() {
+        document.body.classList.remove('overflow-hidden')
+        setModal(false)
+    }
+
+
+
     return (
         <div id="clientePerfil" className="box pb-10">
+            {modal && (
+                <div onClick={closeModal} id="modal" className="fixed flex z-10 top-0 left-0 justify-center items-center h-dvh w-full bg-black/30 backdrop-blur-xl">
+                    <div className="overflow-auto py-10 w-dvw max-h-dvh">
+                        <UpdateProfile />
+                    </div>
+                </div>
+            )}
 
             <div className="rounded-t-4xl rounded-b-xl shadow-2xl shadow-black/50 overflow-hidden" >
                 <div className="relative flex flex-col sm:flex-row items-center gap-4 sm:gap-10 p-5 pb-10 sm:p-10 bg-pink-400">
@@ -27,7 +54,32 @@ export default function ClientView({ idPage, client }: any) {
                         </div> */}
                     </div>
                     {/* <div className="sm:absolute sm:top-5 sm:right-5 flex sm:self-start flex-row items-center gap-2 px-6 py-1 rounded-full text-xl text-white bg-pink-500"> */}
-                    <div className="flex flex-row items-center gap-2 whitespace-nowrap border-4 absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 px-4 py-1 rounded-full text-xl text-white bg-pink-500">
+                    <div onClick={() => openModal('')} className="
+                        absolute
+                        left-1/2
+                        bottom-0
+                        -translate-x-1/2
+                        translate-y-1/2
+
+                        flex
+                        flex-row
+                        items-center
+                        gap-2
+                        px-4
+                        py-1
+                        border-4
+                        rounded-full
+                        text-xl
+                        whitespace-nowrap
+
+                        text-white
+                        bg-pink-500
+                        hover:bg-pink-800
+
+                        cursor-pointer
+                        transition-all
+                        select-none
+                    ">
 
                         {/* Era um botão para escolher se é pessoa ou empresa */}
                         {/* <div className="flex flex-row gap-4 [&_input]:accent-pink-800">
