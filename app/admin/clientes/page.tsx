@@ -6,7 +6,7 @@ export default async function ClientsPage() {
     const clients = await clientService.find()
     return (
         // <ul className="box flex flex-col sm:flex-row justify-center sm:flex-wrap gap-4 sm:gap-8 mt-4">
-        <ul className="box flex flex-col justify-center sm:grid sm:grid-cols-3 gap-4 sm:gap-8 mt-4">
+        <ul className="box flex flex-col justify-center sm:grid sm:grid-cols-3 gap-4 sm:gap-8 py-4">
             {clients.sort((a: any, b: any) => a.name.localeCompare(b.name)).map((c: any, i: number) => (
                 <li key={i} className="col-span-1 ">
                     <Link href={`/admin/cliente/${c.id_client}`} className="flex flex-row items-center cursor-pointer select-none group">

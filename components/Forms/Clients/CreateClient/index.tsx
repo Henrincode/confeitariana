@@ -123,7 +123,7 @@ export default function FormCreateClient({ classBody, classForm, clients, catego
                 </div>
                 <div className="col col-4">
                     <label htmlFor="details" className="f-label">Detalhes</label>
-                    <textarea name="details" id="details" rows={7} placeholder="ex: Alérgico a tal produto, não fica em casa a tarde, esposa de fulano." className="campo resize-none"></textarea>
+                    <textarea name="details" id="details" rows={7} placeholder="ex: Alérgico a tal produto, não fica em casa a tarde, esposa de fulano." className="campo scrollbar-clean resize-none"></textarea>
                 </div>
 
                 {/* Endereço */}
@@ -194,7 +194,7 @@ export default function FormCreateClient({ classBody, classForm, clients, catego
                                 <div className="w-fit px-2 py-1 rounded-t-xl text-white bg-pink-300">Detalhes do endereço</div>
                             </div>
 
-                            <textarea className="col-4 campo resize-none" name="details" rows={7} placeholder="ex: Ao lado da igreja ABC, esquina com a rua abc, deixar na portaria."></textarea>
+                            <textarea className="col-4 campo scrollbar-clean resize-none" name="details" rows={7} placeholder="ex: Ao lado da igreja ABC, esquina com a rua abc, deixar na portaria."></textarea>
                         </div>
                     </div>
                 </div>

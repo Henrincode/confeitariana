@@ -1,15 +1,30 @@
 'use client'
 
-export default function UpdateProfile() {
+import { updateClient } from "@/server/actions/client.action"
+import { useActionState } from "react"
+
+interface State {
+    success?: boolean
+    error?: string
+}
+
+export default function UpdateProfile({ closeModal, client }: { closeModal: Function, client: any }) {
+    const birth_date = client.birth_date && client.birth_date.split('T')[0]
+
+    const initialState: State = {}
+
+    const [formState, formAction] = useActionState(updateClient, initialState)
     return (
-        <div onClick={(e) => e.stopPropagation()} id="modalChild" className="max-w-200 mx-auto p-2 rounded-xl border-2 border-white bg-pink-300/70">
-            <form action="">
-                <div className="
+        <div onClick={(e) => e.stopPropagation()} id="modalChild" className="flex flex-col gap-4 max-w-200 mx-auto p-2 rounded-xl border-2 border-white bg-pink-400">
+            <form action={formAction}>
+                <div>
+                    <input name="id_client" type="text" defaultValue={client.id_client} />
+                    <input name="id_client_category_fk" type="text" defaultValue={client.id_client_category_fk} />
+                    <div className="
                     grid
                     grid-cols-4
                     items-center
                     gap-2
-                    p-2
 
                     [&_.col]:flex
                     [&_.col]:flex-col
@@ -38,45 +53,77 @@ export default function UpdateProfile() {
                     [&_.campo]:bg-white
                     [&_.campo]:hover:bg-pink-100
                 ">
-                    <div className="col-2">
-                        <label className="f-label" htmlFor="f-name">Nome</label>
-                        <input id="f-name" className="campo" name="name" type="text" />
-                    </div>
+                        <div className="col-2">
+                            <label className="f-label" htmlFor="f-name">Nome</label>
+                            <input id="f-name" className="campo" name="name" type="text" defaultValue={client.name} />
+                        </div>
 
-                    <div>
-                        <label className="f-label" htmlFor="f-email">E-Mail</label>
-                        <input id="f-email" className="campo" name="email" type="text" />
-                    </div>
+                        <div>
+                            <label className="f-label" htmlFor="f-email">E-Mail</label>
+                            <input id="f-email" className="campo" name="email" type="text" defaultValue={client.email} />
+                        </div>
 
-                    <div>
-                        <label className="f-label" htmlFor="f-cpf">CPF</label>
-                        <input id="f-cpf" className="campo" name="cpf" type="text" />
-                    </div>
+                        <div>
+                            <label className="f-label" htmlFor="f-cpf">CPF</label>
+                            <input id="f-cpf" className="campo" name="cpf" type="text" defaultValue={client.cpf} />
+                        </div>
 
-                    <div>
-                        <label className="f-label" htmlFor="f-cnpj">CNPJ</label>
-                        <input id="f-cnpj" className="campo" name="cnpj" type="text" />
-                    </div>
+                        <div>
+                            <label className="f-label" htmlFor="f-cnpj">CNPJ</label>
+                            <input id="f-cnpj" className="campo" name="cnpj" type="text" defaultValue={client.cnpj} />
+                        </div>
 
-                    <div>
-                        <label className="f-label" htmlFor="f-phone">Telefone</label>
-                        <input id="f-phone" className="campo" name="phone" type="number" />
-                    </div>
+                        <div>
+                            <label className="f-label" htmlFor="f-phone">Telefone</label>
+                            <input id="f-phone" className="campo" name="phone" type="number" defaultValue={client.phone} />
+                        </div>
 
-                    <div>
-                        <label className="f-label" htmlFor="whatsapp">Whatsapp</label>
-                        <input id="f-whatsapp" className="campo" name="whatsapp" type="text" />
-                    </div>
+                        <div>
+                            <label className="f-label" htmlFor="whatsapp">Whatsapp</label>
+                            <input id="f-whatsapp" className="campo" name="whatsapp" type="number" defaultValue={client.whatsapp} />
+                        </div>
 
-                    <div>
-                        <label className="f-label" htmlFor="f-birthday">Aniversário</label>
-                        <input id="f-birthday" className="campo" name="birthday" type="date" />
+                        <div>
+                            <label className="f-label" htmlFor="f-birthday">Aniversário {birth_date}</label>
+                            <input id="f-birthday" className="campo" name="birthday" type="date" defaultValue={birth_date} />
+                        </div>
+
+                        <div className="col-4">
+                            <label className="f-label" htmlFor="f-birthday">Detalhes</label>
+                            <textarea className="campo resize-none scrollbar-clean" name="" id="" rows={10} defaultValue={client.details}></textarea>
+                        </div>
                     </div>
                 </div>
 
-                <button>Atualizar</button>
-                <button>Cancelar</button>
+
+                <div className="h-1 rounded-full bg-pink-50/50"></div>
+
+                <div className="
+                    flex
+                    flex-row
+                    justify-center
+                    gap-4
+                    mb-2
+
+                    [&_button]:px-2
+                    [&_button]:py-1
+                    [&_button]:border-2
+                    [&_button]:border-white/80
+                    [&_button]:rounded-xl
+                    [&_button]:text-sm
+                    [&_button]:text-white
+                    [&_button]:bg-pink-500
+                    [&_button]:hover:bg-pink-800
+                    [&_button]:cursor-pointer
+                    [&_button]:transition-all
+                ">
+                    <button>Atualizar</button>
+                    <button onClick={() => closeModal()} type="button">Cancelar</button>
+                </div>
+
             </form>
+
+
         </div>
     )
 }

@@ -19,7 +19,9 @@ export async function createClient(_: ActionState, formData: FormData) {
 
     const name = clean('name')
     const contact_name = clean('contact_name')
-    const category = Number(formData.get('category')) || null
+    const id_client_category_fk = Number(formData.get('category')) || null
+    const cpf = clean('cpf')
+    const cnpj = clean('cnpj')
     const email = clean('email')
     const phone = clean('phone')
     const whatsapp = clean('whatsapp')
@@ -36,7 +38,11 @@ export async function createClient(_: ActionState, formData: FormData) {
         return { success: false, error: 'Nome não foi preenchido' }
     }
 
-    const client = { name, contact_name, category, email, phone, whatsapp, birth_date, details, image_url }
+    const client = {
+        name, contact_name, id_client_category_fk, cpf, cnpj,
+        email, phone, whatsapp, birth_date, details, image_url
+    }
+
     let newClient
 
     const createAddres = formData.get('createAddress') === 'on'
@@ -58,8 +64,10 @@ export async function createClient(_: ActionState, formData: FormData) {
             const unit_number = clean('cond_uni_number')
             const internal_street = clean('cond_street')
 
+            if (!id_client_fk) throw new Error('Erro ao receber id do cliente cadastrado')
+
             const address = { id_client_fk, name, zip, number, street, district, city, state, condominium, building_block, unit_number, internal_street }
-            
+
             await clientService.createAddress(address)
         }
         updateTag('clients')
@@ -72,6 +80,56 @@ export async function createClient(_: ActionState, formData: FormData) {
     redirect(`/admin/cliente/${newClient.id_client}`)
     // return { success: true }
 }
+
+// update
+export async function updateClient(_: ActionState, formData: FormData) {
+    const clean = (key: string) => {
+        const value = formData.get(key)?.toString().trim();
+        return value === "" ? null : (value ?? null);
+    }
+
+    const id_client = Number(formData.get('id_client')) || null
+    const name = clean('name')
+    const contact_name = clean('contact_name')
+    const id_client_category_fk = Number(formData.get('category')) || null
+    const cpf = clean('cpf')
+    const cnpj = clean('cnpj')
+    const email = clean('email')
+    const phone = clean('phone')
+    const whatsapp = clean('whatsapp')
+    const birth_date = (() => {
+        const date = clean('birth_date');
+        return date && !isNaN(Date.parse(date)) ? new Date(date) : null;
+    })()
+
+    const details = clean('details')
+    const image_url = clean('image_url')
+
+
+    if (!name) {
+        return { success: false, error: 'Nome não foi preenchido' }
+    }
+
+    console.log(id_client)
+
+    if (!id_client) return { success: false, error: 'id do cliente não informado' }
+
+    const client = {
+        id_client, name, contact_name, id_client_category_fk, cpf, cnpj,
+        email, phone, whatsapp, birth_date, details, image_url
+    }
+
+    try {
+        clientService.update(client)
+        updateTag('clients')
+        redirect(`/admin/cliente/${client.id_client}`)
+    } catch (error: any) {
+        console.error(error.message)
+        return { error: 'Erro' }
+    }
+    return { success: true }
+}
+
 
 // 
 // ADDRESS

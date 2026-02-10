@@ -35,8 +35,8 @@ export default function ClientView({ idPage, client }: any) {
         <div id="clientePerfil" className="box pb-10">
             {modal && (
                 <div onClick={closeModal} id="modal" className="fixed flex z-10 top-0 left-0 justify-center items-center h-dvh w-full bg-black/30 backdrop-blur-xl">
-                    <div className="overflow-auto py-10 w-dvw max-h-dvh">
-                        <UpdateProfile />
+                    <div className="overflow-auto px-3 py-10 w-dvw max-h-dvh">
+                        <UpdateProfile closeModal={closeModal} client={client} />
                     </div>
                 </div>
             )}
@@ -80,17 +80,6 @@ export default function ClientView({ idPage, client }: any) {
                         transition-all
                         select-none
                     ">
-
-                        {/* Era um botão para escolher se é pessoa ou empresa */}
-                        {/* <div className="flex flex-row gap-4 [&_input]:accent-pink-800">
-                            <label htmlFor="r-pessoa" className="whitespace-nowrap">
-                                <input id="r-pessoa" name="r-is_corporate" type="radio" /> pessoa
-                            </label>
-                            <label htmlFor="r-empresa" className="whitespace-nowrap">
-                                <input id="r-empresa" name="r-is_corporate" type="radio" /> empresa
-                            </label>
-                        </div> */}
-
                         <FaEdit /> Editar perfil
                     </div>
                 </div>

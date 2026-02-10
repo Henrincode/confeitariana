@@ -2,11 +2,13 @@ import sql from '@/server/db'
 import { unstable_cache } from 'next/cache'
 import storageServices from './storage.service'
 
-interface CreateClientParans {
-    id_client?: number
-    name: string
+interface ClientParams {
+    id_client?: number | null
+    id_client_category_fk?: number | null
+    name?: string
     contact_name?: string | null
-    category: number | null
+    contact_cpf?: string | null
+    contact_cnpj?: string | null
     email?: string | null
     phone?: string | null
     whatsapp?: string | null
@@ -15,12 +17,8 @@ interface CreateClientParans {
     image_url?: string | null
 }
 
-interface ClientReturning {
-    id_client: number
-}
-
-interface PropsAddress {
-    id_client_fk?: number
+interface AddressParams {
+    id_client_fk: number
     name?: string | null
     zip?: string | null
     number?: string | null
@@ -55,25 +53,41 @@ export const findById = unstable_cache(
             inner join ana_client_categories ca
                 on cl.id_client_category_fk = ca.id_client_category
             where id_client = ${id}
-        `;
-        if (!client) throw Error('Cliente não encontrado');
-        return client;
+        `
+        return client || null
     },
     ['clients'],
     { tags: ['clients'] }
-);
+)
 
 
 // CREATE
-export async function create(params: CreateClientParans): Promise<ClientReturning> {
-    const { name, contact_name, category, email, phone, whatsapp, birth_date, details, image_url } = params
+export async function create(params: ClientParams): Promise<ClientParams> {
+    // const { name, contact_name, category, email, phone, whatsapp, birth_date, details, image_url } = params
 
-    const [client] = await sql<ClientReturning[]>`
-        insert into ana_clients (name, contact_name, id_client_category_fk, email, phone, whatsapp, birth_date, details, image_url) values
-        (${name}, ${contact_name ?? null}, ${category ?? null}, ${email ?? null}, ${phone ?? null}, ${whatsapp ?? null}, ${birth_date ?? null}, ${details ?? null}, ${image_url ?? null} )
+    if(!params.name) throw new Error('Nome do cliente precisa ser preenchido')
+
+    const [client] = await sql`
+        insert into ana_clients ${sql(params)}
         returning *
     `
     if (!client) throw Error('Erro ao cadastrar cliente')
+    return client
+}
+
+// UPDATE
+export async function update(params: ClientParams) {
+    if(!params.name) throw new Error('Nome do cliente precisa ser preenchido')
+    if(!params.id_client) throw new Error('O id_client não foi informado')
+
+        console.log('parametrossss', params)
+
+    const [client] = await sql`
+        update ana_clients set ${sql(params)}
+        where id_client = ${params.id_client}
+        returning *
+    `
+    if(!client) throw new Error('Erro ao alterar dados do cliente')
     return client
 }
 
@@ -95,7 +109,7 @@ export const findAddresses = unstable_cache(
 
 
 // create addresses
-export async function createAddress(props: PropsAddress) {
+export async function createAddress(props: AddressParams) {
 
     const [address] = await sql`
         insert into ana_client_addresses ${sql(props)}
@@ -132,7 +146,7 @@ export async function createCategorie(name: string) {
         (${name})
         returning *
     `
-    if (!category) throw Error('Erro ao cadastrar categoria')
+    if (!category) throw new Error('Erro ao cadastrar categoria')
     return category
 }
 
@@ -154,6 +168,7 @@ const clientService = {
     find,
     findById,
     create,
+    update,
     findAddresses,
     findCategories,
     existsCategory,
