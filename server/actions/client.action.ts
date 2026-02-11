@@ -91,7 +91,7 @@ export async function updateClient(_: ActionState, formData: FormData) {
     const id_client = Number(formData.get('id_client')) || null
     const name = clean('name')
     const contact_name = clean('contact_name')
-    const id_client_category_fk = Number(formData.get('category')) || null
+    const id_client_category_fk = Number(formData.get('id_client_category_fk')) || null
     const cpf = clean('cpf')
     const cnpj = clean('cnpj')
     const email = clean('email')
@@ -120,14 +120,21 @@ export async function updateClient(_: ActionState, formData: FormData) {
     }
 
     try {
-        clientService.update(client)
+        await clientService.update(client)
         updateTag('clients')
-        redirect(`/admin/cliente/${client.id_client}`)
     } catch (error: any) {
         console.error(error.message)
         return { error: 'Erro' }
     }
     return { success: true }
+}
+
+// delete
+export async function deleteClient(id: number){
+    if(!id) return {success: false, error: 'id não informado'}
+    await clientService.delete(id)
+    updateTag('clients')
+    redirect('/admin/clientes')
 }
 
 

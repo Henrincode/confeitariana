@@ -76,9 +76,10 @@ export async function create(params: ClientParams): Promise<ClientParams> {
 }
 
 // UPDATE
-export async function update(params: ClientParams) {
-    if(!params.name) throw new Error('Nome do cliente precisa ser preenchido')
+export async function update(params: ClientParams): Promise<ClientParams> {
+
     if(!params.id_client) throw new Error('O id_client não foi informado')
+    if(!params.name) throw new Error('Nome do cliente precisa ser preenchido')
 
         console.log('parametrossss', params)
 
@@ -89,6 +90,14 @@ export async function update(params: ClientParams) {
     `
     if(!client) throw new Error('Erro ao alterar dados do cliente')
     return client
+}
+
+// DELETE
+export async function remove(id: number){
+    await sql`
+        delete from ana_clients
+        where id_client = ${id}
+    `
 }
 
 // 
@@ -169,6 +178,7 @@ const clientService = {
     findById,
     create,
     update,
+    delete: remove,
     findAddresses,
     findCategories,
     existsCategory,

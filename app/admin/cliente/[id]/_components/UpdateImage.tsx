@@ -62,7 +62,7 @@ export default function UpdateImage({ name, image, clientId }: { name: string, i
                     />
                 ) : (
                     <img
-                        src={`https://api.dicebear.com/9.x/avataaars-neutral/svg?seed=${name}`}
+                        src={`https://api.dicebear.com/9.x/avataaars-neutral/svg?seed=${clientId}`}
                         alt="avatar"
                         className={`w-full sm:w-50 border-4 shadow-lg shadow-black/30 border-white/70 bg-white/50 rounded-full aspect-square object-cover transition-all ${isPending ? 'scale-95 blur-[2px]' : 'group-hover:brightness-90'}`}
                     />

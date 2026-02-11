@@ -1,7 +1,8 @@
 'use client'
 
 import { updateClient } from "@/server/actions/client.action"
-import { useActionState } from "react"
+import { useRouter } from "next/navigation"
+import { useActionState, useEffect } from "react"
 
 interface State {
     success?: boolean
@@ -9,21 +10,33 @@ interface State {
 }
 
 export default function UpdateProfile({ closeModal, client }: { closeModal: Function, client: any }) {
-    const birth_date = client.birth_date && client.birth_date.split('T')[0]
+    const birth_date = client.birth_date && new Date(client.birth_date).toISOString().split('T')[0] || ''
 
     const initialState: State = {}
 
     const [formState, formAction] = useActionState(updateClient, initialState)
+
+    const router = useRouter()
+
+    useEffect(() => {
+        if(formState.success){
+            closeModal()
+            router.refresh()
+        }
+        
+    },[formState.success])
+    
     return (
-        <div onClick={(e) => e.stopPropagation()} id="modalChild" className="flex flex-col gap-4 max-w-200 mx-auto p-2 rounded-xl border-2 border-white bg-pink-400">
-            <form action={formAction}>
+        <div onClick={(e) => e.stopPropagation()} id="modalChild" className="flex flex-col gap-4 max-w-200 mx-auto p-2 rounded-2xl border-4 border-white bg-pink-400">
+            <form action={formAction} className="flex flex-col gap-4">
                 <div>
-                    <input name="id_client" type="text" defaultValue={client.id_client} />
-                    <input name="id_client_category_fk" type="text" defaultValue={client.id_client_category_fk} />
+                    <input hidden name="id_client" type="text" defaultValue={client.id_client} />
+                    <input hidden name="id_client_category_fk" type="text" defaultValue={client.id_client_category_fk} />
+                    <input hidden name="image_url" type="text" defaultValue={client.image_url || null} />
                     <div className="
                     grid
                     grid-cols-4
-                    items-center
+                    items-start
                     gap-2
 
                     [&_.col]:flex
@@ -43,7 +56,7 @@ export default function UpdateProfile({ closeModal, client }: { closeModal: Func
                     [&_.f-label]:text-white
 
                     [&_.campo]:w-full
-                    [&_.campo]:h-full
+                    [&_.campo]:h-fit
                     [&_.campo]:p-2
                     [&_.campo]:rounded-2xl
                     [&_.campo]:hover:outline-2
@@ -53,44 +66,44 @@ export default function UpdateProfile({ closeModal, client }: { closeModal: Func
                     [&_.campo]:bg-white
                     [&_.campo]:hover:bg-pink-100
                 ">
-                        <div className="col-2">
+                        <div className="col col-2">
                             <label className="f-label" htmlFor="f-name">Nome</label>
                             <input id="f-name" className="campo" name="name" type="text" defaultValue={client.name} />
                         </div>
 
-                        <div>
+                        <div className="col">
                             <label className="f-label" htmlFor="f-email">E-Mail</label>
                             <input id="f-email" className="campo" name="email" type="text" defaultValue={client.email} />
                         </div>
 
-                        <div>
+                        <div className="col">
                             <label className="f-label" htmlFor="f-cpf">CPF</label>
                             <input id="f-cpf" className="campo" name="cpf" type="text" defaultValue={client.cpf} />
                         </div>
 
-                        <div>
+                        <div className="col">
                             <label className="f-label" htmlFor="f-cnpj">CNPJ</label>
                             <input id="f-cnpj" className="campo" name="cnpj" type="text" defaultValue={client.cnpj} />
                         </div>
 
-                        <div>
+                        <div className="col">
                             <label className="f-label" htmlFor="f-phone">Telefone</label>
                             <input id="f-phone" className="campo" name="phone" type="number" defaultValue={client.phone} />
                         </div>
 
-                        <div>
+                        <div className="col">
                             <label className="f-label" htmlFor="whatsapp">Whatsapp</label>
                             <input id="f-whatsapp" className="campo" name="whatsapp" type="number" defaultValue={client.whatsapp} />
                         </div>
 
-                        <div>
+                        <div className="col">
                             <label className="f-label" htmlFor="f-birthday">Aniversário {birth_date}</label>
                             <input id="f-birthday" className="campo" name="birthday" type="date" defaultValue={birth_date} />
                         </div>
 
-                        <div className="col-4">
-                            <label className="f-label" htmlFor="f-birthday">Detalhes</label>
-                            <textarea className="campo resize-none scrollbar-clean" name="" id="" rows={10} defaultValue={client.details}></textarea>
+                        <div className="col-4 flex flex-col">
+                            <label className="f-label" htmlFor="f-details">Detalhes</label>
+                            <textarea className="campo resize-none scrollbar-clean" name="details" id="details" rows={10} defaultValue={client.details}></textarea>
                         </div>
                     </div>
                 </div>
@@ -117,7 +130,7 @@ export default function UpdateProfile({ closeModal, client }: { closeModal: Func
                     [&_button]:cursor-pointer
                     [&_button]:transition-all
                 ">
-                    <button>Atualizar</button>
+                    <button type="submit">Atualizar</button>
                     <button onClick={() => closeModal()} type="button">Cancelar</button>
                 </div>
 

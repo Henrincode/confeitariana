@@ -7,26 +7,29 @@ import { FaAddressCard, FaEdit, FaUserCircle } from "react-icons/fa"
 import { RiContactsBookFill } from "react-icons/ri"
 import { useState } from "react"
 import UpdateProfile from "./_components/UpdateProfile"
+import { deleteClient } from "@/server/actions/client.action"
+import { MdDelete } from "react-icons/md"
+import DeleteProfile from "./_components/DeleteProfile"
 
 export default function ClientView({ idPage, client }: any) {
     const [editing, setEditing] = useState('a')
     const [value, setValue] = useState('')
     const [botao, setBotao] = useState('b')
-    const [modal, setModal] = useState(false)
+    const [modal, setModal] = useState('')
 
     function openModal(typeModal: string) {
         document.body.classList.add('overflow-hidden')
 
-        setModal(true)
+        setModal(typeModal)
 
         if (typeModal === 'profile') {
-
+            
         }
     }
 
     function closeModal() {
         document.body.classList.remove('overflow-hidden')
-        setModal(false)
+        setModal('')
     }
 
 
@@ -35,26 +38,58 @@ export default function ClientView({ idPage, client }: any) {
         <div id="clientePerfil" className="box pb-10">
             {modal && (
                 <div onClick={closeModal} id="modal" className="fixed flex z-10 top-0 left-0 justify-center items-center h-dvh w-full bg-black/30 backdrop-blur-xl">
-                    <div className="overflow-auto px-3 py-10 w-dvw max-h-dvh">
-                        <UpdateProfile closeModal={closeModal} client={client} />
+                    <div className="overflow-auto px-3 py-10 w-full max-h-dvh">
+                        {modal === 'delete' && <DeleteProfile closeModal={closeModal} client={client} />}
+                        {modal === 'profile' && <UpdateProfile closeModal={closeModal} client={client} />}
+                        {}
                     </div>
                 </div>
             )}
 
             <div className="rounded-t-4xl rounded-b-xl shadow-2xl shadow-black/50 overflow-hidden" >
                 <div className="relative flex flex-col sm:flex-row items-center gap-4 sm:gap-10 p-5 pb-10 sm:p-10 bg-pink-400">
+                    
+                    <div onClick={() => openModal('delete')} className="
+                        absolute
+                        top-3
+                        right-3
+                        md:top-10
+                        md:right-10
+
+                        flex
+                        flex-row
+                        items-center
+                        px-4
+                        py-1
+                        border-2
+                        md:border-4
+                        rounded-full
+                        text-xl
+                        whitespace-nowrap
+
+                        border-amber-100
+                        text-white
+                        bg-pink-500
+                        hover:bg-pink-800
+
+                        cursor-pointer
+                        transition-all
+                        select-none
+                    "><MdDelete /> <span className="hidden md:block">apagar</span></div>
+
                     <UpdateImage clientId={client.id_client} name={client.name} image={client.image_url} />
                     <div id="name" className="flex-1 flex flex-col items-center sm:items-start">
                         <div className="flex flex-col items-center sm:items-start flex-wrap gap-2 text-white">
-                            <div className="px-2 py-1 rounded-full font-semibold text-sm text-white bg-pink-500">{client.category}</div>
+                            <div className="px-2 py-1 border-2 border-amber-100 rounded-full font-semibold text-sm text-white bg-pink-500">{client.category}</div>
                             <div className="text-3xl sm:text-6xl text-center sm:text-start text-shadow-lg text-shadow-black/20">{client.name}</div>
                         </div>
-                        {/* <div className="hidden sm:flex flex-row items-center gap-2 sm:text-2xl text-pink-900">
-                            <FaFingerprint /> id: {client.id_client}
-                        </div> */}
                     </div>
                     {/* <div className="sm:absolute sm:top-5 sm:right-5 flex sm:self-start flex-row items-center gap-2 px-6 py-1 rounded-full text-xl text-white bg-pink-500"> */}
-                    <div onClick={() => openModal('')} className="
+
+                    
+
+                    
+                    <div onClick={() => openModal('profile')} className="
                         absolute
                         left-1/2
                         bottom-0

@@ -22,7 +22,7 @@ export default async function ClientsPage() {
                             )
                             : (
                                 <img
-                                    src={`https://api.dicebear.com/9.x/avataaars-neutral/svg?seed=${c.name}`}
+                                    src={`https://api.dicebear.com/9.x/avataaars-neutral/svg?seed=${c.id_client}`}
                                     alt="avatar" className="z-1 w-20 sm:w-30 border-8 border-white group-hover:border-pink-300 rounded-full aspect-square object-cover"
                                 />
                             )}
