@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
   experimental: {
     staleTimes: {
       dynamic: 0, // Invalida o cache do navegador para rotas dinâmicas instantaneamente
-      static: 180, // Mantém o cache de rotas estáticas por 3 minutos (opcional)
+      static: 0, // Mantém o cache de rotas estáticas por 3 minutos (opcional)
     },
   },
 };
