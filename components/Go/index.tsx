@@ -2,7 +2,7 @@
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
-export function SmartLink({ href, children }: { href: string, children: React.ReactNode }) {
+export function Go({ href, children, id, className }: { href: string, children: React.ReactNode, id?: string, className?: string }) {
   const router = useRouter()
 
   const handleClick = (e: React.MouseEvent) => {
@@ -12,7 +12,7 @@ export function SmartLink({ href, children }: { href: string, children: React.Re
   }
 
   return (
-    <Link href={href} onClick={handleClick}>
+    <Link id={id} href={href} onClick={handleClick} className={className}>
       {children}
     </Link>
   )

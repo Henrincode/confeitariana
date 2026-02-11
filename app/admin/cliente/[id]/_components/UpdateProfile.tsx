@@ -98,7 +98,7 @@ export default function UpdateProfile({ closeModal, client }: { closeModal: Func
 
                         <div className="col">
                             <label className="f-label" htmlFor="f-birthday">Aniversário {birth_date}</label>
-                            <input id="f-birthday" className="campo" name="birthday" type="date" defaultValue={birth_date} />
+                            <input id="f-birthday" className="campo" name="birth_date" type="date" defaultValue={birth_date} />
                         </div>
 
                         <div className="col-4 flex flex-col">
