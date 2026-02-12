@@ -23,7 +23,7 @@ export default function ClientView({ idPage, client }: any) {
         setModal(typeModal)
 
         if (typeModal === 'profile') {
-            
+
         }
     }
 
@@ -41,14 +41,14 @@ export default function ClientView({ idPage, client }: any) {
                     <div className="overflow-auto px-3 py-10 w-full max-h-dvh">
                         {modal === 'delete' && <DeleteProfile closeModal={closeModal} client={client} />}
                         {modal === 'profile' && <UpdateProfile closeModal={closeModal} client={client} />}
-                        {}
+                        { }
                     </div>
                 </div>
             )}
 
             <div className="rounded-t-4xl rounded-b-xl shadow-2xl shadow-black/50 overflow-hidden" >
                 <div className="relative flex flex-col sm:flex-row items-center gap-4 sm:gap-10 p-5 pb-10 sm:p-10 bg-pink-400">
-                    
+
                     <div onClick={() => openModal('delete')} className="
                         absolute
                         top-3
@@ -86,9 +86,9 @@ export default function ClientView({ idPage, client }: any) {
                     </div>
                     {/* <div className="sm:absolute sm:top-5 sm:right-5 flex sm:self-start flex-row items-center gap-2 px-6 py-1 rounded-full text-xl text-white bg-pink-500"> */}
 
-                    
 
-                    
+
+
                     <div onClick={() => openModal('profile')} className="
                         absolute
                         left-1/2
@@ -181,18 +181,7 @@ export default function ClientView({ idPage, client }: any) {
                             <ul>
                                 <li>
                                     <div className="list-subtittle">NOME{client.contact_name && " DA EMPRESA"}</div>
-                                    {editing !== 'name'
-                                        ?
-                                        <div onClick={() => { setEditing('name'); setValue(client.name || '') }} className="list-info">{client.name}</div>
-                                        :
-                                        <div className="flex flex-col items-start gap-2">
-                                            <input autoFocus type="text" onChange={(e) => setValue(e.target.value)} value={value} className="list-info" />
-                                            <div className="flex flex-row gap-2">
-                                                <button onClick={(e) => setEditing('')} type="button" className="px-2 py-1 rounded-lg text-sm text-pink-900 bg-pink-300 ring-2 ring-pink-500">Salvar</button>
-                                                <button onClick={(e) => setEditing('')} type="button" className="px-2 py-1 rounded-lg text-sm text-pink-900 bg-pink-300 ring-2 ring-pink-500">Cancelar</button>
-                                            </div>
-                                        </div>
-                                    }
+                                    <div onClick={() => { setEditing('name'); setValue(client.name || '') }} className="list-info">{client.name}</div>
 
                                 </li>
                                 {client.contact_name && (
@@ -215,18 +204,7 @@ export default function ClientView({ idPage, client }: any) {
                             <ul>
                                 <li>
                                     <div className="list-subtittle">CPF</div>
-                                    {editing !== 'cpf'
-                                        ?
-                                        <div onClick={() => { setEditing('cpf'); setValue(client.cpf || '') }} className="list-info">{client.cpf ? client.cpf : 'Não informado'}</div>
-                                        :
-                                        <div className="flex flex-col items-start gap-2">
-                                            <input autoFocus type="text" onChange={(e) => setValue(e.target.value)} value={value} className="list-info" />
-                                            <div className="flex flex-row gap-2">
-                                                <button onClick={(e) => setEditing('')} type="button" className="px-2 py-1 rounded-lg text-sm text-pink-900 bg-pink-300 ring-2 ring-pink-500">Salvar</button>
-                                                <button onClick={(e) => setEditing('')} type="button" className="px-2 py-1 rounded-lg text-sm text-pink-900 bg-pink-300 ring-2 ring-pink-500">Cancelar</button>
-                                            </div>
-                                        </div>
-                                    }
+                                    <div onClick={() => { setEditing('cpf'); setValue(client.cpf || '') }} className="list-info">{client.cpf ? client.cpf : 'Não informado'}</div>
                                 </li>
                                 <li>
                                     <div className="list-subtittle">CNPJ</div>
