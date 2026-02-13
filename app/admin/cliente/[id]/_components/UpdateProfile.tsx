@@ -1,7 +1,6 @@
 'use client'
 
 import { updateClient } from "@/server/actions/client.action"
-import { useRouter } from "next/navigation"
 import { useActionState, useEffect } from "react"
 
 interface State {
@@ -16,18 +15,12 @@ export default function UpdateProfile({ closeModal, client }: { closeModal: Func
 
     const [formState, formAction] = useActionState(updateClient, initialState)
 
-    const router = useRouter()
-
     useEffect(() => {
-        if(formState.success){
-            closeModal()
-            router.refresh()
-        }
-        
-    },[formState.success])
-    
+        if (formState.success) closeModal()
+    }, [formState.success])
+
     return (
-        <div onClick={(e) => e.stopPropagation()} id="modalChild" className="flex flex-col gap-4 max-w-200 mx-auto p-2 rounded-2xl border-4 border-white bg-pink-400">
+        <div onMouseDown={(e) => e.stopPropagation()} id="modalChild" className="flex flex-col gap-4 max-w-200 mx-auto p-2 rounded-2xl border-4 border-white bg-pink-400">
             <form action={formAction} className="flex flex-col gap-4">
                 <div>
                     <input hidden name="id_client" type="text" defaultValue={client.id_client} />

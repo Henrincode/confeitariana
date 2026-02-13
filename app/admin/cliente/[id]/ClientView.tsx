@@ -1,15 +1,14 @@
 'use client'
-import Link from "next/link"
-import UpdateImage from "./_components/UpdateImage"
 
+import { useState } from "react"
 import { CgDetailsMore } from "react-icons/cg"
 import { FaAddressCard, FaEdit, FaUserCircle } from "react-icons/fa"
 import { RiContactsBookFill } from "react-icons/ri"
-import { useState } from "react"
-import UpdateProfile from "./_components/UpdateProfile"
-import { deleteClient } from "@/server/actions/client.action"
 import { MdDelete } from "react-icons/md"
+import UpdateImage from "./_components/UpdateImage"
+import UpdateProfile from "./_components/UpdateProfile"
 import DeleteProfile from "./_components/DeleteProfile"
+import CreateAddress from "./_components/CreateAddress"
 
 export default function ClientView({ idPage, client }: any) {
     const [editing, setEditing] = useState('a')
@@ -32,22 +31,22 @@ export default function ClientView({ idPage, client }: any) {
         setModal('')
     }
 
-
-
     return (
         <div id="clientePerfil" className="box pb-10">
             {modal && (
-                <div onClick={closeModal} id="modal" className="fixed flex z-10 top-0 left-0 justify-center items-center h-dvh w-full bg-black/30 backdrop-blur-xl">
+                <div onMouseDown={closeModal} id="modal" className="fixed flex z-10 top-0 left-0 justify-center items-center h-dvh w-full bg-black/30 backdrop-blur-xl">
                     <div className="overflow-auto px-3 py-10 w-full max-h-dvh">
                         {modal === 'delete' && <DeleteProfile closeModal={closeModal} client={client} />}
                         {modal === 'profile' && <UpdateProfile closeModal={closeModal} client={client} />}
-                        { }
+                        {modal === 'address' && <CreateAddress closeModal={closeModal} client={client} />}
                     </div>
                 </div>
             )}
 
             <div className="rounded-t-4xl rounded-b-xl shadow-2xl shadow-black/50 overflow-hidden" >
                 <div className="relative flex flex-col sm:flex-row items-center gap-4 sm:gap-10 p-5 pb-10 sm:p-10 bg-pink-400">
+
+                    <UpdateImage clientId={client.id_client} name={client.name} image={client.image_url} />
 
                     <div onClick={() => openModal('delete')} className="
                         absolute
@@ -75,9 +74,10 @@ export default function ClientView({ idPage, client }: any) {
                         cursor-pointer
                         transition-all
                         select-none
-                    "><MdDelete /> <span className="hidden md:block">apagar</span></div>
+                    ">
+                        <MdDelete /> <span className="hidden md:block">apagar</span>
+                    </div>
 
-                    <UpdateImage clientId={client.id_client} name={client.name} image={client.image_url} />
                     <div id="name" className="flex-1 flex flex-col items-center sm:items-start">
                         <div className="flex flex-col items-center sm:items-start flex-wrap gap-2 text-white">
                             <div className="px-2 py-1 border-2 border-amber-100 rounded-full font-semibold text-sm text-white bg-pink-500">{client.category}</div>
@@ -184,10 +184,10 @@ export default function ClientView({ idPage, client }: any) {
                                     <div onClick={() => { setEditing('name'); setValue(client.name || '') }} className="list-info">{client.name}</div>
 
                                 </li>
-                                {client.contact_name && (
+                                {client.id_client_category_fk > 1 && (
                                     <li>
                                         <div className="list-subtittle">CONTATO</div>
-                                        <div className="list-info">{client.contact_name}</div>
+                                        <div className="list-info">{client.contact_name || 'Não informado'}</div>
                                     </li>
                                 )}
                                 <li>
@@ -246,10 +246,11 @@ export default function ClientView({ idPage, client }: any) {
                     </div>
                 </div>
             </div>
+
             {/* address */}
             <div className=" p-5 sm:px-10 mt-10 rounded-xl shadow-2xl shadow-black/50 bg-white">
                 <div className="mb-4">Endereço</div>
-                <ul className={`${client.addresses.length ? "grid grid-cols-4" : "flex justify-center mb-4"} gap-4`}>
+                <ul className={`${client.addresses.length ? "grid grid-cols-1 md:grid-cols-4" : "flex justify-center mb-4"} gap-4`}>
                     {client.addresses.map((a: any, i: number) => (
                         <li key={i} className="p-2 rounded-lg ring-2 text-gray-600 ring-pink-500/50 bg-pink-50">
                             {a.name} <br /> {a.number && `${a.number}, `}{a.street}
@@ -257,7 +258,7 @@ export default function ClientView({ idPage, client }: any) {
                     ))}
                     {client.addresses.length < 4 && (
                         <div className="flex justify-center items-center">
-                            <div className="px-2 py-1 rounded-full ring-2 font-semibold text-sm ring-pink-800/80 text-white bg-pink-400">
+                            <div onClick={() => openModal('address')} className="px-2 py-1 rounded-full ring-2 font-semibold text-sm ring-pink-800/80 text-white bg-pink-400">
                                 Adicionar {`${client.addresses.length + 1} de 4`}
                             </div>
                         </div>

@@ -130,8 +130,8 @@ export async function updateClient(_: ActionState, formData: FormData) {
 }
 
 // delete
-export async function deleteClient(id: number){
-    if(!id) return {success: false, error: 'id não informado'}
+export async function deleteClient(id: number) {
+    if (!id) return { success: false, error: 'id não informado' }
     await clientService.delete(id)
     updateTag('clients')
     redirect('/admin/clientes')
@@ -144,7 +144,43 @@ export async function deleteClient(id: number){
 
 // create address
 export async function createClientAddress(_: ActionState, formData: FormData) {
+    const clean = (key: string) => {
+        const value = formData.get(key)?.toString().trim();
+        return value === "" ? null : (value ?? null);
+    }
+    try {
+        const id_client_fk = Number(formData.get('id_client_fk')) || null
+        const name = clean('name')
+        const zip = clean('zip')
+        const number = clean('number')
+        const street = clean('street')
+        const district = clean('district')
+        const city = clean('city')
+        const state = clean('state')
+        const condominium = clean('condominium')
+        const building_block = clean('building_block')
+        const unit_number = clean('uni_number')
+        const internal_street = clean('street')
 
+        if (!id_client_fk) return { success: false, error: 'id do cliente não informado' }
+
+        const address = {
+            id_client_fk, name, zip, number, street, district, city, state,
+            condominium, building_block, unit_number, internal_street
+        }
+
+        console.log(address)
+
+        await clientService.createAddress(address)
+
+        updateTag('clients')
+
+    } catch (error) {
+        console.error(error)
+        return { success: false, error: 'Erro ao criar endereço' }
+    }
+    console.log('fooooi')
+    return {success: true}
 }
 
 // 

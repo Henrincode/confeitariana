@@ -54,6 +54,11 @@ export const findById = unstable_cache(
                 on cl.id_client_category_fk = ca.id_client_category
             where id_client = ${id}
         `
+        if (client) {
+            client.id_client = Number(client.id_client)
+            client.id_client_category_fk = Number(client.id_client_category_fk)
+        }
+
         return client || null
     },
     ['clients'],
@@ -65,7 +70,7 @@ export const findById = unstable_cache(
 export async function create(params: ClientParams): Promise<ClientParams> {
     // const { name, contact_name, category, email, phone, whatsapp, birth_date, details, image_url } = params
 
-    if(!params.name) throw new Error('Nome do cliente precisa ser preenchido')
+    if (!params.name) throw new Error('Nome do cliente precisa ser preenchido')
 
     const [client] = await sql`
         insert into ana_clients ${sql(params)}
@@ -78,22 +83,22 @@ export async function create(params: ClientParams): Promise<ClientParams> {
 // UPDATE
 export async function update(params: ClientParams): Promise<ClientParams> {
 
-    if(!params.id_client) throw new Error('O id_client não foi informado')
-    if(!params.name) throw new Error('Nome do cliente precisa ser preenchido')
+    if (!params.id_client) throw new Error('O id_client não foi informado')
+    if (!params.name) throw new Error('Nome do cliente precisa ser preenchido')
 
-        console.log('parametrossss', params)
+    console.log('parametrossss', params)
 
     const [client] = await sql`
         update ana_clients set ${sql(params)}
         where id_client = ${params.id_client}
         returning *
     `
-    if(!client) throw new Error('Erro ao alterar dados do cliente')
+    if (!client) throw new Error('Erro ao alterar dados do cliente')
     return client
 }
 
 // DELETE
-export async function remove(id: number){
+export async function remove(id: number) {
     await sql`
         delete from ana_clients
         where id_client = ${id}
