@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { CgDetailsMore } from "react-icons/cg"
 import { FaAddressCard, FaEdit, FaUserCircle } from "react-icons/fa"
 import { RiContactsBookFill } from "react-icons/ri"
@@ -16,20 +16,25 @@ export default function ClientView({ idPage, client }: any) {
     const [botao, setBotao] = useState('b')
     const [modal, setModal] = useState('')
 
+    // Modal
     function openModal(typeModal: string) {
-        document.body.classList.add('overflow-hidden')
-
-        setModal(typeModal)
-
-        if (typeModal === 'profile') {
-
-        }
+        setModal(typeModal);
     }
 
     function closeModal() {
-        document.body.classList.remove('overflow-hidden')
-        setModal('')
+        setModal('');
     }
+
+    useEffect(() => {
+        if (modal) {
+            document.body.classList.add('overflow-hidden');
+        } else {
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        // Limpeza ao desmontar o componente
+        return () => document.body.classList.remove('overflow-hidden');
+    }, [modal]); // Ele "observa" o estado modal
 
     return (
         <div id="clientePerfil" className="box pb-10">
