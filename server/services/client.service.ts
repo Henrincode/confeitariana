@@ -40,7 +40,7 @@ interface AddressParams {
 // FIND
 const find = unstable_cache(
     async () => await sql`select * from ana_clients`,
-    ['client-find'],
+    ['clients-find'],
     { tags: ['clients'] }
 )
 
@@ -61,7 +61,7 @@ export const findById = unstable_cache(
 
         return client || null
     },
-    ['clients'],
+    ['clients-findById'],
     { tags: ['clients'] }
 )
 
@@ -117,7 +117,7 @@ export const findAddresses = unstable_cache(
         `
         return addresses
     },
-    ['client-addresses'],
+    ['client-findAddresses'],
     { tags: ['clients'] }
 )
 
