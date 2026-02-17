@@ -1,5 +1,3 @@
-import clientService from "@/server/services/client.service";
-
 export default async function Home() {
 
   return (

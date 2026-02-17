@@ -110,8 +110,6 @@ export async function updateClient(_: ActionState, formData: FormData) {
         return { success: false, error: 'Nome não foi preenchido' }
     }
 
-    console.log(id_client)
-
     if (!id_client) return { success: false, error: 'id do cliente não informado' }
 
     const client = {

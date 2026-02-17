@@ -1,3 +1,4 @@
+'use client'
 import { deleteClient } from "@/server/actions/client.action";
 
 export default function UpdateProfile({ closeModal, client }: { closeModal: Function, client: any }) {

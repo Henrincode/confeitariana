@@ -84,8 +84,6 @@ async function update(params: ClientParams): Promise<ClientParams> {
     if (!params.id_client) throw new Error('O id_client não foi informado')
     if (!params.name) throw new Error('Nome do cliente precisa ser preenchido')
 
-    console.log('parametrossss', params)
-
     const [client] = await sql`
         update ana_clients set ${sql(params)}
         where id_client = ${params.id_client}
