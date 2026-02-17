@@ -4,7 +4,7 @@ import "./globals.css";
 import NavBar from "@/components/NavBar";
 
 const fontPoppins = Poppins({
-  weight: ['100','200','300','400','500','600','700','800','900']
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900']
 })
 
 const geistSans = Geist({
@@ -23,10 +23,10 @@ export const metadata: Metadata = {
 };
 
 export const viewport = {
-  themeColor: "#fef3c7", 
+  themeColor: "#fef3c7",
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1, 
+  maximumScale: 1,
   userScalable: false,
 };
 
@@ -38,7 +38,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body
-        className={`${fontPoppins.className} ${geistSans.variable} ${geistMono.variable} antialiased h-dvh mt-20 bg-amber-100`}
+        className={`${fontPoppins.className} ${geistSans.variable} ${geistMono.variable} antialiased min-h-dvh pt-20 bg-amber-100`}
       >
         <NavBar className="fixed top-0 w-full" />
         {children}
