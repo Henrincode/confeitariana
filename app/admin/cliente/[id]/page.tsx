@@ -10,8 +10,13 @@ export default async function ClientePage({ params }: Props) {
     const { id: idString } = await params
     const id = Number(idString)
     const client = await clientService.findById(id)
-    client.addresses = await clientService.findAddresses(id)
+    if (client) client.addresses = await clientService.findAddresses(id)
     return (
-        <ClientView idPage={id} client={client} />
+        <>
+            {client
+                ? <ClientView idPage={id} client={client} />
+                : <div className="pt-10 text-4xl text-center text-gray-700">Cliente não encontrado</div>
+            }
+        </>
     )
 }

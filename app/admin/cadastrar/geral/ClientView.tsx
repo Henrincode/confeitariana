@@ -7,7 +7,10 @@ export default function ClientView({
     clientCategorieCreate,
     clientCategorieUpdate,
     clientCategorieDelete,
-    invoiceTypes
+    invoiceTypes,
+    invoiceTypesCreate,
+    invoiceTypesUpdate,
+    invoiceTypesDelete
 }: any) {
     return (
         <div className="
@@ -15,8 +18,9 @@ export default function ClientView({
             flex
             flex-col
             gap-10
-            
+
             [&_.tittle]:text-4xl
+            [&_.tittle]:text-center
             [&_.tittle]:text-gray-600
             [&_.tittle]:
 
@@ -36,7 +40,7 @@ export default function ClientView({
                 <div className="line"></div>
                 <div className="forms">
                     <FormGeneric
-                        tittle='Tipos'
+                        tittle='Categorias'
                         data={clientCategories}
                         data_id='id_client_category'
                         createAction={clientCategorieCreate}
@@ -50,8 +54,14 @@ export default function ClientView({
                 <p className="tittle">Notas</p>
                 <div className="line"></div>
                 <div className="forms">
-                    {/* <FormInvoiceTypes types={invoiceTypes} /> */}
-                    <p>Tipos</p>
+                    <FormGeneric
+                        tittle='Tipos'
+                        data={invoiceTypes}
+                        data_id='id_invoice_type'
+                        createAction={invoiceTypesCreate}
+                        updateAction={invoiceTypesUpdate}
+                        deleteAction={invoiceTypesDelete}
+                    />
                     <p>Estatus</p>
                 </div>
             </div>

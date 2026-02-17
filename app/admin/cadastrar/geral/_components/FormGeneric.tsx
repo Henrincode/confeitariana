@@ -30,13 +30,13 @@ export default function FormGeneric({ tittle, data, data_id, createAction, updat
     }
 
     async function clickDeleteData() {
-        const data = await deleteAction(inputDeletData)
+        const result = await deleteAction(inputDeletData)
         setCodErro('')
-        if (data.success) {
+        if (result.success) {
             setInputDeletData(data[0][data_id])
             setInputUpdateData(data[0][data_id])
         } else {
-            const msg = data.error === '23503' ? 'Categoria não esta limpa' : 'Erro desconhecido'
+            const msg = result.error === '23503' ? 'Categoria não esta limpa' : 'Erro desconhecido'
             setCodErro(msg)
         }
     }
@@ -61,16 +61,25 @@ export default function FormGeneric({ tittle, data, data_id, createAction, updat
                 items-center
                 gap-2
 
-                w-fit
+                w-full
+                lg:w-fit
                 p-2
                 rounded-2xl
                 **:rounded-2xl
                 
                 text-white
-
                 bg-pink-400
 
-                [&_.campo]:w-50
+                [&_.h-line]:self-stretch
+                [&_.h-line]:w-full
+                [&_.h-line]:lg:w-1
+                [&_.h-line]:h-1
+                [&_.h-line]:lg:h-auto
+                [&_.h-line]:rounded-full
+                [&_.h-line]:bg-white/20
+
+                [&_.campo]:w-full
+                [&_.campo]:lg:w-50
                 [&_.campo]:px-2
                 [&_.campo]:text-gray-700
                 [&_.campo]:bg-pink-50
@@ -86,9 +95,10 @@ export default function FormGeneric({ tittle, data, data_id, createAction, updat
                 [&_button]:cursor-pointer
             ">
                 <p className="text-2xl">{tittle}</p>
+
                 <div className="w-full h-1 rounded-full bg-white/20"></div>
 
-                <div className="flex flex-row flex-nowrap gap-2">
+                <div className="flex flex-col lg:flex-row flex-wrap gap-2 w-full">
 
                     {/* creat */}
                     <form action={clickCreateData} className="flex flex-col items-center gap-2">
@@ -98,7 +108,7 @@ export default function FormGeneric({ tittle, data, data_id, createAction, updat
                         <button>Cadastrar</button>
                     </form>
 
-                    <div className="w-1 h-full rounded-full bg-white/20"></div>
+                    <div className="h-line"></div>
 
                     {/* delete */}
                     <div className="flex flex-col items-center gap-2">
@@ -108,7 +118,7 @@ export default function FormGeneric({ tittle, data, data_id, createAction, updat
                         <button onClick={clickDeleteData} type="button">Apagar</button>
                     </div>
 
-                    <div className="w-1 h-full rounded-full bg-white/20"></div>
+                    <div className="h-line"></div>
 
                     {/* edit */}
                     <div className="flex flex-col gap-2">

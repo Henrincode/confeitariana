@@ -11,7 +11,7 @@ export default function NavBar({ className }: Props) {
     const router = useRouter()
 
     return (
-        <div className={`${className} p-2 border-b-2 border-amber-300 bg-amber-200`}>
+        <div className={`${className} z-100 p-2 border-b-2 border-amber-300 bg-amber-300/50 backdrop-blur`}>
             <div className="box flex flex-row justify-between items-center">
                 <Link onClick={() => router.refresh()} href="/" id="nav-logo" className="flex flex-row items-center gap-2 group">
                     <img src="/cookie-01.png" alt="" className="w-8" />

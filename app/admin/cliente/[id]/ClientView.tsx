@@ -41,7 +41,7 @@ export default function ClientView({ idPage, client }: any) {
     return (
         <div id="clientePerfil" className="box pb-10">
             {modal && (
-                <div onMouseDown={closeModal} id="modal" className="fixed flex z-10 top-0 left-0 justify-center items-center h-dvh w-full bg-black/30 backdrop-blur-xl">
+                <div onMouseDown={closeModal} id="modal" className="fixed flex z-101 top-0 left-0 justify-center items-center h-dvh w-full bg-black/30 backdrop-blur-xl">
                     <div className="overflow-auto px-3 py-10 w-full max-h-dvh">
                         {modal === 'delete' && <DeleteProfile closeModal={closeModal} client={client} />}
                         {modal === 'profile' && <UpdateProfile closeModal={closeModal} client={client} />}

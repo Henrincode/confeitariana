@@ -22,6 +22,14 @@ export const metadata: Metadata = {
   description: "Gerenciador de produtos e clientes",
 };
 
+export const viewport = {
+  themeColor: "#fef3c7", 
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1, 
+  userScalable: false,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -30,9 +38,9 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body
-        className={`${fontPoppins.className} ${geistSans.variable} ${geistMono.variable} antialiased h-dvh bg-amber-100`}
+        className={`${fontPoppins.className} ${geistSans.variable} ${geistMono.variable} antialiased h-dvh mt-20 bg-amber-100`}
       >
-        <NavBar className="mb-3" />
+        <NavBar className="fixed top-0 w-full" />
         {children}
       </body>
     </html>

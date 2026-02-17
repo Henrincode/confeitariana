@@ -203,8 +203,6 @@ export async function createClientCategory(input_name: string) {
 
     if (!name) return { success: false, error: 'Nome precisa ser preenchido.' }
 
-    const teste = await clientService.existsCategory(name)
-    console.dir(name)
     if (await clientService.existsCategory(name)) return { success: false, error: 'Nome já existe' }
 
     try {
@@ -217,7 +215,7 @@ export async function createClientCategory(input_name: string) {
     }
 }
 
-// RENAME
+// UPDATE
 export async function updateClientCategory(category: { id_client_category: number, name: string }) {
     try {
         await clientService.updateCategory(category)

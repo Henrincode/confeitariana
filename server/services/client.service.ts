@@ -43,7 +43,7 @@ const find = unstable_cache(
 )
 
 // FIND BY ID
-export const findById = unstable_cache(
+const findById = unstable_cache(
     async (id: number) => {
         const [client] = await sql`
             select cl.*, ca.name category 
@@ -65,7 +65,7 @@ export const findById = unstable_cache(
 
 
 // CREATE
-export async function create(params: ClientParams): Promise<ClientParams> {
+async function create(params: ClientParams): Promise<ClientParams> {
     // const { name, contact_name, category, email, phone, whatsapp, birth_date, details, image_url } = params
 
     if (!params.name) throw new Error('Nome do cliente precisa ser preenchido')
@@ -79,7 +79,7 @@ export async function create(params: ClientParams): Promise<ClientParams> {
 }
 
 // UPDATE
-export async function update(params: ClientParams): Promise<ClientParams> {
+async function update(params: ClientParams): Promise<ClientParams> {
 
     if (!params.id_client) throw new Error('O id_client não foi informado')
     if (!params.name) throw new Error('Nome do cliente precisa ser preenchido')
@@ -96,7 +96,7 @@ export async function update(params: ClientParams): Promise<ClientParams> {
 }
 
 // DELETE
-export async function remove(id: number) {
+async function remove(id: number) {
     await sql`
         delete from ana_clients
         where id_client = ${id}
@@ -106,7 +106,7 @@ export async function remove(id: number) {
 // ------------------- ADDRESSES
 
 // FIND
-export const findAddresses = unstable_cache(
+const findAddresses = unstable_cache(
     async (id: number) => {
         const addresses = await sql`
             select * from ana_client_addresses where id_client_fk = ${id}
@@ -119,13 +119,13 @@ export const findAddresses = unstable_cache(
             id_client_fk: Number(addr.id_client_fk)
         }))
     },
-    ['client-findAddresses'],
+    ['clients-findAddresses'],
     { tags: ['clients'] }
 )
 
 
 // CREAT
-export async function createAddress(props: AddressParams) {
+async function createAddress(props: AddressParams) {
 
     const [address] = await sql`
         insert into ana_client_addresses ${sql(props)}
@@ -134,7 +134,7 @@ export async function createAddress(props: AddressParams) {
 }
 
 // delete
-export async function deleteAddress(id: number) {
+async function deleteAddress(id: number) {
 
     const [address] = await sql`
         delete from ana_client_addresses where id_client_address = ${id}
@@ -144,28 +144,35 @@ export async function deleteAddress(id: number) {
 // ------------------- CATEGORIES
 
 // FIND
-export async function findCategories() {
-    const categories = await sql`
+const findCategories = unstable_cache(
+    async () => {
+        const categories = await sql`
         select * from ana_client_categories
         order by id_client_category
     `
-    return categories.map(cat => ({
-        ...cat,
-        id_client_category: Number(cat.id_client_category)
-    }))
-}
-
+        return categories.map(cat => ({
+            ...cat,
+            id_client_category: Number(cat.id_client_category)
+        }))
+    },
+    ['clients-findCategories'],
+    { tags: ['clients'] }
+)
 // Existy
-export async function existsCategory(name: string) {
-    const [category] = await sql`
+const existsCategory = unstable_cache(
+    async (name: string) => {
+        const [category] = await sql`
         select name from ana_client_categories
         where LOWER(name) = LOWER(${name})
     `
-    return category
-}
+        return category
+    },
+    ['clients-existsCategory'],
+    { tags: ['clients'] }
+)
 
 // CREATE
-export async function createCategory(name: string) {
+async function createCategory(name: string) {
     const [category] = await sql`
         insert into ana_client_categories (name) values
         (${name})
@@ -176,9 +183,8 @@ export async function createCategory(name: string) {
 }
 
 // UPDATE
-export async function updateCategory({id_client_category, name}: {id_client_category: number, name: string}){
-    console.log('3', name)
-    const [category] = await sql`
+async function updateCategory({ id_client_category, name }: { id_client_category: number, name: string }) {
+    await sql`
         update ana_client_categories
         set name = ${name}
         where id_client_category = ${id_client_category}
@@ -186,7 +192,7 @@ export async function updateCategory({id_client_category, name}: {id_client_cate
 }
 
 // DELETE
-export async function deleteCategory(id: number) {
+async function deleteCategory(id: number) {
     const [categoty] = await sql`
         delete from ana_client_categories where id_client_category = ${id}
     `
@@ -194,7 +200,7 @@ export async function deleteCategory(id: number) {
 
 // ------------------- IMAGE
 
-export async function updateImage({ id_client, file }: { id_client: number, file: File }) {
+async function updateImage({ id_client, file }: { id_client: number, file: File }) {
     const fileExt = file.name.split('.').pop()
     const fileName = `${Math.random().toString().slice(2)}.${fileExt}`
     const filePath = `clients/${id_client}/${fileName}`
