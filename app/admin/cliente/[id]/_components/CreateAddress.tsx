@@ -140,7 +140,7 @@ export default function CreateAddress({ closeModal, client }: { closeModal: Func
                     [&_button]:cursor-pointer
                     [&_button]:transition-all
                 ">
-                    <button type="submit">Atualizar</button>
+                    <button type="submit">Criar</button>
                     <button onClick={() => closeModal()} type="button">Cancelar</button>
                 </div>
 

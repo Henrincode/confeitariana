@@ -33,9 +33,7 @@ interface AddressParams {
     details?: string | null
 }
 
-// 
-// --- CLIENTS
-// 
+// ------------------- CLIENTS
 
 // FIND
 const find = unstable_cache(
@@ -105,9 +103,7 @@ export async function remove(id: number) {
     `
 }
 
-// 
-// --- ADDRESSES
-// 
+// ------------------- ADDRESSES
 
 // FIND
 export const findAddresses = unstable_cache(
@@ -115,14 +111,20 @@ export const findAddresses = unstable_cache(
         const addresses = await sql`
             select * from ana_client_addresses where id_client_fk = ${id}
         `
-        return addresses
+
+
+        return addresses.map(addr => ({
+            ...addr,
+            id_client_address: Number(addr.id_client_address),
+            id_client_fk: Number(addr.id_client_fk)
+        }))
     },
     ['client-findAddresses'],
     { tags: ['clients'] }
 )
 
 
-// create addresses
+// CREAT
 export async function createAddress(props: AddressParams) {
 
     const [address] = await sql`
@@ -131,30 +133,39 @@ export async function createAddress(props: AddressParams) {
     `
 }
 
-// 
-// -- CATEGORIES
-// 
+// delete
+export async function deleteAddress(id: number) {
+
+    const [address] = await sql`
+        delete from ana_client_addresses where id_client_address = ${id}
+    `
+}
+
+// ------------------- CATEGORIES
 
 // FIND
 export async function findCategories() {
     const categories = await sql`
         select * from ana_client_categories
+        order by id_client_category
     `
-    return categories
+    return categories.map(cat => ({
+        ...cat,
+        id_client_category: Number(cat.id_client_category)
+    }))
 }
 
 // Existy
-
 export async function existsCategory(name: string) {
     const [category] = await sql`
-    select name from ana_client_categories
-    where LOWER(name) = LOWER(${name})
+        select name from ana_client_categories
+        where LOWER(name) = LOWER(${name})
     `
-    return !!category
+    return category
 }
 
 // CREATE
-export async function createCategorie(name: string) {
+export async function createCategory(name: string) {
     const [category] = await sql`
         insert into ana_client_categories (name) values
         (${name})
@@ -163,6 +174,25 @@ export async function createCategorie(name: string) {
     if (!category) throw new Error('Erro ao cadastrar categoria')
     return category
 }
+
+// UPDATE
+export async function updateCategory({id_client_category, name}: {id_client_category: number, name: string}){
+    console.log('3', name)
+    const [category] = await sql`
+        update ana_client_categories
+        set name = ${name}
+        where id_client_category = ${id_client_category}
+    `
+}
+
+// DELETE
+export async function deleteCategory(id: number) {
+    const [categoty] = await sql`
+        delete from ana_client_categories where id_client_category = ${id}
+    `
+}
+
+// ------------------- IMAGE
 
 export async function updateImage({ id_client, file }: { id_client: number, file: File }) {
     const fileExt = file.name.split('.').pop()
@@ -184,12 +214,21 @@ const clientService = {
     create,
     update,
     delete: remove,
+
+    // addresses
     findAddresses,
+    createAddress,
+    deleteAddress,
+
+    // category
     findCategories,
     existsCategory,
-    createCategorie,
-    updateImage,
-    createAddress
+    createCategory,
+    updateCategory,
+    deleteCategory,
+
+    // image
+    updateImage
 }
 
 export default clientService

@@ -1,6 +1,6 @@
 'use server'
 import clientService from "@/server/services/client.service";
-import { revalidateTag, updateTag } from "next/cache";
+import { updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
 interface ActionState {
@@ -180,7 +180,17 @@ export async function createClientAddress(_: ActionState, formData: FormData) {
         return { success: false, error: 'Erro ao criar endereço' }
     }
     console.log('fooooi')
-    return {success: true}
+    return { success: true }
+}
+
+// adress delete
+export async function deleteClientAddress(id: number) {
+    try {
+        await clientService.deleteAddress(id)
+        updateTag('clients')
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 // 
@@ -188,21 +198,44 @@ export async function createClientAddress(_: ActionState, formData: FormData) {
 // 
 
 // CREAT
-export async function createClientCategory(_: ActionState, formData: FormData) {
-    const name = formData.get('name')?.toString().trim() || null
+export async function createClientCategory(input_name: string) {
+    const name = input_name?.toString().trim() || null
 
     if (!name) return { success: false, error: 'Nome precisa ser preenchido.' }
 
+    const teste = await clientService.existsCategory(name)
+    console.dir(name)
     if (await clientService.existsCategory(name)) return { success: false, error: 'Nome já existe' }
 
     try {
-        await clientService.createCategorie(name)
-        // @ts-expect-error — bug de tipagem do Next 16 (revalidateTag aceita 1 arg em runtime)
-        revalidateTag('clients')
+        await clientService.createCategory(name)
+        updateTag('clients')
         return { success: true }
     } catch (error) {
         console.error(error)
         return { success: false, error: 'Erro ao criar categoria' }
+    }
+}
+
+// RENAME
+export async function updateClientCategory(category: { id_client_category: number, name: string }) {
+    try {
+        await clientService.updateCategory(category)
+        updateTag('clients')
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+// DELETE
+export async function deleteClientCategory(id: number) {
+    try {
+        await clientService.deleteCategory(id)
+        updateTag('clients')
+        return { success: true }
+    } catch (error: any) {
+        console.error(error)
+        return { success: false, error: error.code }
     }
 }
 
@@ -219,8 +252,7 @@ export async function updateClientImage(_: ActionState, formData: FormData) {
 
         const url = await clientService.updateImage({ id_client, file })
 
-        // @ts-expect-error — bug de tipagem do Next 16 (revalidateTag aceita 1 arg em runtime)
-        revalidateTag('clients')
+        updateTag('clients')
         return { success: true }
 
     } catch (error: any) {

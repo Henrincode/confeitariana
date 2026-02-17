@@ -20,7 +20,9 @@ export default function NavBar({ className }: Props) {
                 <ul className="flex flex-row gap-2 font text-amber-800 [&_.link]:hover:text-amber-500">
                     <li><Link onClick={() => router.refresh()} className="link" href="/admin/clientes">Clientes</Link></li>
                     <li className="w-1 rounded-full bg-amber-50"></li>
-                    <li><Link onClick={() => router.refresh()} className="link" href="/admin/clientes/cadastrar">Cadastrar</Link></li>
+                    <li><Link onClick={() => router.refresh()} className="link" href="/admin/clientes/cadastrar">Cadastrar cliente</Link></li>
+                    <li className="w-1 rounded-full bg-amber-50"></li>
+                    <li><Link onClick={() => router.refresh()} className="link" href="/admin/cadastrar/geral">Cadastrar geral</Link></li>
                 </ul>
             </div>
         </div>
