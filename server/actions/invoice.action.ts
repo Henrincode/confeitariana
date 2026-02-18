@@ -1,25 +1,37 @@
 'use server'
 import { updateTag } from "next/cache"
 import invoiceService from "../services/invoice.service"
-import { InvoiceReturn, InvoiceStatus } from "@/types/invoice.types"
+import { InvoiceReturn, InvoiceStatus, InvoiceType } from "@/types/invoice.types"
 
-// ------------------- TYPES
+// ------------------|
+// ------------------| TYPES
+// ------------------|
 
 // CREAT
-export async function createInvoiceType(input_name: string) {
-    const name = input_name?.toString().trim() || null
+export async function createInvoiceType(
+    params: InvoiceType & { name: string }
+): Promise<InvoiceReturn> {
 
-    if (!name) return { success: false, error: 'Campo nome deve ser preenchido' }
-    if (await invoiceService.extistsType(name)) return { success: false, error: 'Nome já existe' }
+    params.name = params.name?.toString().trim()
+
+    if (!params.name) return {
+
+        success: false,
+        message: 'Campo "nome" deve ser preenchido',
+        errors: {
+            name: true
+        }
+    }
+
+    const data = { name: params.name }
 
     try {
-        await invoiceService.createType(name)
+        await invoiceService.createType(data)
         updateTag('invoices')
         return { success: true }
-
     } catch (error) {
-        console.error(error)
-        return { success: false, error: 'Erro ao cadastrar no banco' }
+        console.error('ERROR [createInvoiceType]', error)
+        return { success: false, message: 'Erro ao criar no banco' }
     }
 }
 
@@ -32,14 +44,14 @@ export async function updateInvoiceType(type: { id_invoice_type: number, name: s
 
     } catch (error) {
         console.error(error)
-        return { success: false, error: 'erro ao cadastrar no banco' }
+        return { success: false, error: 'Erro ao cadastrar no banco' }
     }
 }
 
 // DELETE
 export async function deleteInvoiceType(id: string) {
     const id_invoice_type = Number(id)
-    if (isNaN(id_invoice_type)) return { success: false, error: 'Id informado não é um número' }
+    if (isNaN(id_invoice_type)) return { success: false, error: 'ID informado não é um número' }
 
     const type = {
         id_invoice_type
@@ -72,14 +84,14 @@ export async function createInvoiceStatus(
     params: InvoiceStatus & { name: string }
 ): Promise<InvoiceReturn> {
 
-    if (!params.name) return { success: false, error: 'Nome precisa ser preenchido' }
+    if (!params.name) return { success: false, message: 'Nome precisa ser preenchido' }
     try {
         await invoiceService.createStatus(params)
         updateTag('invoices')
         return { success: true }
     } catch (error) {
         console.error(error)
-        return { success: false, error: "Erro ao cadastrar" }
+        return { success: false, message: "Erro ao cadastrar" }
     }
 }
 
@@ -89,9 +101,9 @@ export async function updateInvoiceStatus(
 ): Promise<InvoiceReturn> {
 
     if (!params.id_invoice_status || isNaN(params.id_invoice_status)) {
-        return { success: false, error: 'ID não encontrado' }
+        return { success: false, message: 'ID não encontrado' }
     }
-    if (!params.name) return { success: false, error: 'Nome precisa ser preenchido' }
+    if (!params.name) return { success: false, message: 'Nome precisa ser preenchido' }
 
     try {
         await invoiceService.updateStatus(params)
@@ -100,7 +112,7 @@ export async function updateInvoiceStatus(
 
     } catch (error) {
         console.error('ERRO [updateInvoiceStatus]', error)
-        return { success: false, error: "Erro ao atualizar" }
+        return { success: false, message: "Erro ao atualizar" }
     }
 }
 
@@ -109,7 +121,7 @@ export async function deleteInvoiceStatus(
     params: InvoiceStatus & { id_invoice_status: number }
 ): Promise<InvoiceReturn> {
 
-    if (isNaN(params.id_invoice_status)) return { success: false, error: "ID não encontrado" }
+    if (isNaN(params.id_invoice_status)) return { success: false, message: "ID não encontrado" }
 
     try {
         await invoiceService.deleteStatus(params)
@@ -117,6 +129,6 @@ export async function deleteInvoiceStatus(
         return { success: true }
     } catch (error) {
         console.error("ERRO [deleteInvoiceStatus]", error)
-        return { success: false, error: "Erro ao apagar" }
+        return { success: false, message: "Erro ao apagar" }
     }
 }

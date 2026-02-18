@@ -34,10 +34,9 @@ const extistsType = unstable_cache(
 )
 
 // CREATE
-async function createType(name: string) {
+async function createType(params: InvoiceType & {name: string}) {
     await sql`
-        insert into ana_invoice_types (name) values
-        (${name})
+        insert into ana_invoice_types (${sql(params)})
     `
 }
 

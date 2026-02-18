@@ -12,6 +12,9 @@ export interface InvoiceStatus {
 }
 
 export interface InvoiceReturn {
-    success: boolean
-    error?: string
+    success?: boolean
+    message?: string
+    errors?: {
+        [key: string]: string | boolean
+    }
 }
