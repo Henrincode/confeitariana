@@ -10,7 +10,11 @@ export default function ClientView({
     invoiceTypes,
     invoiceTypesCreate,
     invoiceTypesUpdate,
-    invoiceTypesDelete
+    invoiceTypesDelete,
+    invoiceStatus,
+    invoiceStatusCreate,
+    invoiceStatusUpdate,
+    invoiceStatusDelete
 }: any) {
     return (
         <div className="
@@ -33,7 +37,7 @@ export default function ClientView({
             [&_.forms]:flex
             [&_.forms]:flex-col
             [&_.forms]:items-center
-            [&_.forms]:gap-2
+            [&_.forms]:gap-4
         ">
             <div className="category">
                 <p className="tittle">Clientes</p>
@@ -62,7 +66,14 @@ export default function ClientView({
                         updateAction={invoiceTypesUpdate}
                         deleteAction={invoiceTypesDelete}
                     />
-                    <p>Estatus</p>
+                    <FormGeneric
+                        tittle='Estatus'
+                        data={invoiceStatus}
+                        data_id='id_invoice_status'
+                        createAction={invoiceStatusCreate}
+                        updateAction={invoiceStatusUpdate}
+                        deleteAction={invoiceStatusDelete}
+                    />
                 </div>
             </div>
 

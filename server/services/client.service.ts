@@ -199,6 +199,9 @@ async function deleteCategory(id: number) {
 // ------------------- IMAGE
 
 async function updateImage({ id_client, file }: { id_client: number, file: File }) {
+    if (!file || !file.name) {
+        throw new Error("Arquivo inválido ou não selecionado.");
+    }
     const fileExt = file.name.split('.').pop()
     const fileName = `${Math.random().toString().slice(2)}.${fileExt}`
     const filePath = `clients/${id_client}/${fileName}`

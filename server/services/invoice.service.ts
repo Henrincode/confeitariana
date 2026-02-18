@@ -1,11 +1,8 @@
 import { unstable_cache } from "next/cache"
 import sql from "../db"
+import { InvoiceStatus, InvoiceType } from "@/types/invoice.types"
 
-interface InvoiceType {
-    id_invoice_type?: number | null,
-    name?: string | null,
-    created_at?: Date | null
-}
+
 
 // ------------------- TYPES
 
@@ -68,12 +65,56 @@ async function deleteType({ id_invoice_type }: InvoiceType) {
     `
 }
 
+// ------------------- STATUS
+
+// FIND
+const findStatus = unstable_cache(
+    async () => {
+        const data = await sql`select * from ana_invoice_status`
+
+        return data.map((row) => ({
+            ...row,
+            id_invoice_status: Number(row.id_invoice_status)
+        }))
+    },
+    ['invoice-status-find'],
+    {tags: ["invoices"]}
+)
+
+// CREATE
+async function createStatus(params: InvoiceStatus) {
+    await sql`
+        insert into ana_invoice_status ${sql(params)}
+    `
+}
+
+// UPDATE
+async function updateStatus(params: InvoiceStatus & {id_invoice_status: number}) {
+    await sql`
+        update ana_invoice_status set ${sql(params)}
+        where id_invoice_status = ${params.id_invoice_status}
+    `
+}
+
+// DELETE
+async function deleteStatus(params: InvoiceStatus & {id_invoice_status: number}) {
+    await sql`
+        delete from ana_invoice_status where id_invoice_status = ${params.id_invoice_status}
+    `
+}
+
 const invoiceService = {
+    // TYPES
     findTypes,
     extistsType,
     createType,
     updateType,
-    deleteType
+    deleteType,
+    // Status
+    findStatus,
+    createStatus,
+    updateStatus,
+    deleteStatus
 }
 
 export default invoiceService

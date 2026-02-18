@@ -20,7 +20,7 @@ export default function FormGeneric({ tittle, data, data_id, createAction, updat
     const [codErro, setCodErro] = useState('')
 
     async function clickCreateData() {
-        const data = await createAction(inputCreateData)
+        const data = await createAction({name: inputCreateData})
         setCodErro('')
         if (data.success) {
             setInputCreateData('')
@@ -30,7 +30,7 @@ export default function FormGeneric({ tittle, data, data_id, createAction, updat
     }
 
     async function clickDeleteData() {
-        const result = await deleteAction(inputDeletData)
+        const result = await deleteAction({[data_id]: inputDeletData})
         setCodErro('')
         if (result.success) {
             setInputDeletData(data[0][data_id])
@@ -81,13 +81,14 @@ export default function FormGeneric({ tittle, data, data_id, createAction, updat
                 [&_.campo]:w-full
                 [&_.campo]:lg:w-50
                 [&_.campo]:px-2
+                [&_.campo]:py-1
                 [&_.campo]:text-gray-700
                 [&_.campo]:bg-pink-50
 
                 [&_button]:w-full
                 [&_button]:px-2
                 [&_button]:py-1
-                [&_button]:text-sm
+                [&_button]:lg:text-sm
                 [&_button]:text-gray-800
                 [&_button]:hover:text-white
                 [&_button]:bg-pink-300
