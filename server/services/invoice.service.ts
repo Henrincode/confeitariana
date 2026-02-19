@@ -41,7 +41,7 @@ async function createType(params: InvoiceType & {name: string}) {
 }
 
 // UPDATE
-async function updateType(params: InvoiceType) {
+async function updateType(params: InvoiceType & {id_invoice_type: number, name: string}): Promise<void> {
     const { id_invoice_type, name } = params
 
     if (!id_invoice_type) throw new Error('id ausente')
@@ -55,12 +55,11 @@ async function updateType(params: InvoiceType) {
 }
 
 // DELETE
-async function deleteType({ id_invoice_type }: InvoiceType) {
-    if (!id_invoice_type) throw new Error('id ausente')
+async function deleteType(params: InvoiceType & {id_invoice_type: number}) {
 
     await sql`
         delete from ana_invoice_types
-        where id_invoice_type = ${id_invoice_type}
+        where id_invoice_type = ${params.id_invoice_type}
     `
 }
 
