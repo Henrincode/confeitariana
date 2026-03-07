@@ -2,7 +2,8 @@
 
 import { updateTag } from "next/cache"
 import invoiceService from "../services/invoice.service"
-import { InvoiceReturn, InvoiceStatus, InvoiceType } from "@/types/invoice.types"
+import { InvoiceReturn, InvoiceStatus, InvoiceType, InvoiceTypeCreate } from "@/types/invoice.types"
+import { ApiResponse } from "@/types/ApiResponse"
 
 // ------------------|
 // ------------------| TYPES
@@ -10,8 +11,8 @@ import { InvoiceReturn, InvoiceStatus, InvoiceType } from "@/types/invoice.types
 
 // CREAT
 export async function createInvoiceType(
-    params: InvoiceType & { name: string }
-): Promise<InvoiceReturn> {
+    params: InvoiceTypeCreate
+): Promise<ApiResponse<InvoiceType>> {
 
     if (!params) return { success: false, message: 'Não foi passado nenhum pârametro' }
 
@@ -22,16 +23,16 @@ export async function createInvoiceType(
         success: false,
         message: 'Campo "nome" deve ser preenchido',
         errors: {
-            name: true
+            name: 'Campo "nome deve ser preenchido'
         }
     }
 
-    const data: { name: string } = { name: params.name }
+    const data = { name: params.name }
 
     try {
-        await invoiceService.createType(data)
+        const ndata = await invoiceService.createType(data)
         updateTag('invoices')
-        return { success: true }
+        return { success: true, ndata }
     } catch (error) {
         console.error('ERROR [createInvoiceType]', error)
         return { success: false, message: 'Erro ao criar no banco' }

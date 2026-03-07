@@ -1,6 +1,7 @@
 import sql from '@/server/db'
 import { unstable_cache } from 'next/cache'
 import storageServices from './storage.service'
+import { InvoiceType, InvoiceTypeCreate } from '@/types/invoice.types'
 
 interface ClientParams {
     id_client?: number | null
@@ -65,12 +66,12 @@ const findById = unstable_cache(
 
 
 // CREATE
-async function create(params: ClientParams): Promise<ClientParams> {
+async function create(params: InvoiceTypeCreate): Promise<InvoiceType> {
     // const { name, contact_name, category, email, phone, whatsapp, birth_date, details, image_url } = params
 
     if (!params.name) throw new Error('Nome do cliente precisa ser preenchido')
 
-    const [client] = await sql`
+    const [client] = await sql<InvoiceType[]>`
         insert into ana_clients ${sql(params)}
         returning *
     `

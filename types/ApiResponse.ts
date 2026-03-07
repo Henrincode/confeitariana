@@ -1,0 +1,14 @@
+export type ApiResponse<T, E = T> =
+    | {
+        success: true;
+        data: T;
+        message?: string;
+        errors?: never
+    }
+    | {
+        success: false;
+        data?: never;
+        message: string;
+        // O 'Partial<Record<keyof E, boolean>>' mapeia as chaves do seu objeto para string
+        errors?: Partial<Record<keyof E, string>>
+    };
