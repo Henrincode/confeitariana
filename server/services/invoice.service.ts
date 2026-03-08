@@ -1,6 +1,6 @@
 import { unstable_cache } from "next/cache"
 import sql from "../db"
-import { InvoiceStatus, InvoiceType } from "@/types/invoice.types"
+import { InvoiceStatus, InvoiceType, InvoiceTypeCreate, InvoiceTypeUpdate } from "@/types/invoice.types"
 
 
 
@@ -34,24 +34,28 @@ const extistsType = unstable_cache(
 )
 
 // CREATE
-async function createType(params: InvoiceType) {
-    await sql`
+async function createType(params: InvoiceTypeCreate): Promise<InvoiceType> {
+    const [data] = await sql<InvoiceType[]>`
         insert into ana_invoice_types (${sql(params)})
+        required *
     `
+    return {...data, id_invoice_type: Number(data.id_invoice_type)}
 }
 
 // UPDATE
-async function updateType(params: InvoiceType & {id_invoice_type: number, name: string}): Promise<void> {
+async function updateType(params: InvoiceTypeUpdate): Promise<InvoiceType> {
     const { id_invoice_type, name } = params
 
     if (!id_invoice_type) throw new Error('id ausente')
     if (!name) throw new Error('nome ausente')
 
-    await sql`
+    const [row] = await sql<InvoiceType[]>`
         update ana_invoice_types set
         name = ${name}
         where id_invoice_type = ${id_invoice_type}
+        returning *
     `
+    return {...row, id_invoice_type: Number(row)}
 }
 
 // DELETE

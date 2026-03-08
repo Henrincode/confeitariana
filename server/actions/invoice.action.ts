@@ -2,7 +2,7 @@
 
 import { updateTag } from "next/cache"
 import invoiceService from "../services/invoice.service"
-import { InvoiceReturn, InvoiceStatus, InvoiceType, InvoiceTypeCreate } from "@/types/invoice.types"
+import { InvoiceReturn, InvoiceStatus, InvoiceType, InvoiceTypeCreate, InvoiceTypeUpdate, InvoiceUpdate } from "@/types/invoice.types"
 import { ApiResponse } from "@/types/ApiResponse"
 
 // ------------------|
@@ -12,7 +12,7 @@ import { ApiResponse } from "@/types/ApiResponse"
 // CREAT
 export async function createInvoiceType(
     params: InvoiceTypeCreate
-): Promise<ApiResponse<InvoiceType>> {
+): ApiResponse<InvoiceType> {
 
     if (!params) return { success: false, message: 'Não foi passado nenhum pârametro' }
 
@@ -22,17 +22,15 @@ export async function createInvoiceType(
 
         success: false,
         message: 'Campo "nome" deve ser preenchido',
-        errors: {
-            name: 'Campo "nome deve ser preenchido'
-        }
+        errors: { name: 'Campo "nome deve ser preenchido' }
     }
 
-    const data = { name: params.name }
+    const payload = { name: params.name }
 
     try {
-        const ndata = await invoiceService.createType(data)
+        const response = await invoiceService.createType(payload)
         updateTag('invoices')
-        return { success: true, ndata }
+        return { success: true, data: response }
     } catch (error) {
         console.error('ERROR [createInvoiceType]', error)
         return { success: false, message: 'Erro ao criar no banco' }
@@ -41,36 +39,33 @@ export async function createInvoiceType(
 
 // UPDATE
 export async function updateInvoiceType(
-    params: InvoiceType & { id_invoice_type: number, name: string }
-): Promise<InvoiceReturn> {
+    params: InvoiceTypeUpdate): Promise<ApiResponse<InvoiceType>> {
 
     if (!params) return { success: false, message: 'Não foi passado nenhum pârametro' }
 
-    const errors: Record<string, string | boolean> = {}
+    const errors: Record<string, string> = {}
 
     params.name = params.name?.toString().trim()
 
     if (!params.id_invoice_type || isNaN(params.id_invoice_type)) {
         errors.id_invoice_type = 'ID não informado'
     }
-    if (!params.name) errors.name = 'Nome não informado'
+
+    if (!params.name) { errors.name = 'Nome não informado' }
 
     if (Object.keys(errors).length) return {
-
         success: false,
         message: 'Faltando dados',
         errors
     }
 
-    const data: { id_invoice_type: number, name: string } = {
-        id_invoice_type: params.id_invoice_type,
-        name: params.name
-    }
+    const data: InvoiceTypeUpdate = { id_invoice_type: params.id_invoice_type, name: params.name }
+
 
     try {
-        await invoiceService.updateType(data)
+        const response = await invoiceService.updateType(data)
         updateTag('invoices')
-        return { success: true }
+        return { success: true, data: response }
 
     } catch (error) {
         console.error(error)
@@ -168,7 +163,7 @@ export async function deleteInvoiceStatus(
         await invoiceService.deleteStatus(params)
         updateTag('invoices')
         return { success: true }
-        
+
     } catch (error) {
         console.error("ERRO [deleteInvoiceStatus]", error)
         return { success: false, message: "Erro ao apagar" }

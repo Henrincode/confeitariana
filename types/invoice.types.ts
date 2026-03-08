@@ -30,7 +30,7 @@ export interface InvoiceType {
     created_at: Date
 }
 
-export type InvoiceTypeCreate = Omit<InvoiceType, 'id_invoice_type'>
+export type InvoiceTypeCreate = Omit<InvoiceType, 'id_invoice_type' | 'created_at'>
 export type InvoiceTypeUpdate = Partial<InvoiceTypeCreate> & Pick<InvoiceType, 'id_invoice_type'>
 
 // invoice status

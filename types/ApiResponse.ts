@@ -1,4 +1,4 @@
-export type ApiResponse<T, E = T> =
+type BaseResponse<T, E = T> =
     | {
         success: true;
         data: T;
@@ -12,3 +12,5 @@ export type ApiResponse<T, E = T> =
         // O 'Partial<Record<keyof E, boolean>>' mapeia as chaves do seu objeto para string
         errors?: Partial<Record<keyof E, string>>
     };
+
+export type ApiResponse<T, E = T> = Promise<BaseResponse<T, E>>
