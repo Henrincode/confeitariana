@@ -1,4 +1,5 @@
-export interface Invoice {
+// table: invoices
+export interface InvoiceDB {
     id_invoice: number
     id_invoice_type_fk: number
     id_client_fk: number
@@ -12,16 +13,19 @@ export interface Invoice {
     created_at: Date
     delivered_at: Date | null
     deleted_at: Date | null
-
-    type: string
-    client: string
-    supplier: string
-    status: string
-    staff: string
 }
 
-export type InvoiceCreate = Omit<Invoice, 'id_invoice' | 'type' | 'client' | 'supplier' | 'status' | 'staf'>
-export type InvoiceUpdate = Partial<InvoiceCreate> & Pick<Invoice, 'id_invoice'>
+// view: table + joins
+export interface Invoice extends InvoiceDB {
+    type: string;
+    client: string;
+    supplier: string;
+    status: string;
+    staff: string;
+}
+
+export type InvoiceCreate = Omit<Invoice, 'id_invoice' | 'created_at' | 'deleted_at'> & { delivered_at: Date | null }
+export type InvoiceUpdate = Pick<Invoice, 'id_invoice'> & Partial<InvoiceCreate>
 
 // invoice type
 export interface InvoiceType {
@@ -29,9 +33,6 @@ export interface InvoiceType {
     name: string
     created_at: Date
 }
-
-export type InvoiceTypeCreate = Omit<InvoiceType, 'id_invoice_type' | 'created_at'>
-export type InvoiceTypeUpdate = Partial<InvoiceTypeCreate> & Pick<InvoiceType, 'id_invoice_type'>
 
 // invoice status
 export interface InvoiceStatus {
