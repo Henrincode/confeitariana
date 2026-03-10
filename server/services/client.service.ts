@@ -1,64 +1,47 @@
 import sql from '@/server/db'
 import { unstable_cache } from 'next/cache'
 import storageServices from './storage.service'
-import { InvoiceType, InvoiceTypeCreate } from '@/types/invoice.types'
-
-interface ClientParams {
-    id_client?: number | null
-    id_client_category_fk?: number | null
-    name?: string
-    contact_name?: string | null
-    contact_cpf?: string | null
-    contact_cnpj?: string | null
-    email?: string | null
-    phone?: string | null
-    whatsapp?: string | null
-    birth_date?: Date | null
-    details?: string | null
-    image_url?: string | null
-}
-
-interface AddressParams {
-    id_client_fk: number
-    name?: string | null
-    zip?: string | null
-    number?: string | null
-    street?: string | null
-    district?: string | null
-    city?: string | null
-    state?: string | null
-    condominium?: string | null
-    building_block?: string | null
-    unit_number?: string | null
-    internal_street?: string | null
-    details?: string | null
-}
+import { Client, ClientDB } from '@/types/client.types'
+import { CreateClient, UpdateClient } from '@/schemas/client.schema'
 
 // ------------------- CLIENTS
 
 // FIND
 const find = unstable_cache(
-    async () => await sql`select * from ana_clients`,
+    async (): Promise<Client[]> => {
+        const rows = await sql<Client[]>`
+            select cl.*, ca.name category 
+            from ana_clients cl
+            inner join ana_client_categories ca
+                on cl.id_client_category_fk = ca.id_client_category
+        `
+        return rows.map(r => ({
+            ...r,
+            id_client: Number(r.id_client),
+            id_client_category_fk: Number(r.id_client_category_fk)
+        }))
+    },
     ['clients-find'],
     { tags: ['clients'] }
 )
 
 // FIND BY ID
 const findById = unstable_cache(
-    async (id: number) => {
-        const [client] = await sql`
+    async (id: number): Promise<Client | null> => {
+        const [row] = await sql<Client[]>`
             select cl.*, ca.name category 
             from ana_clients cl
             inner join ana_client_categories ca
                 on cl.id_client_category_fk = ca.id_client_category
             where id_client = ${id}
         `
-        if (client) {
-            client.id_client = Number(client.id_client)
-            client.id_client_category_fk = Number(client.id_client_category_fk)
-        }
+        if (!row) return null
 
-        return client || null
+        return {
+            ...row,
+            id_client: Number(row.id_client),
+            id_client_category_fk: Number(row.id_client_category_fk)
+        }
     },
     ['clients-findById'],
     { tags: ['clients'] }
@@ -66,32 +49,32 @@ const findById = unstable_cache(
 
 
 // CREATE
-async function create(params: InvoiceTypeCreate): Promise<InvoiceType> {
-    // const { name, contact_name, category, email, phone, whatsapp, birth_date, details, image_url } = params
+async function create(params: CreateClient): Promise<ClientDB> {
 
-    if (!params.name) throw new Error('Nome do cliente precisa ser preenchido')
-
-    const [client] = await sql<InvoiceType[]>`
+    const [row] = await sql<Client[]>`
         insert into ana_clients ${sql(params)}
         returning *
     `
-    if (!client) throw Error('Erro ao cadastrar cliente')
-    return client
+    return {
+        ...row,
+        id_client: Number(row.id_client),
+        id_client_category_fk: Number(row.id_client_category_fk)
+    }
 }
 
 // UPDATE
-async function update(params: ClientParams): Promise<ClientParams> {
+async function update(params: UpdateClient): Promise<ClientDB> {
 
-    if (!params.id_client) throw new Error('O id_client não foi informado')
-    if (!params.name) throw new Error('Nome do cliente precisa ser preenchido')
-
-    const [client] = await sql`
+    const [row] = await sql<Client[]>`
         update ana_clients set ${sql(params)}
         where id_client = ${params.id_client}
         returning *
     `
-    if (!client) throw new Error('Erro ao alterar dados do cliente')
-    return client
+    return {
+        ...row,
+        id_client: Number(row.id_client),
+        id_client_category_fk: Number(row.id_client_category_fk)
+    }
 }
 
 // DELETE
@@ -105,7 +88,7 @@ async function remove(id: number) {
 // ------------------- ADDRESSES
 
 // FIND
-const findAddresses = unstable_cache(
+const findAddressesByClient = unstable_cache(
     async (id: number) => {
         const addresses = await sql`
             select * from ana_client_addresses where id_client_fk = ${id}

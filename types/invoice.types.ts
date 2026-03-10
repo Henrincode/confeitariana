@@ -24,9 +24,6 @@ export interface Invoice extends InvoiceDB {
     staff: string;
 }
 
-export type InvoiceCreate = Omit<Invoice, 'id_invoice' | 'created_at' | 'deleted_at'> & { delivered_at: Date | null }
-export type InvoiceUpdate = Pick<Invoice, 'id_invoice'> & Partial<InvoiceCreate>
-
 // invoice type
 export interface InvoiceType {
     id_invoice_type: number

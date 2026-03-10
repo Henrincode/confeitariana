@@ -1,9 +1,4 @@
-import { z } from "zod";
-
-// DB
-// id_invoice_type: number
-// name: string
-// created_at: Date
+import { z } from "zod"
 
 // create type schema
 export const createInvoiceTypeSchema = z.object({
@@ -16,5 +11,5 @@ export const updateInvoiceTypeSchema = createInvoiceTypeSchema.extend({
 })
 
 // types
-export type InvoiceTypeCreate = z.infer<typeof createInvoiceTypeSchema>
-export type InvoiceTypeUpdate = z.infer<typeof updateInvoiceTypeSchema>
+export type CreateInvoiceType = z.infer<typeof createInvoiceTypeSchema>
+export type UpdateInvoiceType = z.infer<typeof updateInvoiceTypeSchema>
