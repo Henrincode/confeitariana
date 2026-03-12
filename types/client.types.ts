@@ -31,7 +31,7 @@ export interface ClientCategoryDB {
 }
 
 // view: client category
-export interface ClientCategory extends ClientDB { }
+export interface ClientCategory extends ClientCategoryDB { }
 
 // -------------------------------------------------------
 
@@ -60,3 +60,9 @@ export interface ClientAddressDB {
 
 // view: client addresses
 export interface ClientAddress extends ClientAddressDB { }
+
+// uplad image
+export interface ClientUploadImage {
+    id_client: number
+    file: File
+}

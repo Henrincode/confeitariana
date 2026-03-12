@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 // create client schema
-const createClientSchema = z.object({
+export const createClientSchema = z.object({
     id_client_category_fk: z.coerce.number().positive(),
     name: z.string().trim().min(3, 'Mínimo 3 caracteres'),
     contact_name: z.string().trim().min(3, 'Mínimo 3 caracteres').optional().or(z.literal('')),
@@ -16,7 +16,7 @@ const createClientSchema = z.object({
 })
 
 // update client schema
-const updateClientSchema = createClientSchema.extend({
+export const updateClientSchema = createClientSchema.extend({
     id_client: z.coerce.number().positive(),
     deleted_at: z.coerce.date().optional()
 })
@@ -25,16 +25,49 @@ const updateClientSchema = createClientSchema.extend({
 export type CreateClient = z.infer<typeof createClientSchema>
 export type UpdateClient = z.infer<typeof updateClientSchema>
 
+// -------------------------------------------------------
+
 // create client category schema
-const createClientCategorySchema = z.object({
-    name: z.string().min(3, 'Minimo 3 caracteres')
+export const createClientCategorySchema = z.object({
+    name: z.string().trim().min(3, 'Minimo 3 caracteres')
 })
 
 // update client category schema
-const updateClientCategorySchema = createClientCategorySchema.extend({
+export const updateClientCategorySchema = createClientCategorySchema.extend({
     id_client_category: z.coerce.number().positive()
 })
 
 // types
 export type CreateClientCategory = z.infer<typeof createClientCategorySchema>
 export type UpdateClientCategory = z.infer<typeof updateClientCategorySchema>
+
+// -------------------------------------------------------
+
+// create client address schema
+const createCliencAddressSchema = z.object({
+    id_client_fk: z.coerce.number().positive(),
+    name: z.string().trim().min(3, 'Minimo 3 caracteres'),
+    zip: z.string().trim().min(3).optional(),
+    number: z.string().trim().min(3).optional(),
+    street: z.string().trim().min(3).optional(),
+    district: z.string().trim().min(3).optional(),
+    city: z.string().trim().min(3).optional(),
+    state: z.string().trim().min(3).optional(),
+    country_code: z.string().trim().min(3).optional(),
+
+    condominium: z.string().trim().min(3).optional(),
+    building_block: z.string().trim().min(3).optional(),
+    unit_number: z.string().trim().min(3).optional(),
+    internal_street: z.string().trim().min(3).optional(),
+
+    details: z.string().trim().min(3).optional()
+})
+
+// update client street schema
+export const updateClientAddressSchema = createCliencAddressSchema.extend({
+    id_client_address: z.coerce.number().positive()
+})
+
+// types
+export type CreateClientAddress = z.infer<typeof createCliencAddressSchema>
+export type updateClientAddressSchema = z.infer<typeof updateClientAddressSchema>

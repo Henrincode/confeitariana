@@ -1,7 +1,11 @@
 'use server'
+import { CreateClient, createClientSchema } from "@/schemas/client.schema";
 import clientService from "@/server/services/client.service";
+import { ApiResponse } from "@/types/ApiResponse";
+import { ClientDB } from "@/types/client.types";
 import { updateTag } from "next/cache";
 import { redirect } from "next/navigation";
+import z from "zod";
 
 interface ActionState {
     success?: boolean
@@ -10,75 +14,27 @@ interface ActionState {
 }
 
 // creat
-export async function createClient(_: ActionState, formData: FormData) {
+export async function createClient(params: FormData | CreateClient): ApiResponse<CreateClient> {
 
-    const clean = (key: string) => {
-        const value = formData.get(key)?.toString().trim();
-        return value === "" ? null : (value ?? null);
+    const paramsToObj = params instanceof FormData
+        ? Object.fromEntries(params.entries())
+        : params;
+
+    const paramsValidate = createClientSchema.safeParse(paramsToObj)
+
+    if (!paramsValidate.success) {
+        return {
+            success: false,
+            message: "Existem erros de validação.",
+            errors: z.flattenError(paramsValidate.error).fieldErrors
+        }
     }
-
-    const name = clean('name')
-    const contact_name = clean('contact_name')
-    const id_client_category_fk = Number(formData.get('category')) || null
-    const cpf = clean('cpf')
-    const cnpj = clean('cnpj')
-    const email = clean('email')
-    const phone = clean('phone')
-    const whatsapp = clean('whatsapp')
-    const birth_date = (() => {
-        const date = clean('birth_date');
-        return date && !isNaN(Date.parse(date)) ? new Date(date) : null;
-    })()
-
-    const details = clean('details')
-    const image_url = clean('image_url')
-
-
-    if (!name) {
-        return { success: false, error: 'Nome não foi preenchido' }
-    }
-
-    const client = {
-        name, contact_name, id_client_category_fk, cpf, cnpj,
-        email, phone, whatsapp, birth_date, details, image_url
-    }
-
-    let newClient
-
-    const createAddres = formData.get('createAddress') === 'on'
 
     try {
-        newClient = await clientService.create(client)
 
-        if (createAddres) {
-            const id_client_fk = newClient.id_client
-            const name = clean('address_name')
-            const zip = clean('address_zip')
-            const number = clean('address_number')
-            const street = clean('address_street')
-            const district = clean('address_district')
-            const city = clean('address_city')
-            const state = clean('address_state')
-            const condominium = clean('cond_name')
-            const building_block = clean('cond_building_block')
-            const unit_number = clean('cond_uni_number')
-            const internal_street = clean('cond_street')
-
-            if (!id_client_fk) throw new Error('Erro ao receber id do cliente cadastrado')
-
-            const address = { id_client_fk, name, zip, number, street, district, city, state, condominium, building_block, unit_number, internal_street }
-
-            await clientService.createAddress(address)
-        }
-        updateTag('clients')
-
-    } catch (error) {
-        console.error(error)
-        return { success: false, error: 'Erro ao criar cliente' }
+    } catch(error) {
+        
     }
-    // if (newClient) redirect(`/admin/cliente/${newClient.id_client}`)
-    redirect(`/admin/cliente/${newClient.id_client}`)
-    // return { success: true }
 }
 
 // update
