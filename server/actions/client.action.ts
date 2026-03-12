@@ -14,7 +14,7 @@ interface ActionState {
 }
 
 // creat
-export async function createClient(params: FormData | CreateClient): ApiResponse<CreateClient> {
+export async function createClient(params: FormData | CreateClient): ApiResponse<ClientDB> {
 
     const paramsToObj = params instanceof FormData
         ? Object.fromEntries(params.entries())
@@ -31,9 +31,12 @@ export async function createClient(params: FormData | CreateClient): ApiResponse
     }
 
     try {
+        const response = await clientService.create(paramsValidate.data)
+        return {success: true, data: response}
 
-    } catch(error) {
-        
+    } catch (error) {
+        console.error('ERROR ACTION createClient')
+        return { success: false, message: 'Erro interno do servidor' }
     }
 }
 
