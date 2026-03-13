@@ -12,7 +12,7 @@ export const createClientSchema = z.object({
     whatsapp: z.string().optional().or(z.literal('')),
     birth_date: z.coerce.date().optional(),
     details: z.string().optional().or(z.literal('')),
-    image_url: z.string().url('URL inválida').optional().or(z.literal('')),
+    image_url: z.url('URL inválida').optional().or(z.literal('')),
 })
 
 // update client schema
@@ -44,7 +44,7 @@ export type UpdateClientCategory = z.infer<typeof updateClientCategorySchema>
 // -------------------------------------------------------
 
 // create client address schema
-const createCliencAddressSchema = z.object({
+export const createCliencAddressSchema = z.object({
     id_client_fk: z.coerce.number().positive(),
     name: z.string().trim().min(3, 'Minimo 3 caracteres'),
     zip: z.string().trim().min(3).optional(),
@@ -71,3 +71,16 @@ export const updateClientAddressSchema = createCliencAddressSchema.extend({
 // types
 export type CreateClientAddress = z.infer<typeof createCliencAddressSchema>
 export type updateClientAddressSchema = z.infer<typeof updateClientAddressSchema>
+
+// -------------------------------------------------------
+
+// upload client image schema
+export const uploadClientImageSchema = z.object({
+    id_client: z.coerce.number().positive("ID do cliente é obrigatório"),
+    file: z.instanceof(File, { message: 'Selecione uma imagem válida' })
+        .refine((file) => file.size <= 5 * 1024 * 1024, 'O arquivo deve ter no máximo 5MB')
+        .refine((file) => ['image/jpeg', 'image/png', 'image/webp'].includes(file.type), 'Formato de imagem inválido')
+})
+
+// types
+export type UploadClientImage = z.infer<typeof uploadClientImageSchema>

@@ -2,7 +2,7 @@ import sql from '@/server/db'
 import { unstable_cache } from 'next/cache'
 import storageServices from './storage.service'
 import { Client, ClientDB, ClientAddress, ClientAddressDB, ClientCategory, ClientCategoryDB, ClientUploadImage } from '@/types/client.types'
-import { CreateClient, UpdateClient } from '@/schemas/client.schema'
+import { CreateClient, CreateClientAddress, CreateClientCategory, UpdateClient, UpdateClientCategory } from '@/schemas/client.schema'
 
 // ------------------- CLIENTS
 
@@ -111,7 +111,7 @@ const findAddressesByClient = unstable_cache(
 
 
 // CREAT
-async function createAddress(params: ClientAddress): Promise<ClientAddressDB> {
+async function createAddress(params: CreateClientAddress): Promise<ClientAddressDB> {
 
     const [row] = await sql<ClientAddressDB[]>`
         insert into ana_client_addresses ${sql(params)}
@@ -170,7 +170,7 @@ const findCategories = unstable_cache(
 // )
 
 // CREATE
-async function createCategory(params: ClientCategoryDB): Promise<ClientCategoryDB> {
+async function createCategory(params: CreateClientCategory): Promise<ClientCategoryDB> {
     const [row] = await sql<ClientCategoryDB[]>`
         insert into ana_client_categories ${sql(params)}
         returning *
@@ -182,7 +182,7 @@ async function createCategory(params: ClientCategoryDB): Promise<ClientCategoryD
 }
 
 // UPDATE
-async function updateCategory(params: ClientCategoryDB): Promise<ClientCategoryDB> {
+async function updateCategory(params: UpdateClientCategory): Promise<ClientCategoryDB> {
     const [row] = await sql<ClientCategoryDB[]>`
         update ana_client_categories set ${sql(params)}
         where id_client_category = ${params.id_client_category}

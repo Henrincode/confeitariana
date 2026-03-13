@@ -9,7 +9,7 @@ type BaseResponse<T, E = T> =
         success: false;
         data?: never;
         message: string;
-        // O 'Partial<Record<keyof E, string>>' mapeia as chaves do objeto para string
+        // O 'Partial<Record<keyof E, string[]>>' mapeia as chaves do objeto para string[]
         errors?: Partial<Record<keyof E, string[]>>
     };
 

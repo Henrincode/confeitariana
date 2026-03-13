@@ -1,11 +1,11 @@
 'use server'
-import { CreateClient, createClientSchema } from "@/schemas/client.schema";
+import { createCliencAddressSchema, CreateClient, CreateClientAddress, CreateClientCategory, createClientCategorySchema, createClientSchema, UpdateClient, UpdateClientCategory, updateClientCategorySchema, updateClientSchema, UploadClientImage, uploadClientImageSchema } from "@/schemas/client.schema";
 import clientService from "@/server/services/client.service";
 import { ApiResponse } from "@/types/ApiResponse";
-import { ClientDB } from "@/types/client.types";
+import { ClientAddressDB, ClientCategoryDB, ClientDB } from "@/types/client.types";
 import { updateTag } from "next/cache";
 import { redirect } from "next/navigation";
-import z from "zod";
+import z, { success } from "zod";
 
 // creat
 export async function createClient(params: FormData | CreateClient): ApiResponse<ClientDB> {
@@ -13,7 +13,7 @@ export async function createClient(params: FormData | CreateClient): ApiResponse
     // transform FormData to obj
     const paramsToObj = params instanceof FormData
         ? Object.fromEntries(params.entries())
-        : params;
+        : params
 
     // valida chaves do objeto
     const paramsValidate = createClientSchema.safeParse(paramsToObj)
@@ -37,63 +37,48 @@ export async function createClient(params: FormData | CreateClient): ApiResponse
         return { success: true, data }
 
     } catch (error) {
-        console.error('ERROR ACTION createClient')
+        console.error('ERROR ACTION createClient', error)
         return { success: false, message: 'Erro interno do servidor' }
     }
 }
 
 // update
-export async function updateClient(_: ActionState, formData: FormData) {
-    const clean = (key: string) => {
-        const value = formData.get(key)?.toString().trim();
-        return value === "" ? null : (value ?? null);
-    }
+export async function updateClient(params: FormData | UpdateClient): ApiResponse<ClientDB> {
 
-    const id_client = Number(formData.get('id_client')) || null
-    const name = clean('name')
-    const contact_name = clean('contact_name')
-    const id_client_category_fk = Number(formData.get('id_client_category_fk')) || null
-    const cpf = clean('cpf')
-    const cnpj = clean('cnpj')
-    const email = clean('email')
-    const phone = clean('phone')
-    const whatsapp = clean('whatsapp')
-    const birth_date = (() => {
-        const date = clean('birth_date');
-        return date && !isNaN(Date.parse(date)) ? new Date(date) : null;
-    })()
+    const paramsToObj = params instanceof FormData
+        ? Object.fromEntries(params.entries())
+        : params
 
-    const details = clean('details')
-    const image_url = clean('image_url')
+    const paramsValidate = updateClientSchema.safeParse(paramsToObj)
 
-
-    if (!name) {
-        return { success: false, error: 'Nome não foi preenchido' }
-    }
-
-    if (!id_client) return { success: false, error: 'id do cliente não informado' }
-
-    const client = {
-        id_client, name, contact_name, id_client_category_fk, cpf, cnpj,
-        email, phone, whatsapp, birth_date, details, image_url
+    if (!paramsValidate.success) return {
+        success: false,
+        message: "Existem erros de validação.",
+        errors: z.flattenError(paramsValidate.error).fieldErrors
     }
 
     try {
-        await clientService.update(client)
+        const data = await clientService.update(paramsValidate.data)
         updateTag('clients')
-    } catch (error: any) {
-        console.error(error.message)
-        return { error: 'Erro' }
+        return { success: true, data }
+    } catch (error) {
+        console.error('ERROR ACTION updateClient', error)
+        return { success: false, message: 'Erro interno do servidor' }
     }
-    return { success: true }
 }
 
 // delete
-export async function deleteClient(id: number) {
-    if (!id) return { success: false, error: 'id não informado' }
-    await clientService.delete(id)
-    updateTag('clients')
-    redirect('/admin/clientes')
+export async function deleteClient(id: number): ApiResponse<ClientDB> {
+    if (!id || isNaN(id) || id < 1) return { success: false, message: 'ID não informado ou não é do tipo Number' }
+
+    try {
+        const data = await clientService.delete(id)
+        updateTag('clients')
+        return { success: true, data }
+    } catch (error) {
+        console.error('ERROR ACTION deleteClient', error)
+        return { success: false, message: 'Erro interno do servidor' }
+    }
 }
 
 
@@ -102,53 +87,43 @@ export async function deleteClient(id: number) {
 // 
 
 // create address
-export async function createClientAddress(_: ActionState, formData: FormData) {
-    const clean = (key: string) => {
-        const value = formData.get(key)?.toString().trim();
-        return value === "" ? null : (value ?? null);
+export async function createClientAddress(params: FormData | CreateClientAddress): ApiResponse<ClientAddressDB> {
+
+    const paramsToObj = params instanceof FormData
+        ? Object.fromEntries(params.entries())
+        : params
+
+    const paramsValidate = createCliencAddressSchema.safeParse(paramsToObj)
+
+    if (!paramsValidate.success) return {
+        success: false,
+        message: "Existem erros de validação.",
+        errors: z.flattenError(paramsValidate.error).fieldErrors
     }
+
     try {
-        const id_client_fk = Number(formData.get('id_client_fk')) || null
-        const name = clean('name')
-        const zip = clean('zip')
-        const number = clean('number')
-        const street = clean('street')
-        const district = clean('district')
-        const city = clean('city')
-        const state = clean('state')
-        const condominium = clean('condominium')
-        const building_block = clean('building_block')
-        const unit_number = clean('uni_number')
-        const internal_street = clean('street')
-
-        if (!id_client_fk) return { success: false, error: 'id do cliente não informado' }
-
-        const address = {
-            id_client_fk, name, zip, number, street, district, city, state,
-            condominium, building_block, unit_number, internal_street
-        }
-
-        console.log(address)
-
-        await clientService.createAddress(address)
-
+        const data = await clientService.createAddress(paramsValidate.data)
         updateTag('clients')
+        return { success: true, data }
 
     } catch (error) {
-        console.error(error)
-        return { success: false, error: 'Erro ao criar endereço' }
+        console.error('ERROR ACTION createClientAddress', error)
+        return { success: false, message: 'Erro interno do servidor' }
     }
-    console.log('fooooi')
-    return { success: true }
 }
 
 // adress delete
-export async function deleteClientAddress(id: number) {
+export async function deleteClientAddress(id: number): ApiResponse<ClientAddressDB> {
+
+    if (!id || isNaN(id) || id < 1) return { success: false, message: 'ID não informado ou não é do tipo Number' }
+
     try {
-        await clientService.deleteAddress(id)
+        const data = await clientService.deleteAddress(id)
         updateTag('clients')
+        return { success: true, data }
     } catch (error) {
-        console.log(error)
+        console.log('ERROR ACTION deleteClientAddress', error)
+        return { success: false, message: 'Erro interno do servidor' }
     }
 }
 
@@ -157,30 +132,55 @@ export async function deleteClientAddress(id: number) {
 // 
 
 // CREAT
-export async function createClientCategory(input_name: string) {
-    const name = input_name?.toString().trim() || null
+export async function createClientCategory(params: FormData | CreateClientCategory): ApiResponse<ClientCategoryDB> {
 
-    if (!name) return { success: false, error: 'Nome precisa ser preenchido.' }
+    const paramsToObj = params instanceof FormData
+        ? Object.fromEntries(params.entries())
+        : params
 
-    if (await clientService.existsCategory(name)) return { success: false, error: 'Nome já existe' }
+    const paramsValidate = createClientCategorySchema.safeParse(paramsToObj)
+
+    if (!paramsValidate.success) return {
+        success: false,
+        message: "Existem erros de validação.",
+        errors: z.flattenError(paramsValidate.error).fieldErrors
+    }
 
     try {
-        await clientService.createCategory(name)
+        const data = await clientService.createCategory(paramsValidate.data)
         updateTag('clients')
-        return { success: true }
+        return { success: true, data }
+
     } catch (error) {
-        console.error(error)
-        return { success: false, error: 'Erro ao criar categoria' }
+        console.error('ERROR ACTION createClientCategory', error)
+        return { success: false, message: 'Erro interno do servidor' }
     }
+
 }
 
 // UPDATE
-export async function updateClientCategory(category: { id_client_category: number, name: string }) {
+export async function updateClientCategory(params: FormData | UpdateClientCategory): ApiResponse<ClientCategoryDB> {
+
+    const paramsToObj = params instanceof FormData
+        ? Object.fromEntries(params.entries())
+        : params
+
+    const paramsValidate = updateClientCategorySchema.safeParse(paramsToObj)
+
+    if (!paramsValidate.success) return {
+        success: false,
+        message: "Existem erros de validação.",
+        errors: z.flattenError(paramsValidate.error).fieldErrors
+    }
+
     try {
-        await clientService.updateCategory(category)
+        const data = await clientService.updateCategory(paramsValidate.data)
         updateTag('clients')
+        return { success: true, data }
+
     } catch (error) {
-        console.error(error)
+        console.error('ERROR ACTION updateClientCategory', error)
+        return { success: false, message: 'Erro interno do servidor' }
     }
 }
 
@@ -201,19 +201,31 @@ export async function deleteClientCategory(id: number) {
 // 
 
 // update
-export async function updateClientImage(_: ActionState, formData: FormData) {
+export async function uploadClientImage(params: FormData | UploadClientImage ): ApiResponse<ClientDB> {
+
+    // 
+    // Arrumar o arquivo de imagem convertido e comprimido igual ao projeto Locardora
+    // 
+
+    const paramsToObj = params instanceof FormData
+        ? Object.fromEntries(params.entries())
+        : params
+
+    const paramsValidate = uploadClientImageSchema.safeParse(paramsToObj)
+
+    if (!paramsValidate.success) return {
+        success: false,
+        message: "Existem erros de validação.",
+        errors: z.flattenError(paramsValidate.error).fieldErrors
+    }
+
     try {
-        const id_client = Number(formData.get('id_client'))
-        const file = formData.get('image_url') as File
-        if (!file) throw new Error('Nenhuma imagem enviada.')
-
-        const url = await clientService.updateImage({ id_client, file })
-
+        const data = await clientService.uploadImage(paramsValidate.data)
         updateTag('clients')
-        return { success: true }
+        return { success: true, data }
 
     } catch (error: any) {
         console.error(error.message)
-        return { success: false, error: 'Erro ao enviar imagem' }
+        return { success: false, message: 'Erro ao enviar imagem' }
     }
 }
