@@ -7,21 +7,18 @@ import { updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import z from "zod";
 
-interface ActionState {
-    success?: boolean
-    error?: string
-    client?: any
-}
-
 // creat
 export async function createClient(params: FormData | CreateClient): ApiResponse<ClientDB> {
 
+    // transform FormData to obj
     const paramsToObj = params instanceof FormData
         ? Object.fromEntries(params.entries())
         : params;
 
+    // valida chaves do objeto
     const paramsValidate = createClientSchema.safeParse(paramsToObj)
 
+    // retorna erros caso exista
     if (!paramsValidate.success) {
         return {
             success: false,
@@ -30,9 +27,14 @@ export async function createClient(params: FormData | CreateClient): ApiResponse
         }
     }
 
+    // abre try/cach para tratar erros do banco
     try {
-        const response = await clientService.create(paramsValidate.data)
-        return {success: true, data: response}
+        // envia dados para a service
+        const data = await clientService.create(paramsValidate.data)
+        // revalida o cache
+        updateTag('clients')
+        // retorna os dados cadastrados
+        return { success: true, data }
 
     } catch (error) {
         console.error('ERROR ACTION createClient')
