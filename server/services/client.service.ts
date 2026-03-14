@@ -221,9 +221,10 @@ async function uploadImage(params: ClientUploadImage): Promise<ClientDB> {
     const image_url = await storageServices.image({ file, filePath })
 
     const [row] = await sql<ClientDB[]>`
-        UPDATE ana_clients 
-        SET image_url = ${image_url} 
-        WHERE id_client = ${id_client}
+    UPDATE ana_clients 
+    SET image_url = ${image_url} 
+    WHERE id_client = ${id_client}
+    returning *
     `
     return {
         ...row,

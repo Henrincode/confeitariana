@@ -1,34 +1,19 @@
-'use client'
+import clientService from "@/server/services/client.service";
+import ClientTeste from "./ClientView";
 
-import { CreateClient } from "@/schemas/client.schema"
-import { createClient } from "@/server/actions/client.action"
-import { useEffect, useState } from "react"
+export default async function teste() {
 
-export default function teste() {
+    const client = await clientService.findById(120)
 
-    const [load, setLoad] = useState(false)
-
-    async function teste() {
-        setLoad(true)
-        const client: CreateClient = {
-            id_client_category_fk: 1,
-            name: 'teste'
-        }
-
-        const data = await createClient(client)
-        console.log(data)
-        setLoad(false)
+    if(!client) {
+        return (
+            <div className="text-center text-8xl">
+                Cliente não encontrado
+            </div>
+        )
     }
 
     return (
-        <div className="box flex flex-col items-center">
-
-            {load
-                ? <div className="size-20 border-10 rounded-full border-cyan-300 border-t-black/0 animate-spin"></div>
-                : <button onMouseDown={teste}>aaaaaa</button>
-            }
-
-
-        </div>
+        <ClientTeste client={client}/>
     )
 }
