@@ -11,8 +11,15 @@ import DeleteProfile from "./_components/DeleteProfile"
 import CreateAddress from "./_components/CreateAddress"
 import { AiFillDelete } from "react-icons/ai"
 import { deleteClientAddress } from "@/server/actions/client.action"
+import { Client, ClientAddress } from "@/types/client.types"
 
-export default function ClientView({ idPage, client }: any) {
+interface Params {
+    idPage: number,
+    client: Client,
+    clientAddresses: ClientAddress[]
+}
+
+export default function ClientView({ idPage, client, clientAddresses }: Params) {
     const [editing, setEditing] = useState('a')
     const [value, setValue] = useState('')
     const [botao, setBotao] = useState('b')
@@ -53,7 +60,7 @@ export default function ClientView({ idPage, client }: any) {
             <div className="rounded-t-4xl rounded-b-xl shadow-2xl shadow-black/50 overflow-hidden" >
                 <div className="relative flex flex-col sm:flex-row items-center gap-4 sm:gap-10 p-5 pb-10 sm:p-10 bg-pink-400">
 
-                    <UpdateImage clientId={client.id_client} name={client.name} image={client.image_url} />
+                    <UpdateImage clientId={client.id_client} name={client.name} image={client.image_url || ''} />
 
                     <div onClick={() => openModal('delete')} className="
                         absolute
@@ -257,8 +264,8 @@ export default function ClientView({ idPage, client }: any) {
             {/* address */}
             <div className=" p-5 sm:px-10 mt-10 rounded-xl shadow-2xl shadow-black/50 bg-white">
                 <div className="mb-4">Endereço</div>
-                <ul className={`${client.addresses.length ? "grid grid-cols-1 md:grid-cols-4" : "flex justify-center mb-4"} gap-4`}>
-                    {client.addresses.map((a: any, i: number) => (
+                <ul className={`${clientAddresses.length ? "grid grid-cols-1 md:grid-cols-4" : "flex justify-center mb-4"} gap-4`}>
+                    {clientAddresses.map((a: any, i: number) => (
                         <li key={i} className="group relative p-2 rounded-lg ring-2 text-gray-600 ring-pink-500/50 bg-pink-50">
                             {a.name} <br /> {a.number && `${a.number}, `}{a.street}
                             {/* delete address */}
@@ -268,11 +275,11 @@ export default function ClientView({ idPage, client }: any) {
                             </button>
                         </li>
                     ))}
-                    {client.addresses.length < 4 && (
+                    {clientAddresses.length < 4 && (
                         <div className="flex justify-center items-center">
                             <div onClick={() => openModal('address')}
                                 className="px-2 py-1 rounded-full ring-2 font-semibold text-sm ring-pink-800/80 text-white bg-pink-400 hover:bg-pink-500 cursor-pointer">
-                                Adicionar {`${client.addresses.length + 1} de 4`}
+                                Adicionar {`${clientAddresses.length + 1} de 4`}
                             </div>
                         </div>
                     )}

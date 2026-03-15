@@ -1,7 +1,12 @@
 'use client'
 import { deleteClient } from "@/server/actions/client.action";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function UpdateProfile({ closeModal, client }: { closeModal: Function, client: any }) {
+
+    const router = useRouter()
+
     return (
         <div onMouseDown={(e) => e.stopPropagation()} className="
             flex flex-col items-center gap-4
@@ -27,7 +32,7 @@ export default function UpdateProfile({ closeModal, client }: { closeModal: Func
                 [&_.buttom]:text-white [&_.buttom]:border-white
                 [&_.buttom]:bg-pink-500 [&_.buttom]:hover:bg-pink-800
             ">
-                <div className="buttom" onClick={() => { closeModal(); deleteClient(client.id_client) }}>sim</div>
+                <Link href={'/admin/clientes/'} className="buttom" onClick={() => { closeModal(); deleteClient(client.id_client) }}>sim</Link>
                 <div className="buttom" onClick={() => closeModal()}>não</div>
             </div>
         </div>

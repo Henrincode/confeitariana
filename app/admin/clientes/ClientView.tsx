@@ -14,8 +14,8 @@ export default function ClientView({clients}: any){
                                 <Image
                                     src={c.image_url}
                                     alt='avatar'
-                                    width={120}
-                                    height={120}
+                                    width={200}
+                                    height={200}
                                     className="z-1 w-20 sm:w-30 border-8 border-white group-hover:border-pink-300 rounded-full aspect-square object-cover"
                                 />
                             )

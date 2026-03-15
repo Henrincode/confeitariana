@@ -1,75 +1,91 @@
 'use client'
 
 import imageCompression from 'browser-image-compression';
-import { updateClientImage } from "@/server/actions/client.action";
-import { useActionState, startTransition, useState } from "react"; // 1. Importe o startTransition
+import { uploadClientImage } from "@/server/actions/client.action";
+import { useActionState, startTransition, useState, useEffect } from "react"; // 1. Importe o startTransition
 import Image from 'next/image';
 
-interface State {
-    success?: boolean
-    error?: string
-}
-
-const initialState: State = {}
-
 export default function UpdateImage({ name, image, clientId }: { name: string, image: string, clientId: number }) {
-    // Nota: Em React 19 / Next 15, useActionState retorna [state, action, isPending]
-    const [stateImage, formImage, isPending] = useActionState(updateClientImage, initialState)
 
-    const clickUpdateImage = async (event: React.ChangeEvent<HTMLInputElement>) => {
-        const imageFile = event.target.files?.[0]
-        if (!imageFile) return
+    const [pending, setPending] = useState<boolean>()
+
+    const [imageUrl, setImageUrl] = useState('')
+    const [fileUpload, setFileUpload] = useState<File>()
+    const [error, setError] = useState('')
+
+    const [newComp, setNewComp] = useState(1)
+
+    // useEffect(() => {
+    //     if (image && !imageUrl) setImageUrl(image)
+    // }, [])
+
+    async function renderImage(e: React.ChangeEvent<HTMLInputElement>) {
+
+        const imageFile = e.currentTarget.files?.[0];
+        if (!imageFile) return;
+
+        setPending(true)
 
         const options = {
-            maxSizeMB: 1,
+            maxSizeMB: 2,
             maxWidthOrHeight: 1000,
             useWebWorker: true,
-        }
+        };
 
         try {
-            // 1. Compacta a imagem
-            const compressedFile = await imageCompression(imageFile, options)
+            // 1. Comprime o arquivo (retorna um Blob/File sem o nome original)
+            const compressedBlob = await imageCompression(imageFile, options);
 
-            // 2. Cria o FormData com o arquivo otimizado
-            const formData = new FormData()
-            formData.append('image_url', compressedFile, compressedFile.name)
-            formData.append('id_client', clientId.toString())
+            // 2. Converte o Blob em um novo objeto File
+            // Passa o array com o blob, o nome original e o tipo
+            const finalFile = new File([compressedBlob], imageFile.name, {
+                type: imageFile.type,
+                lastModified: Date.now(),
+            });
 
-            // 3. A MÁGICA: Dispara a Action dentro de uma transition
-            // Isso remove o erro do console e ativa o estado isPending
-            startTransition(() => {
-                formImage(formData)
-            })
+            // 3. Salva um File real, com .name e .size
+            setFileUpload(finalFile);
 
-        } catch (error) {
-            console.error("Erro ao comprimir imagem:", error)
+            const data = { id_client: clientId, file: finalFile }
+
+            const response = await uploadClientImage(data)
+            console.log('data? ', data)
+            console.log('deu certo? ', response)
+            if (!response.success) setError(response.message)
+
+            // 4. Cria URL para preview (funciona igual com File ou Blob)
+            // if (response.success) {
+            //     const url = URL.createObjectURL(finalFile)
+            //     setImageUrl(url)
+            //     setNewComp(c => c + 1)
+            // }
+
+        } catch (error: any) {
+            console.error("Erro na compressão:", error);
+            setError('Erro desconhecido')
         }
+
+        setTimeout(() => {
+            setPending(false)
+        }, 1500);
     }
 
     return (
         <form>
             <label
                 htmlFor="updateImage"
-                className={`relative cursor-pointer block group ${isPending ? 'opacity-50 pointer-events-none' : ''}`}
+                className={`relative cursor-pointer block group ${pending ? 'opacity-50 pointer-events-none' : ''}`}
             >
-                {image ? (
-                    <Image
-                        src={image}
-                        alt='avatar'
-                        width={200}
-                        height={200}
-                        className={`w-full sm:w-50 border-4 shadow-lg shadow-black/30 border-white/70 bg-white/50 rounded-full aspect-square object-cover transition-all ${isPending ? 'scale-95 blur-[2px]' : 'group-hover:brightness-90'}`}
-                    />
-                ) : (
-                    <img
-                        src={`https://api.dicebear.com/9.x/avataaars-neutral/svg?seed=${clientId}`}
-                        alt="avatar"
-                        className={`w-full sm:w-50 border-4 shadow-lg shadow-black/30 border-white/70 bg-white/50 rounded-full aspect-square object-cover transition-all ${isPending ? 'scale-95 blur-[2px]' : 'group-hover:brightness-90'}`}
-                    />
-                )}
+                <Image
+                    src={image || `https://api.dicebear.com/9.x/avataaars-neutral/svg?seed=${clientId}`}
+                    alt='avatar'
+                    width={350}
+                    height={350}
+                    className={`w-full sm:w-50 border-4 shadow-lg shadow-black/30 border-white/70 bg-white/50 rounded-full aspect-square object-cover transition-all ${pending ? 'scale-95 blur-[2px]' : 'group-hover:brightness-90'}`}
+                />
 
                 {/* Overlay de carregamento opcional */}
-                {isPending && (
+                {pending && (
                     <div className="absolute inset-0 flex items-center justify-center">
                         <div className="w-8 h-8 border-4 border-pink-600 border-t-transparent rounded-full animate-spin"></div>
                     </div>
@@ -80,13 +96,13 @@ export default function UpdateImage({ name, image, clientId }: { name: string, i
                     type="file"
                     accept="image/*"
                     hidden
-                    onChange={clickUpdateImage}
-                    disabled={isPending}
+                    onChange={renderImage}
+                    disabled={pending}
                 />
             </label>
 
-            {stateImage?.error && (
-                <p className="text-red-500 text-xs mt-2 text-center font-semibold">{stateImage.error}</p>
+            {error && (
+                <p className="text-red-500 text-xs mt-2 text-center font-semibold">{error}</p>
             )}
         </form>
     );

@@ -203,10 +203,6 @@ export async function deleteClientCategory(id: number) {
 // update
 export async function uploadClientImage(params: FormData | UploadClientImage ): ApiResponse<ClientDB> {
 
-    // 
-    // Arrumar o arquivo de imagem convertido e comprimido igual ao projeto Locardora
-    // 
-
     const paramsToObj = params instanceof FormData
         ? Object.fromEntries(params.entries())
         : params

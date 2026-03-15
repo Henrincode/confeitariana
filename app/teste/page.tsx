@@ -3,7 +3,7 @@ import ClientTeste from "./ClientView";
 
 export default async function teste() {
 
-    const client = await clientService.findById(120)
+    const client = await clientService.findById(1020)
 
     if(!client) {
         return (

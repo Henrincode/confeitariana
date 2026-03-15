@@ -3,29 +3,21 @@
 import { updateClient } from "@/server/actions/client.action"
 import { useActionState, useEffect } from "react"
 
-interface State {
-    success?: boolean
-    error?: string
-}
-
 export default function UpdateProfile({ closeModal, client }: { closeModal: Function, client: any }) {
     const birth_date = client.birth_date && new Date(client.birth_date).toISOString().split('T')[0] || ''
 
-    const initialState: State = {}
-
-    const [formState, formAction] = useActionState(updateClient, initialState)
-
-    useEffect(() => {
-        if (formState.success) closeModal()
-    }, [formState.success])
+    async function submit(formData: FormData) {
+        const data = Object.fromEntries(formData.entries())
+        console.log(data)
+    }
 
     return (
         <div onMouseDown={(e) => e.stopPropagation()} id="modalChild" className="flex flex-col gap-4 max-w-200 mx-auto p-2 rounded-2xl border-4 border-white bg-pink-400">
-            <form action={formAction} className="flex flex-col gap-4">
+            <form action={submit} className="flex flex-col gap-4">
                 <div>
                     <input hidden name="id_client" type="text" defaultValue={client.id_client} />
                     <input hidden name="id_client_category_fk" type="text" defaultValue={client.id_client_category_fk} />
-                    <input hidden name="image_url" type="text" defaultValue={client.image_url || null} />
+                    {/* <input hidden name="image_url" type="text" defaultValue={client.image_url || null} /> */}
                     <div className="
                     grid
                     grid-cols-4
@@ -124,6 +116,7 @@ export default function UpdateProfile({ closeModal, client }: { closeModal: Func
                     [&_button]:transition-all
                 ">
                     <button type="submit">Atualizar</button>
+                    <button type="reset">Desfazer</button>
                     <button onClick={() => closeModal()} type="button">Cancelar</button>
                 </div>
 

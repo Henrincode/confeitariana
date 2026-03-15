@@ -210,10 +210,9 @@ async function deleteCategory(id: number): Promise<ClientCategoryDB> {
 // ------------------- IMAGE
 
 async function uploadImage(params: ClientUploadImage): Promise<ClientDB> {
+    
     const { id_client, file } = params
-    if (!file || !file.name) {
-        throw new Error("Arquivo inválido ou não selecionado.");
-    }
+
     const fileExt = file.name.split('.').pop()
     const fileName = `${Math.random().toString().slice(2)}.${fileExt}`
     const filePath = `clients/${id_client}/${fileName}`
