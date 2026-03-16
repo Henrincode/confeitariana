@@ -7,8 +7,8 @@ export default function UpdateProfile({ closeModal, client }: { closeModal: Func
     const birth_date = client.birth_date && new Date(client.birth_date).toISOString().split('T')[0] || ''
 
     async function submit(formData: FormData) {
-        const data = Object.fromEntries(formData.entries())
-        console.log(data)
+        const response = await updateClient(formData)
+        console.log('response', response)
     }
 
     return (
@@ -20,19 +20,20 @@ export default function UpdateProfile({ closeModal, client }: { closeModal: Func
                     {/* <input hidden name="image_url" type="text" defaultValue={client.image_url || null} /> */}
                     <div className="
                     grid
-                    grid-cols-4
+                    grid-cols-1
+                    md:grid-cols-4
                     items-start
                     gap-2
 
                     [&_.col]:flex
                     [&_.col]:flex-col
-                    [&_.col-1]:col-span-4
+                    [&_.col-1]:col-span-1
                     [&_.col-1]:sm:col-span-1
-                    [&_.col-2]:col-span-4
+                    [&_.col-2]:col-span-1
                     [&_.col-2]:sm:col-span-2
-                    [&_.col-3]:col-span-4
+                    [&_.col-3]:col-span-1
                     [&_.col-3]:sm:col-span-3
-                    [&_.col-4]:col-span-4
+                    [&_.col-4]:col-span-1
                     [&_.col-4]:sm:col-span-4
 
                     [&_.f-label]:w-fit
@@ -82,7 +83,7 @@ export default function UpdateProfile({ closeModal, client }: { closeModal: Func
                         </div>
 
                         <div className="col">
-                            <label className="f-label" htmlFor="f-birthday">Aniversário {birth_date}</label>
+                            <label className="f-label" htmlFor="f-birthday">Aniversário</label>
                             <input id="f-birthday" className="campo" name="birth_date" type="date" defaultValue={birth_date} />
                         </div>
 
