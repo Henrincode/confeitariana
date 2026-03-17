@@ -11,18 +11,20 @@ interface State {
 export default function CreateAddress({ closeModal, client }: { closeModal: Function, client: any }) {
     const birth_date = client.birth_date && new Date(client.birth_date).toISOString().split('T')[0] || ''
 
-    const initialState: State = {}
+    async function submit(formData: FormData){
+        console.log('formData', Object.fromEntries(formData.entries()))
+        const response = await createClientAddress(formData)
+        console.log('response', response)
+    }
 
-    const [formState, formAction] = useActionState(createClientAddress, initialState)
-
-    useEffect(() => {
-        if(formState.success) closeModal()
+    // useEffect(() => {
+    //     if(formState.success) closeModal()
         
-    },[formState.success])
+    // },[formState.success])
     
     return (
         <div onMouseDown={(e) => e.stopPropagation()} id="modalChild" className="flex flex-col gap-4 max-w-200 mx-auto p-2 rounded-2xl border-4 border-white bg-pink-400">
-            <form action={formAction} className="flex flex-col gap-4">
+            <form action={submit} className="flex flex-col gap-4">
                 <div>
                     <input hidden name="id_client_fk" type="text" defaultValue={client.id_client} />
                     <div className="
@@ -105,8 +107,8 @@ export default function CreateAddress({ closeModal, client }: { closeModal: Func
                                 <input name="unit_number" id="unit_number" type="text" placeholder="ex: 1, 2, 2B" className="campo" />
                             </div>
                             <div className="col col-1">
-                                <label htmlFor="street" className="f-label">Rua interna</label>
-                                <input name="street" id="street" type="text" placeholder="ex: Av. 2, Rua 4" className="campo" />
+                                <label htmlFor="internal_street" className="f-label">Rua interna</label>
+                                <input name="internal_street" id="internal_street" type="text" placeholder="ex: Av. 2, Rua 4" className="campo" />
                             </div>
 
                             {/* detalhes */}

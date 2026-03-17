@@ -12,8 +12,8 @@ export default function ClientView({clients}: any){
                                 <Image
                                     src={c.image_url || `https://api.dicebear.com/9.x/avataaars-neutral/svg?seed=${c.id_client}`}
                                     alt='avatar'
-                                    width={200}
-                                    height={200}
+                                    width={100}
+                                    height={100}
                                     className="z-1 w-20 sm:w-30 border-8 border-white group-hover:border-pink-300 rounded-full aspect-square bg-white object-cover"
                                 />
                         <div className="sm:flex-1 sm:flex sm:flex-row sm:items-center sm:min-h-16 px-2 py-1 pl-8 -ml-5 sm:text-xl rounded-r-2xl text-gray-700 bg-white group-hover:bg-pink-300">

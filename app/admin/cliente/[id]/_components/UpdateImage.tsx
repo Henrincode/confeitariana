@@ -79,8 +79,8 @@ export default function UpdateImage({ name, image, clientId }: { name: string, i
                 <Image
                     src={image || `https://api.dicebear.com/9.x/avataaars-neutral/svg?seed=${clientId}`}
                     alt='avatar'
-                    width={350}
-                    height={350}
+                    width={300}
+                    height={300}
                     className={`w-full sm:w-50 border-4 shadow-lg shadow-black/30 border-white/70 bg-white/50 rounded-full aspect-square object-cover transition-all ${pending ? 'scale-95 blur-[2px]' : 'group-hover:brightness-90'}`}
                 />
 

@@ -4,15 +4,15 @@ import { z } from 'zod'
 export const createClientSchema = z.object({
     id_client_category_fk: z.coerce.number().positive(),
     name: z.string().trim().min(3, 'Mínimo 3 caracteres'),
-    contact_name: z.string().trim().min(3, 'Mínimo 3 caracteres').optional().or(z.literal('')),
-    cpf: z.string().trim().min(11, 'CPF precisa de 11 números').optional().or(z.literal('')),
-    cnpj: z.string().trim().optional().or(z.literal('')),
+    contact_name: z.string().trim().min(3, 'Mínimo 3 caracteres').or(z.literal('')).optional(),
+    cpf: z.string().trim().min(11, 'CPF precisa de 11 números').or(z.literal('')).optional(),
+    cnpj: z.string().trim().or(z.literal('')).optional(),
     email: z.email('E-mail inválido').optional(),
-    phone: z.string().optional().or(z.literal('')),
-    whatsapp: z.string().optional().or(z.literal('')),
+    phone: z.string().or(z.literal('')).optional(),
+    whatsapp: z.string().or(z.literal('')).optional(),
     birth_date: z.coerce.date().optional(),
-    details: z.string().optional().or(z.literal('')),
-    image_url: z.url('URL inválida').optional().or(z.literal('')),
+    details: z.string().or(z.literal('')).optional(),
+    image_url: z.url('URL inválida').or(z.literal('')).optional(),
 })
 
 // update client schema
@@ -47,20 +47,20 @@ export type UpdateClientCategory = z.infer<typeof updateClientCategorySchema>
 export const createCliencAddressSchema = z.object({
     id_client_fk: z.coerce.number().positive(),
     name: z.string().trim().min(3, 'Minimo 3 caracteres'),
-    zip: z.string().trim().min(3).optional(),
-    number: z.string().trim().min(3).optional(),
-    street: z.string().trim().min(3).optional(),
-    district: z.string().trim().min(3).optional(),
-    city: z.string().trim().min(3).optional(),
-    state: z.string().trim().min(3).optional(),
-    country_code: z.string().trim().min(3).optional(),
+    zip: z.string().trim().min(3).or(z.literal('')).optional(),
+    number: z.string().trim().min(3).or(z.literal('')).optional(),
+    street: z.string().trim().min(3).or(z.literal('')).optional(),
+    district: z.string().trim().min(3).or(z.literal('')).optional(),
+    city: z.string().trim().min(3).or(z.literal('')).optional(),
+    state: z.string().trim().min(3).or(z.literal('')).optional(),
+    country_code: z.string().trim().min(3).or(z.literal('')).optional(),
 
-    condominium: z.string().trim().min(3).optional(),
-    building_block: z.string().trim().min(3).optional(),
-    unit_number: z.string().trim().min(3).optional(),
-    internal_street: z.string().trim().min(3).optional(),
+    condominium: z.string().trim().min(3).or(z.literal('')).optional(),
+    building_block: z.string().trim().min(3).or(z.literal('')).optional(),
+    unit_number: z.string().trim().min(3).or(z.literal('')).optional(),
+    internal_street: z.string().trim().min(3).or(z.literal('')).optional(),
 
-    details: z.string().trim().min(3).optional()
+    details: z.string().trim().min(3).or(z.literal('')).optional()
 })
 
 // update client street schema

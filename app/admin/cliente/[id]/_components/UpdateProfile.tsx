@@ -1,14 +1,64 @@
 'use client'
 
 import { updateClient } from "@/server/actions/client.action"
-import { useActionState, useEffect } from "react"
+import { ClientDB } from "@/types/client.types"
+import { useActionState, useEffect, useState } from "react"
 
-export default function UpdateProfile({ closeModal, client }: { closeModal: Function, client: any }) {
-    const birth_date = client.birth_date && new Date(client.birth_date).toISOString().split('T')[0] || ''
+interface Params {
+    closeModal: Function
+    client: ClientDB
+}
+
+export default function UpdateProfile({ closeModal, client }: Params) {
+
+
+
+    const [errors, setErrors] = useState<Record<string, string[]>>()
+
+    const [inputName, setInputName] = useState<string>('')
+    const [inputContactName, setInputContactName] = useState<string>('')
+    const [inputCPF, setInputCPF] = useState<string>('')
+    const [inputCNPJ, setInputCNPJ] = useState<string>('')
+    const [inputEmail, setInputEmail] = useState<string>('')
+    const [inputPhone, setInputPhone] = useState<string>('')
+    const [inputWhatsapp, setInputWhatsapp] = useState<string>('')
+    const [inputBirtDate, setInputBirtDate] = useState<string>('')
+    const [inputDetails, setInputDetails] = useState<string>('')
+
+    useEffect(() => {
+        formDefault()
+    }, [])
+
+    async function formDefault() {
+        setInputName(client.name)
+        setInputContactName(client.contact_name || '')
+        setInputCPF(client.cpf || '')
+        setInputCNPJ(client.cnpj || '')
+        setInputEmail(client.email || '')
+        setInputPhone(client.phone || '')
+        setInputWhatsapp(client.whatsapp || '')
+        setInputDetails(client.details || '')
+
+        const birth_date = client.birth_date && new Date(client.birth_date).toISOString().split('T')[0] || ''
+        setInputBirtDate(birth_date)
+
+    }
+
+    function removeError(error: string) {
+        const list = errors
+        if (!list) return
+        delete list[error]
+        setErrors(list)
+    }
 
     async function submit(formData: FormData) {
         const response = await updateClient(formData)
-        console.log('response', response)
+        if (!response.success) {
+            setErrors(response.errors)
+            console.log('nao foi', response.errors)
+            return
+        }
+        closeModal()
     }
 
     return (
@@ -51,25 +101,39 @@ export default function UpdateProfile({ closeModal, client }: { closeModal: Func
                     [&_.campo]:text-gray-600
                     [&_.campo]:bg-white
                     [&_.campo]:hover:bg-pink-100
+
+                    [&_.error]:bg-red-500
                 ">
                         <div className="col col-2">
                             <label className="f-label" htmlFor="f-name">Nome</label>
-                            <input id="f-name" className="campo" name="name" type="text" defaultValue={client.name} />
+                            <input
+                                onInput={(e) => { setInputName(e.currentTarget.value); removeError('name') }} value={inputName}
+                                id="f-name" name="name" type="text" className={`${errors?.name && 'error'} campo`}
+                            />
                         </div>
 
                         <div className="col">
                             <label className="f-label" htmlFor="f-email">E-Mail</label>
-                            <input id="f-email" className="campo" name="email" type="text" defaultValue={client.email} />
+                            <input
+                                onInput={(e) => { setInputEmail(e.currentTarget.value); removeError('email') }} value={inputEmail}
+                                id="f-email" name="email" type="text" className={`${errors?.email && 'error'} campo`}
+                            />
                         </div>
 
                         <div className="col">
                             <label className="f-label" htmlFor="f-cpf">CPF</label>
-                            <input id="f-cpf" className="campo" name="cpf" type="text" defaultValue={client.cpf} />
+                            <input
+                                onInput={(e) => { setInputCPF(e.currentTarget.value); removeError('cpf') }} value={inputCPF}
+                                id="f-cpf" name="cpf" type="text" className={`${errors?.cpf && 'error'} campo`}
+                            />
                         </div>
 
                         <div className="col">
                             <label className="f-label" htmlFor="f-cnpj">CNPJ</label>
-                            <input id="f-cnpj" className="campo" name="cnpj" type="text" defaultValue={client.cnpj} />
+                            <input
+                                onInput={(e) => { setInputCNPJ(e.currentTarget.value); removeError('cnpj') }} value={inputCPF}
+                                id="f-cnpj" name="cnpj" type="text" className={`${errors?.cnpj && 'error'} campo`}
+                            />
                         </div>
 
                         <div className="col">
@@ -84,7 +148,7 @@ export default function UpdateProfile({ closeModal, client }: { closeModal: Func
 
                         <div className="col">
                             <label className="f-label" htmlFor="f-birthday">Aniversário</label>
-                            <input id="f-birthday" className="campo" name="birth_date" type="date" defaultValue={birth_date} />
+                            <input id="f-birthday" className="campo" name="birth_date" type="date" />
                         </div>
 
                         <div className="col-4 flex flex-col">
@@ -96,6 +160,10 @@ export default function UpdateProfile({ closeModal, client }: { closeModal: Func
 
 
                 <div className="h-1 rounded-full bg-pink-50/50"></div>
+
+                {errors && (
+                    '...'
+                )}
 
                 <div className="
                     flex
@@ -117,7 +185,7 @@ export default function UpdateProfile({ closeModal, client }: { closeModal: Func
                     [&_button]:transition-all
                 ">
                     <button type="submit">Atualizar</button>
-                    <button type="reset">Desfazer</button>
+                    <button onClick={formDefault} type="button">Desfazer</button>
                     <button onClick={() => closeModal()} type="button">Cancelar</button>
                 </div>
 
