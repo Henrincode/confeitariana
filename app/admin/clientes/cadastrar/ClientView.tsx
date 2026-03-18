@@ -14,6 +14,7 @@ export default function ClientView({ types }: Params) {
     const router = useRouter()
 
     const [error, setError] = useState(false)
+    const [creating, setCreating] = useState(false)
 
     const [name, setName] = useState('')
     const [selectType, setSelectType] = useState<string>('')
@@ -21,6 +22,7 @@ export default function ClientView({ types }: Params) {
 
     async function submit(e: React.SubmitEvent<HTMLFormElement>) {
         e.preventDefault()
+        setCreating(true)
 
         if (name.length < 3 || (selectType !== '1' && contactName.length < 3)) {
             setError(true)
@@ -28,12 +30,14 @@ export default function ClientView({ types }: Params) {
         }
 
         // Transforma o elemento e formData
-        const formData = new FormData(e.currentTarget);
-        const response = await createClient(formData);
+        const formData = new FormData(e.currentTarget)
+        const response = await createClient(formData)
 
         if (response.success) {
-            router.push(`/admin/cliente/${response.data.id_client}`);
+            router.push(`/admin/cliente/${response.data.id_client}`)
+            return
         }
+        setCreating(false)
     }
 
     return (
@@ -67,33 +71,29 @@ export default function ClientView({ types }: Params) {
                 </div>
             )}
 
-            <button
-                type="submit"
-                disabled={
-                    name.length < 3 ||
-                    selectType === '' ||
-                    (Number(selectType) > 1 && contactName !== '' && contactName.length < 3)
-                }
-                className={`${(
-                    name.length < 3 ||
-                    selectType === '' ||
-                    (Number(selectType) > 1 && contactName !== '' && contactName.length < 3))
-                    ? 'opacity-50 cursor-not-allowed'
-                    : 'hover:bg-pink-600'
-                    } p-2 rounded-lg bg-pink-500 text-white cursor-pointer transition-all`}
-            >
-                Cadastrar
-            </button>
-
-            {/* <button type="submit" disabled={
-                contactName
-                    ? (name.length < 3 || selectType === '' && contactName === '' || contactName.length < 3)
-                    : (name.length < 3 || selectType === '')
-            }
-                className={`${(name.length < 3 || selectType === '' && contactName === '' || contactName.length < 3) && 'opacity-50'} p-2 rounded-lg bg-pink-500 text-white`}
-            >
-                Cadastrar
-            </button> */}
+            {creating
+                ? (
+                    <p className="font-bold text-2xl text-pink-500 animate-pulse">Cadastrando</p>
+                )
+                : (
+                    <button
+                        type="submit"
+                        disabled={
+                            name.length < 3 ||
+                            selectType === '' ||
+                            (Number(selectType) > 1 && contactName !== '' && contactName.length < 3)
+                        }
+                        className={`${(
+                            name.length < 3 ||
+                            selectType === '' ||
+                            (Number(selectType) > 1 && contactName !== '' && contactName.length < 3))
+                            ? 'opacity-50 cursor-not-allowed'
+                            : 'hover:bg-pink-600'
+                            } p-2 rounded-lg bg-pink-500 text-white cursor-pointer transition-all`}
+                    >
+                        Cadastrar
+                    </button>
+                )}
 
             {error && (
                 <p className="text-red-500">
