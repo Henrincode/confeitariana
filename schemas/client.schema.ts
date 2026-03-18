@@ -1,24 +1,50 @@
 import { z } from 'zod'
 
+// Helper para tratar strings vazias vindas de formulários
+const emptyToNull = (val: string) => (val === "" ? null : val)
+
 // create client schema
 export const createClientSchema = z.object({
-    id_client_category_fk: z.coerce.number().positive(),
+    id_client_type_fk: z.coerce.number().positive(),
+
     name: z.string().trim().min(3, 'Mínimo 3 caracteres'),
-    contact_name: z.string().trim().min(3, 'Mínimo 3 caracteres').or(z.literal('')).optional(),
-    cpf: z.string().trim().min(11, 'CPF precisa de 11 números').or(z.literal('')).optional(),
-    cnpj: z.string().trim().or(z.literal('')).optional(),
-    email: z.email('E-mail inválido').optional(),
-    phone: z.string().or(z.literal('')).optional(),
-    whatsapp: z.string().or(z.literal('')).optional(),
-    birth_date: z.coerce.date().optional(),
-    details: z.string().or(z.literal('')).optional(),
-    image_url: z.url('URL inválida').or(z.literal('')).optional(),
+
+    contact_name: z.preprocess(emptyToNull,
+        z.string().trim().min(3, 'Mínimo 3 caracteres').nullable().optional()
+    ),
+    cpf: z.preprocess(emptyToNull,
+        z.string().trim().length(11, 'CPF precisa de exatamente 11 números')
+            .regex(/^\d+$/, 'O CPF deve conter apenas números').nullable().optional()
+    ),
+    cnpj: z.preprocess(emptyToNull,
+        z.string().trim().length(14, 'CNPJ deve ter exatamente 14 caracteres').nullable().optional()
+    ),
+    email: z.preprocess(emptyToNull,
+        z.email('E-mail inválido').nullable().optional()
+    ),
+    phone: z.preprocess(emptyToNull,
+        z.string().nullable().optional()
+    ),
+    whatsapp: z.preprocess(emptyToNull,
+        z.string().nullable().optional()
+    ),
+    birth_date: z.preprocess(emptyToNull,
+        z.coerce.date().nullable().optional()
+    ),
+    details: z.preprocess(emptyToNull,
+        z.string().nullable().optional()
+    ),
+    image_url: z.preprocess(emptyToNull,
+        z.url('URL inválida').nullable().optional()
+    ),
 })
 
 // update client schema
 export const updateClientSchema = createClientSchema.extend({
     id_client: z.coerce.number().positive(),
-    deleted_at: z.coerce.date().optional()
+    deleted_at: z.preprocess(emptyToNull,
+        z.coerce.date().nullable().optional()
+    )
 })
 
 // types
@@ -27,50 +53,77 @@ export type UpdateClient = z.infer<typeof updateClientSchema>
 
 // -------------------------------------------------------
 
-// create client category schema
-export const createClientCategorySchema = z.object({
+// create client type schema
+export const createClientTypeSchema = z.object({
     name: z.string().trim().min(3, 'Minimo 3 caracteres')
 })
 
-// update client category schema
-export const updateClientCategorySchema = createClientCategorySchema.extend({
-    id_client_category: z.coerce.number().positive()
+// update client type schema
+export const updateClientTypeSchema = createClientTypeSchema.extend({
+    id_client_type: z.coerce.number().positive()
 })
 
 // types
-export type CreateClientCategory = z.infer<typeof createClientCategorySchema>
-export type UpdateClientCategory = z.infer<typeof updateClientCategorySchema>
+export type CreateClientType = z.infer<typeof createClientTypeSchema>
+export type UpdateClientType = z.infer<typeof updateClientTypeSchema>
 
 // -------------------------------------------------------
 
 // create client address schema
-export const createCliencAddressSchema = z.object({
+export const createClientAddressSchema = z.object({
     id_client_fk: z.coerce.number().positive(),
-    name: z.string().trim().min(3, 'Minimo 3 caracteres'),
-    zip: z.string().trim().min(3).or(z.literal('')).optional(),
-    number: z.string().trim().min(3).or(z.literal('')).optional(),
-    street: z.string().trim().min(3).or(z.literal('')).optional(),
-    district: z.string().trim().min(3).or(z.literal('')).optional(),
-    city: z.string().trim().min(3).or(z.literal('')).optional(),
-    state: z.string().trim().min(3).or(z.literal('')).optional(),
-    country_code: z.string().trim().min(3).or(z.literal('')).optional(),
 
-    condominium: z.string().trim().min(3).or(z.literal('')).optional(),
-    building_block: z.string().trim().min(3).or(z.literal('')).optional(),
-    unit_number: z.string().trim().min(3).or(z.literal('')).optional(),
-    internal_street: z.string().trim().min(3).or(z.literal('')).optional(),
+    name: z.string().trim().min(3, 'Mínimo 3 caracteres'),
 
-    details: z.string().trim().min(3).or(z.literal('')).optional()
+    // Campos de endereço padrão
+    zip: z.preprocess(emptyToNull,
+        z.string().trim().length(8, 'CEP precisa de exatamente 8 números')
+            .regex(/^\d+$/, 'O CEP deve conter apenas números').nullable().optional()
+    ),
+    number: z.preprocess(emptyToNull,
+        z.string().trim().nullable().optional()
+    ),
+    street: z.preprocess(emptyToNull,
+        z.string().trim().nullable().optional()
+    ),
+    district: z.preprocess(emptyToNull,
+        z.string().trim().nullable().optional()
+    ),
+    city: z.preprocess(emptyToNull,
+        z.string().trim().min(3, 'Mínimo 3 caracteres').nullable().optional()
+    ),
+    state: z.preprocess(emptyToNull,
+        z.string().trim().min(2, 'Use a sigla ou nome do estado').nullable().optional()
+    ),
+    country_code: z.preprocess(emptyToNull,
+        z.string().trim().min(2, 'Mínimo 2 letras ex: BR, AG').max(6, 'Máximo 6 letras usando abreviação ex: BR, AG, USA').nullable().optional()
+    ),
+    // Campos de condomínio/detalhamento
+    condominium: z.preprocess(emptyToNull,
+        z.string().trim().min(3, 'Mínimo 3 letras').nullable().optional()
+    ),
+    building_block: z.preprocess(emptyToNull,
+        z.string().trim().nullable().optional()
+    ),
+    unit_number: z.preprocess(emptyToNull,
+        z.string().trim().nullable().optional()
+    ),
+    internal_street: z.preprocess(emptyToNull,
+        z.string().trim().min(3).nullable().optional()
+    ),
+    details: z.preprocess(emptyToNull,
+        z.string().trim().min(3).nullable().optional()
+    )
 })
 
 // update client street schema
-export const updateClientAddressSchema = createCliencAddressSchema.extend({
+export const updateClientAddressSchema = createClientAddressSchema.extend({
     id_client_address: z.coerce.number().positive()
 })
 
 // types
-export type CreateClientAddress = z.infer<typeof createCliencAddressSchema>
-export type updateClientAddressSchema = z.infer<typeof updateClientAddressSchema>
+export type CreateClientAddress = z.infer<typeof createClientAddressSchema>
+export type UpdateClientAddress = z.infer<typeof updateClientAddressSchema>
 
 // -------------------------------------------------------
 

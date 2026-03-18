@@ -1,8 +1,8 @@
 import sql from '@/server/db'
 import { unstable_cache } from 'next/cache'
 import storageServices from './storage.service'
-import { Client, ClientDB, ClientAddress, ClientAddressDB, ClientCategory, ClientCategoryDB, ClientUploadImage } from '@/types/client.types'
-import { CreateClient, CreateClientAddress, CreateClientCategory, UpdateClient, UpdateClientCategory } from '@/schemas/client.schema'
+import { Client, ClientDB, ClientAddress, ClientAddressDB, ClientUploadImage, ClientType, ClientTypeDB } from '@/types/client.types'
+import { CreateClient, CreateClientAddress, CreateClientType, UpdateClient, UpdateClientAddress, UpdateClientType } from '@/schemas/client.schema'
 
 // ------------------- CLIENTS
 
@@ -10,15 +10,15 @@ import { CreateClient, CreateClientAddress, CreateClientCategory, UpdateClient, 
 const find = unstable_cache(
     async (): Promise<Client[]> => {
         const rows = await sql<Client[]>`
-            select cl.*, ca.name category 
+            select cl.*, ty.name type 
             from ana_clients cl
-            inner join ana_client_categories ca
-                on cl.id_client_category_fk = ca.id_client_category
+            inner join ana_client_types ty
+                on cl.id_client_type_fk = ty.id_client_type
         `
         return rows.map(r => ({
             ...r,
             id_client: Number(r.id_client),
-            id_client_category_fk: Number(r.id_client_category_fk)
+            id_client_type_fk: Number(r.id_client_type_fk)
         }))
     },
     ['clients-find'],
@@ -29,10 +29,10 @@ const find = unstable_cache(
 const findById = unstable_cache(
     async (id: number): Promise<Client | null> => {
         const [row] = await sql<Client[]>`
-            select cl.*, ca.name category 
+            select cl.*, ty.name type 
             from ana_clients cl
-            inner join ana_client_categories ca
-                on cl.id_client_category_fk = ca.id_client_category
+            inner join ana_client_types ty
+                on cl.id_client_type_fk = ty.id_client_type
             where id_client = ${id}
         `
         if (!row) return null
@@ -40,7 +40,7 @@ const findById = unstable_cache(
         return {
             ...row,
             id_client: Number(row.id_client),
-            id_client_category_fk: Number(row.id_client_category_fk)
+            id_client_type_fk: Number(row.id_client_type_fk)
         }
     },
     ['clients-findById'],
@@ -58,7 +58,7 @@ async function create(params: CreateClient): Promise<ClientDB> {
     return {
         ...row,
         id_client: Number(row.id_client),
-        id_client_category_fk: Number(row.id_client_category_fk)
+        id_client_type_fk: Number(row.id_client_type_fk)
     }
 }
 
@@ -73,7 +73,7 @@ async function update(params: UpdateClient): Promise<ClientDB> {
     return {
         ...row,
         id_client: Number(row.id_client),
-        id_client_category_fk: Number(row.id_client_category_fk)
+        id_client_type_fk: Number(row.id_client_type_fk)
     }
 }
 
@@ -87,7 +87,7 @@ async function remove(id: number): Promise<ClientDB> {
     return {
         ...row,
         id_client: Number(row.id_client),
-        id_client_category_fk: Number(row.id_client_category_fk)
+        id_client_type_fk: Number(row.id_client_type_fk)
     }
 }
 
@@ -124,6 +124,21 @@ async function createAddress(params: CreateClientAddress): Promise<ClientAddress
     }
 }
 
+// update
+async function updateAddress(params: UpdateClientAddress): Promise<ClientAddressDB> {
+
+    const [row] = await sql<ClientAddressDB[]>`
+        UPDATE ana_client_addresses set ${sql(params)}
+        WHERE id_client_address = ${params.id_client_address}
+        returning *
+    `
+    return {
+        ...row,
+        id_client_address: Number(row.id_client_address),
+        id_client_fk: Number(row.id_client_fk)
+    }
+}
+
 // delete
 async function deleteAddress(id: number): Promise<ClientAddressDB> {
 
@@ -138,21 +153,21 @@ async function deleteAddress(id: number): Promise<ClientAddressDB> {
     }
 }
 
-// ------------------- CATEGORIES
+// ------------------- types
 
 // FIND
-const findCategories = unstable_cache(
-    async (): Promise<ClientCategory[]> => {
-        const rows = await sql<ClientCategory[]>`
-        select * from ana_client_categories
-        order by id_client_category
+const findTypes = unstable_cache(
+    async (): Promise<ClientType[]> => {
+        const rows = await sql<ClientType[]>`
+        select * from ana_client_types
+        order by id_client_type
     `
         return rows.map(r => ({
             ...r,
-            id_client_category: Number(r.id_client_category)
+            id_client_type: Number(r.id_client_type)
         }))
     },
-    ['clients-findCategories'],
+    ['clients-findTypes'],
     { tags: ['clients'] }
 )
 
@@ -170,47 +185,47 @@ const findCategories = unstable_cache(
 // )
 
 // CREATE
-async function createCategory(params: CreateClientCategory): Promise<ClientCategoryDB> {
-    const [row] = await sql<ClientCategoryDB[]>`
-        insert into ana_client_categories ${sql(params)}
+async function createType(params: CreateClientType): Promise<ClientTypeDB> {
+    const [row] = await sql<ClientTypeDB[]>`
+        insert into ana_client_types ${sql(params)}
         returning *
     `
     return {
         ...row,
-        id_client_category: Number(row.id_client_category)
+        id_client_type: Number(row.id_client_type)
     }
 }
 
 // UPDATE
-async function updateCategory(params: UpdateClientCategory): Promise<ClientCategoryDB> {
-    const [row] = await sql<ClientCategoryDB[]>`
-        update ana_client_categories set ${sql(params)}
-        where id_client_category = ${params.id_client_category}
+async function updateType(params: UpdateClientType): Promise<ClientTypeDB> {
+    const [row] = await sql<ClientTypeDB[]>`
+        update ana_client_types set ${sql(params)}
+        where id_client_type = ${params.id_client_type}
         returning *
     `
     return {
         ...row,
-        id_client_category: Number(row.id_client_category)
+        id_client_type: Number(row.id_client_type)
     }
 }
 
 // DELETE
-async function deleteCategory(id: number): Promise<ClientCategoryDB> {
-    const [row] = await sql<ClientCategoryDB[]>`
-        delete from ana_client_categories
-        where id_client_category = ${id}
+async function deleteType(id: number): Promise<ClientTypeDB> {
+    const [row] = await sql<ClientTypeDB[]>`
+        delete from ana_client_types
+        where id_client_type = ${id}
         returning *
     `
     return {
         ...row,
-        id_client_category: Number(row.id_client_category)
+        id_client_type: Number(row.id_client_type)
     }
 }
 
 // ------------------- IMAGE
 
 async function uploadImage(params: ClientUploadImage): Promise<ClientDB> {
-    
+
     const { id_client, file } = params
 
     const fileExt = file.name.split('.').pop()
@@ -228,7 +243,7 @@ async function uploadImage(params: ClientUploadImage): Promise<ClientDB> {
     return {
         ...row,
         id_client: Number(row.id_client),
-        id_client_category_fk: Number(row.id_client_category_fk)
+        id_client_type_fk: Number(row.id_client_type_fk)
     }
 }
 
@@ -242,14 +257,15 @@ const clientService = {
     // addresses
     findAddressesByClient,
     createAddress,
+    updateAddress,
     deleteAddress,
 
     // category
-    findCategories,
+    findTypes,
     // existsCategory,
-    createCategory,
-    updateCategory,
-    deleteCategory,
+    createType,
+    updateType,
+    deleteType,
 
     // image
     uploadImage

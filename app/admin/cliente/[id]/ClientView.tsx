@@ -9,7 +9,7 @@ import UpdateImage from "./_components/UpdateImage"
 import UpdateProfile from "./_components/UpdateProfile"
 import DeleteProfile from "./_components/DeleteProfile"
 import CreateAddress from "./_components/CreateAddress"
-import { AiFillDelete } from "react-icons/ai"
+import { AiFillDelete, AiFillEdit } from "react-icons/ai"
 import { deleteClientAddress } from "@/server/actions/client.action"
 import { Client, ClientAddress } from "@/types/client.types"
 
@@ -24,26 +24,28 @@ export default function ClientView({ idPage, client, clientAddresses }: Params) 
     const [value, setValue] = useState('')
     const [botao, setBotao] = useState('b')
     const [modal, setModal] = useState('')
+    const [addressModal, setAddressModal] = useState<ClientAddress | null>(null)
 
     // Modal
     function openModal(typeModal: string) {
-        setModal(typeModal);
+        setModal(typeModal)
     }
 
     function closeModal() {
-        setModal('');
+        setModal('')
     }
 
     useEffect(() => {
         if (modal) {
-            document.body.classList.add('overflow-hidden');
+            document.body.classList.add('overflow-hidden')
         } else {
-            document.body.classList.remove('overflow-hidden');
+            document.body.classList.remove('overflow-hidden')
+            setAddressModal(null)
         }
 
         // Limpeza ao desmontar o componente
-        return () => document.body.classList.remove('overflow-hidden');
-    }, [modal]); // Ele "observa" o estado modal
+        return () => document.body.classList.remove('overflow-hidden')
+    }, [modal]) // Ele "observa" o estado modal
 
     return (
         <div id="clientePerfil" className="box pb-10">
@@ -52,7 +54,7 @@ export default function ClientView({ idPage, client, clientAddresses }: Params) 
                     <div className="overflow-auto px-3 py-10 w-full max-h-dvh">
                         {modal === 'delete' && <DeleteProfile closeModal={closeModal} client={client} />}
                         {modal === 'profile' && <UpdateProfile closeModal={closeModal} client={client} />}
-                        {modal === 'address' && <CreateAddress closeModal={closeModal} client={client} />}
+                        {modal === 'address' && <CreateAddress closeModal={closeModal} client={client} address={addressModal} />}
                     </div>
                 </div>
             )}
@@ -94,7 +96,7 @@ export default function ClientView({ idPage, client, clientAddresses }: Params) 
 
                     <div id="name" className="flex-1 flex flex-col items-center sm:items-start">
                         <div className="flex flex-col items-center sm:items-start flex-wrap gap-2 text-white">
-                            <div className="px-2 py-1 border-2 border-amber-100 rounded-full font-semibold text-sm text-white bg-pink-500">{client.category}</div>
+                            <div className="px-2 py-1 border-2 border-amber-100 rounded-full font-semibold text-sm text-white bg-pink-500">{client.type}</div>
                             <div className="text-3xl sm:text-6xl text-center sm:text-start text-shadow-lg text-shadow-black/20">{client.name}</div>
                         </div>
                     </div>
@@ -198,7 +200,7 @@ export default function ClientView({ idPage, client, clientAddresses }: Params) 
                                     <div onClick={() => { setEditing('name'); setValue(client.name || '') }} className="list-info">{client.name}</div>
 
                                 </li>
-                                {client.id_client_category_fk > 1 && (
+                                {client.id_client_type_fk > 1 && (
                                     <li>
                                         <div className="list-subtittle">CONTATO</div>
                                         <div className="list-info">{client.contact_name || 'Não informado'}</div>
@@ -268,11 +270,17 @@ export default function ClientView({ idPage, client, clientAddresses }: Params) 
                     {clientAddresses.map((a: any, i: number) => (
                         <li key={i} className="group relative p-2 rounded-lg ring-2 text-gray-600 ring-pink-500/50 bg-pink-50">
                             {a.name} <br /> {a.number && `${a.number}, `}{a.street}
-                            {/* delete address */}
-                            <button type="button" onClick={() => deleteClientAddress(a.id_client_address)}
-                                className="absolute hidden group-hover:block top-2 right-2 p-1 rounded-full text-white bg-red-500 cursor-pointer">
-                                <AiFillDelete />
-                            </button>
+                            {/* update / delete address */}
+                            <div className="absolute md:hidden group-hover:flex top-2 right-2 flex flex-row gap-1.5">
+                                <button type="button" onClick={() => { setAddressModal(a); openModal('address') }}
+                                    className="p-1 rounded-full text-white bg-green-500 cursor-pointer">
+                                    <AiFillEdit />
+                                </button>
+                                <button type="button" onClick={() => deleteClientAddress(a.id_client_address)}
+                                    className="p-1 rounded-full text-white bg-red-500 cursor-pointer">
+                                    <AiFillDelete />
+                                </button>
+                            </div>
                         </li>
                     ))}
                     {clientAddresses.length < 4 && (

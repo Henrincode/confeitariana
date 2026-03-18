@@ -13,7 +13,7 @@ export default function UpdateProfile({ closeModal, client }: Params) {
 
 
 
-    const [errors, setErrors] = useState<Record<string, string[]>>()
+    const [errors, setErrors] = useState<Record<string, string[]> | null>()
 
     const [inputName, setInputName] = useState<string>('')
     const [inputContactName, setInputContactName] = useState<string>('')
@@ -30,6 +30,9 @@ export default function UpdateProfile({ closeModal, client }: Params) {
     }, [])
 
     async function formDefault() {
+
+        setErrors(null)
+        
         setInputName(client.name)
         setInputContactName(client.contact_name || '')
         setInputCPF(client.cpf || '')
@@ -55,7 +58,6 @@ export default function UpdateProfile({ closeModal, client }: Params) {
         const response = await updateClient(formData)
         if (!response.success) {
             setErrors(response.errors)
-            console.log('nao foi', response.errors)
             return
         }
         closeModal()
@@ -66,7 +68,7 @@ export default function UpdateProfile({ closeModal, client }: Params) {
             <form action={submit} className="flex flex-col gap-4">
                 <div>
                     <input hidden name="id_client" type="text" defaultValue={client.id_client} />
-                    <input hidden name="id_client_category_fk" type="text" defaultValue={client.id_client_category_fk} />
+                    <input hidden name="id_client_category_fk" type="text" defaultValue={client.id_client_type_fk} />
                     {/* <input hidden name="image_url" type="text" defaultValue={client.image_url || null} /> */}
                     <div className="
                     grid
@@ -102,7 +104,9 @@ export default function UpdateProfile({ closeModal, client }: Params) {
                     [&_.campo]:bg-white
                     [&_.campo]:hover:bg-pink-100
 
-                    [&_.error]:bg-red-500
+                    [&_.error]:ring-2
+                    [&_.error]:ring-red-500
+                    [&_.error]:bg-red-300
                 ">
                         <div className="col col-2">
                             <label className="f-label" htmlFor="f-name">Nome</label>
@@ -131,29 +135,40 @@ export default function UpdateProfile({ closeModal, client }: Params) {
                         <div className="col">
                             <label className="f-label" htmlFor="f-cnpj">CNPJ</label>
                             <input
-                                onInput={(e) => { setInputCNPJ(e.currentTarget.value); removeError('cnpj') }} value={inputCPF}
+                                onInput={(e) => { setInputCNPJ(e.currentTarget.value); removeError('cnpj') }} value={inputCNPJ}
                                 id="f-cnpj" name="cnpj" type="text" className={`${errors?.cnpj && 'error'} campo`}
                             />
                         </div>
 
                         <div className="col">
                             <label className="f-label" htmlFor="f-phone">Telefone</label>
-                            <input id="f-phone" className="campo" name="phone" type="number" defaultValue={client.phone} />
+                            <input
+                                onInput={(e) => { setInputPhone(e.currentTarget.value); removeError('phone') }} value={inputPhone}
+                                id="f-phone" name="phone" type="number" className={`${errors?.phone && 'error'} campo`}
+                            />
                         </div>
 
                         <div className="col">
                             <label className="f-label" htmlFor="whatsapp">Whatsapp</label>
-                            <input id="f-whatsapp" className="campo" name="whatsapp" type="number" defaultValue={client.whatsapp} />
+                            <input
+                                onInput={(e) => { setInputWhatsapp(e.currentTarget.value); removeError('whatsapp') }} value={inputWhatsapp}
+                                id="f-whatsapp" name="whatsapp" type="number" className={`${errors?.whatsapp && 'error'} campo`}
+                            />
                         </div>
 
                         <div className="col">
                             <label className="f-label" htmlFor="f-birthday">Aniversário</label>
-                            <input id="f-birthday" className="campo" name="birth_date" type="date" />
+                            <input
+                                onInput={(e) => { setInputBirtDate(e.currentTarget.value); removeError('birth_date') }} value={inputBirtDate}
+                                id="f-birthday" name="birth_date" type="date" className={`${errors?.birth_date && 'error'} campo`}
+                            />
                         </div>
 
                         <div className="col-4 flex flex-col">
                             <label className="f-label" htmlFor="f-details">Detalhes</label>
-                            <textarea className="campo resize-none scrollbar-clean" name="details" id="details" rows={10} defaultValue={client.details}></textarea>
+                            <textarea
+                                onInput={(e) => { setInputDetails(e.currentTarget.value); removeError('details') }} value={inputDetails}
+                                id="details" name="details" rows={10} className="campo resize-none scrollbar-clean" ></textarea>
                         </div>
                     </div>
                 </div>
@@ -162,7 +177,13 @@ export default function UpdateProfile({ closeModal, client }: Params) {
                 <div className="h-1 rounded-full bg-pink-50/50"></div>
 
                 {errors && (
-                    '...'
+                    <div className="flex flex-col gap-1 max-w-100 w-full mx-auto bg-red-100 p-3 rounded-xl">
+                        {Object.entries(errors).map(([field, messages]) => (
+                            <div key={field} className="text-xs text-red-600">
+                                <strong>{field}:</strong> {messages.join(", ")}
+                            </div>
+                        ))}
+                    </div>
                 )}
 
                 <div className="

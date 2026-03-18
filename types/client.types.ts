@@ -1,7 +1,7 @@
 //---- table: clients
 export interface ClientDB {
     id_client: number
-    id_client_category_fk: number
+    id_client_type_fk: number
     name: string
     contact_name: string | null
     cpf: string | null
@@ -18,20 +18,20 @@ export interface ClientDB {
 
 // view: client
 export interface Client extends ClientDB {
-    category: string
+    type: string
 }
 
 // -------------------------------------------------------
 
 // table: client_categories
-export interface ClientCategoryDB {
-    id_client_category: number
+export interface ClientTypeDB {
+    id_client_type: number
     name: string
     created_at: Date
 }
 
 // view: client category
-export interface ClientCategory extends ClientCategoryDB { }
+export interface ClientType extends ClientTypeDB { }
 
 // -------------------------------------------------------
 

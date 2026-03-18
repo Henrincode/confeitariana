@@ -65,8 +65,8 @@ CREATE TABLE ana_auth_staff (
 );
 
 -- Segmentação de Clientes: Grupos como 'VIP', 'Corporativo' ou 'Revenda'.
-CREATE TABLE ana_client_categories (
-    id_client_category BIGSERIAL PRIMARY KEY,
+CREATE TABLE ana_client_types (
+    id_client_type BIGSERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -74,7 +74,7 @@ CREATE TABLE ana_client_categories (
 -- Entidades de Consumo: Cadastro central de clientes.
 CREATE TABLE ana_clients (
     id_client BIGSERIAL PRIMARY KEY,
-    id_client_category_fk BIGINT REFERENCES ana_client_categories(id_client_category),
+    id_client_type_fk BIGINT REFERENCES ana_client_categories(id_client_type),
     name VARCHAR(255) NOT NULL,
     contact_name VARCHAR(100),
     CPF VARCHAR(255),

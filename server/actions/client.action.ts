@@ -1,10 +1,9 @@
 'use server'
-import { createCliencAddressSchema, CreateClient, CreateClientAddress, CreateClientCategory, createClientCategorySchema, createClientSchema, UpdateClient, UpdateClientCategory, updateClientCategorySchema, updateClientSchema, UploadClientImage, uploadClientImageSchema } from "@/schemas/client.schema";
+import { createClientAddressSchema, CreateClient, CreateClientAddress,   createClientSchema, UpdateClient,   updateClientSchema, UploadClientImage, uploadClientImageSchema, UpdateClientAddress, updateClientAddressSchema, UpdateClientType, updateClientTypeSchema, CreateClientType, createClientTypeSchema } from "@/schemas/client.schema";
 import clientService from "@/server/services/client.service";
 import { ApiResponse } from "@/types/ApiResponse";
-import { ClientAddressDB, ClientCategoryDB, ClientDB } from "@/types/client.types";
+import { ClientAddressDB,  ClientDB, ClientTypeDB } from "@/types/client.types";
 import { updateTag } from "next/cache";
-import { redirect } from "next/navigation";
 import z, { success } from "zod";
 
 // creat
@@ -93,7 +92,7 @@ export async function createClientAddress(params: FormData | CreateClientAddress
         ? Object.fromEntries(params.entries())
         : params
 
-    const paramsValidate = createCliencAddressSchema.safeParse(paramsToObj)
+    const paramsValidate = createClientAddressSchema.safeParse(paramsToObj)
 
     if (!paramsValidate.success) return {
         success: false,
@@ -108,6 +107,31 @@ export async function createClientAddress(params: FormData | CreateClientAddress
 
     } catch (error) {
         console.error('ERROR ACTION createClientAddress', error)
+        return { success: false, message: 'Erro interno do servidor' }
+    }
+}
+
+// address update
+export async function updateClientAddress(params: FormData | UpdateClientAddress): ApiResponse<ClientAddressDB> {
+
+    const paramsToObj = params instanceof FormData
+        ? Object.fromEntries(params.entries())
+        : params
+
+    const paramsValidate = updateClientAddressSchema.safeParse(paramsToObj)
+
+    if (!paramsValidate.success) return {
+        success: false,
+        message: 'Existem erros de validação.',
+        errors: z.flattenError(paramsValidate.error).fieldErrors
+    }
+
+    try {
+        const data = await clientService.updateAddress(paramsValidate.data)
+        updateTag('clients')
+        return { success: true, data }
+    } catch (error) {
+        console.error('ERROR ACTION updateClientAddress', error)
         return { success: false, message: 'Erro interno do servidor' }
     }
 }
@@ -132,13 +156,13 @@ export async function deleteClientAddress(id: number): ApiResponse<ClientAddress
 // 
 
 // CREAT
-export async function createClientCategory(params: FormData | CreateClientCategory): ApiResponse<ClientCategoryDB> {
+export async function createClientType(params: FormData | CreateClientType): ApiResponse<ClientTypeDB> {
 
     const paramsToObj = params instanceof FormData
         ? Object.fromEntries(params.entries())
         : params
 
-    const paramsValidate = createClientCategorySchema.safeParse(paramsToObj)
+    const paramsValidate = createClientTypeSchema.safeParse(paramsToObj)
 
     if (!paramsValidate.success) return {
         success: false,
@@ -147,25 +171,25 @@ export async function createClientCategory(params: FormData | CreateClientCatego
     }
 
     try {
-        const data = await clientService.createCategory(paramsValidate.data)
+        const data = await clientService.createType(paramsValidate.data)
         updateTag('clients')
         return { success: true, data }
 
     } catch (error) {
-        console.error('ERROR ACTION createClientCategory', error)
+        console.error('ERROR ACTION createClientType', error)
         return { success: false, message: 'Erro interno do servidor' }
     }
 
 }
 
 // UPDATE
-export async function updateClientCategory(params: FormData | UpdateClientCategory): ApiResponse<ClientCategoryDB> {
+export async function updateClientType(params: FormData | UpdateClientType): ApiResponse<ClientTypeDB> {
 
     const paramsToObj = params instanceof FormData
         ? Object.fromEntries(params.entries())
         : params
 
-    const paramsValidate = updateClientCategorySchema.safeParse(paramsToObj)
+    const paramsValidate = updateClientTypeSchema.safeParse(paramsToObj)
 
     if (!paramsValidate.success) return {
         success: false,
@@ -174,20 +198,20 @@ export async function updateClientCategory(params: FormData | UpdateClientCatego
     }
 
     try {
-        const data = await clientService.updateCategory(paramsValidate.data)
+        const data = await clientService.updateType(paramsValidate.data)
         updateTag('clients')
         return { success: true, data }
 
     } catch (error) {
-        console.error('ERROR ACTION updateClientCategory', error)
+        console.error('ERROR ACTION updateClientType', error)
         return { success: false, message: 'Erro interno do servidor' }
     }
 }
 
 // DELETE
-export async function deleteClientCategory(id: number) {
+export async function deleteClientType(id: number) {
     try {
-        await clientService.deleteCategory(id)
+        await clientService.deleteType(id)
         updateTag('clients')
         return { success: true }
     } catch (error: any) {
@@ -201,7 +225,7 @@ export async function deleteClientCategory(id: number) {
 // 
 
 // update
-export async function uploadClientImage(params: FormData | UploadClientImage ): ApiResponse<ClientDB> {
+export async function uploadClientImage(params: FormData | UploadClientImage): ApiResponse<ClientDB> {
 
     const paramsToObj = params instanceof FormData
         ? Object.fromEntries(params.entries())

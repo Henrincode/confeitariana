@@ -22,8 +22,8 @@ export default function NavBar({ className }: Props) {
                     <li><Link onClick={() => router.refresh()} className="link" href="/admin/clientes">Clientes</Link></li>
                     <li className="w-1 rounded-full bg-amber-50"></li>
                     <li><Link onClick={() => router.refresh()} className="link" href="/admin/clientes/cadastrar">Cadastrar cliente</Link></li>
-                    <li className="w-1 rounded-full bg-amber-50"></li>
-                    <li><Link onClick={() => router.refresh()} className="link" href="/admin/cadastrar/geral">Cadastrar geral</Link></li>
+                    {/* <li className="w-1 rounded-full bg-amber-50"></li>
+                    <li><Link onClick={() => router.refresh()} className="link" href="/admin/cadastrar/geral">Cadastrar geral</Link></li> */}
                 </ul>
             </div>
         </div>

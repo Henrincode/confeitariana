@@ -1,11 +1,21 @@
 'use client'
 import { deleteClient } from "@/server/actions/client.action";
-import Link from "next/link";
+import { Client } from "@/types/client.types";
 import { useRouter } from "next/navigation";
 
-export default function UpdateProfile({ closeModal, client }: { closeModal: Function, client: any }) {
+interface Params {
+    closeModal: Function
+    client: Client
+}
+
+export default function UpdateProfile({ closeModal, client }: Params) {
 
     const router = useRouter()
+
+    async function confirm() {
+        await deleteClient(client.id_client)
+        router.push('/admin/clientes/')
+    }
 
     return (
         <div onMouseDown={(e) => e.stopPropagation()} className="
@@ -14,10 +24,8 @@ export default function UpdateProfile({ closeModal, client }: { closeModal: Func
             border-white text-white bg-pink-400
         ">
             <div className="text-center">
-                <p>
-                    Deseja realmente apagar o usuário
-                </p>
-                <p className="text-pink-800">
+                <p>Deseja realmente apagar o usuário</p>
+                <p className="text-pink-900 animate-pulse">
                     {client.name.split(' ')[0]}
                 </p>
             </div>
@@ -27,13 +35,13 @@ export default function UpdateProfile({ closeModal, client }: { closeModal: Func
                 cursor-pointer
                 select-none
 
-                [&_.buttom]:px-2 [&_.buttom]:py-1
-                [&_.buttom]:border-2 [&_.buttom]:rounded-xl
-                [&_.buttom]:text-white [&_.buttom]:border-white
-                [&_.buttom]:bg-pink-500 [&_.buttom]:hover:bg-pink-800
+                [&_.button]:px-2 [&_.button]:py-1 [&_.button]:cursor-pointer
+                [&_.button]:border-2 [&_.button]:rounded-xl
+                [&_.button]:text-white [&_.button]:border-white
+                [&_.button]:bg-pink-500 [&_.button]:hover:bg-pink-800
             ">
-                <Link href={'/admin/clientes/'} className="buttom" onClick={() => { closeModal(); deleteClient(client.id_client) }}>sim</Link>
-                <div className="buttom" onClick={() => closeModal()}>não</div>
+                <button type="button" className="button" onClick={confirm}>sim</button>
+                <div className="button" onClick={() => closeModal()}>não</div>
             </div>
         </div>
     )
