@@ -20,21 +20,21 @@ export default function ClientView({ types }: Params) {
     const [contactName, setContactName] = useState<string>('')
 
     async function submit(e: React.SubmitEvent<HTMLFormElement>) {
-    e.preventDefault()
+        e.preventDefault()
 
-    if (name.length < 3 || (selectType !== '1' && contactName.length < 3)) {
-        setError(true)
-        return
+        if (name.length < 3 || (selectType !== '1' && contactName.length < 3)) {
+            setError(true)
+            return
+        }
+
+        // Transforma o elemento e formData
+        const formData = new FormData(e.currentTarget);
+        const response = await createClient(formData);
+
+        if (response.success) {
+            router.push(`/admin/cliente/${response.data.id_client}`);
+        }
     }
-
-    // Transforma o elemento e formData
-    const formData = new FormData(e.currentTarget);
-    const response = await createClient(formData);
-
-    if (response.success) {
-        router.push(`/admin/cliente/${response.data.id_client}`);
-    }
-}
 
     return (
         <form onSubmit={submit} className="box flex flex-col items-center gap-6">
@@ -69,8 +69,18 @@ export default function ClientView({ types }: Params) {
 
             <button
                 type="submit"
-                disabled={name.length < 3 || selectType === '' || (Number(selectType) > 1 && contactName.length < 3)}
-                className={`${(name.length < 3 || selectType === '' || (Number(selectType) > 1 && contactName.length < 3)) ? 'opacity-50' : 'hover:bg-pink-600'} p-2 rounded-lg bg-pink-500 text-white cursor-pointer transition-all`}
+                disabled={
+                    name.length < 3 ||
+                    selectType === '' ||
+                    (Number(selectType) > 1 && contactName !== '' && contactName.length < 3)
+                }
+                className={`${(
+                    name.length < 3 ||
+                    selectType === '' ||
+                    (Number(selectType) > 1 && contactName !== '' && contactName.length < 3))
+                    ? 'opacity-50 cursor-not-allowed'
+                    : 'hover:bg-pink-600'
+                    } p-2 rounded-lg bg-pink-500 text-white cursor-pointer transition-all`}
             >
                 Cadastrar
             </button>
