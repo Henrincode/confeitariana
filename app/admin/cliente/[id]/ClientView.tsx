@@ -11,15 +11,16 @@ import DeleteProfile from "./_components/DeleteProfile"
 import CreateAddress from "./_components/CreateAddress"
 import { AiFillDelete, AiFillEdit } from "react-icons/ai"
 import { deleteClientAddress } from "@/server/actions/client.action"
-import { Client, ClientAddress } from "@/types/client.types"
+import { Client, ClientAddress, ClientType } from "@/types/client.types"
 
 interface Params {
-    idPage: number,
-    client: Client,
+    idPage: number
+    client: Client
+    clientTypes: ClientType[]
     clientAddresses: ClientAddress[]
 }
 
-export default function ClientView({ idPage, client, clientAddresses }: Params) {
+export default function ClientView({ idPage, client, clientTypes, clientAddresses }: Params) {
     const [editing, setEditing] = useState('a')
     const [value, setValue] = useState('')
     const [botao, setBotao] = useState('b')
@@ -53,7 +54,7 @@ export default function ClientView({ idPage, client, clientAddresses }: Params) 
                 <div onMouseDown={closeModal} id="modal" className="fixed flex z-101 top-0 left-0 justify-center items-center h-dvh w-full bg-black/30 backdrop-blur-xl">
                     <div className="overflow-auto px-3 py-10 w-full max-h-dvh">
                         {modal === 'delete' && <DeleteProfile closeModal={closeModal} client={client} />}
-                        {modal === 'profile' && <UpdateProfile closeModal={closeModal} client={client} />}
+                        {modal === 'profile' && <UpdateProfile closeModal={closeModal} client={client} clientTypes={clientTypes} />}
                         {modal === 'address' && <CreateAddress closeModal={closeModal} client={client} address={addressModal} />}
                     </div>
                 </div>
@@ -255,7 +256,7 @@ export default function ClientView({ idPage, client, clientAddresses }: Params) 
                         {/* Detalhes */}
                         <div className="col-3">
                             <div className="list-tittle"><CgDetailsMore /> Detalhes</div>
-                            <div className={`${client.details || 'flex flex-row justify-center items-center'} min-h-20 p-2 mt-4 border-2 rounded-xl font-light text-sm sm:text-xl text-gray-600 border-pink-500/50 bg-pink-50 whitespace-pre-line`}>
+                            <div className={`${client.details || 'flex flex-row justify-center items-center'} min-h-20 p-2 mt-4 border-2 rounded-xl font-light text-sm sm:text-xl text-gray-600 border-pink-500/50 bg-pink-50 whitespace-pre-wrap`}>
                                 {client.details ? client.details : "Nada informado."}
                             </div>
                         </div>
@@ -268,16 +269,12 @@ export default function ClientView({ idPage, client, clientAddresses }: Params) 
                 <div className="mb-4">Endereço</div>
                 <ul className={`${clientAddresses.length ? "grid grid-cols-1 md:grid-cols-4" : "flex justify-center mb-4"} gap-4`}>
                     {clientAddresses.map((a: any, i: number) => (
-                        <li key={i} className="group relative p-2 rounded-lg ring-2 text-gray-600 ring-pink-500/50 bg-pink-50">
+                        <li key={i} onClick={() => { setAddressModal(a); openModal('address') }} className="group relative p-2 rounded-lg ring-2 text-gray-600 ring-pink-500/50 bg-pink-50 hover:bg-pink-100 cursor-pointer">
                             {a.name} <br /> {a.number && `${a.number}, `}{a.street}
                             {/* update / delete address */}
                             <div className="absolute md:hidden group-hover:flex top-2 right-2 flex flex-row gap-1.5">
-                                <button type="button" onClick={() => { setAddressModal(a); openModal('address') }}
-                                    className="p-1 rounded-full text-white bg-green-500 cursor-pointer">
-                                    <AiFillEdit />
-                                </button>
-                                <button type="button" onClick={() => deleteClientAddress(a.id_client_address)}
-                                    className="p-1 rounded-full text-white bg-red-500 cursor-pointer">
+                                <button type="button" onClick={(e) => { e.stopPropagation(); deleteClientAddress(a.id_client_address) }}
+                                    className="p-1 rounded-full text-white bg-red-500 hover:bg-red-600 cursor-pointer">
                                     <AiFillDelete />
                                 </button>
                             </div>

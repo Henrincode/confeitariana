@@ -1,20 +1,20 @@
 'use client'
 
 import { updateClient } from "@/server/actions/client.action"
-import { ClientDB } from "@/types/client.types"
+import { ClientDB, ClientTypeDB } from "@/types/client.types"
 import { useActionState, useEffect, useState } from "react"
 
 interface Params {
     closeModal: Function
     client: ClientDB
+    clientTypes: ClientTypeDB[]
 }
 
-export default function UpdateProfile({ closeModal, client }: Params) {
-
-
+export default function UpdateProfile({ closeModal, client, clientTypes }: Params) {
 
     const [errors, setErrors] = useState<Record<string, string[]> | null>()
 
+    const [inputIdClientTypeFk, setInputIdClientTypeFk] = useState<string>('')
     const [inputName, setInputName] = useState<string>('')
     const [inputContactName, setInputContactName] = useState<string>('')
     const [inputCPF, setInputCPF] = useState<string>('')
@@ -32,7 +32,8 @@ export default function UpdateProfile({ closeModal, client }: Params) {
     async function formDefault() {
 
         setErrors(null)
-        
+
+        setInputIdClientTypeFk(String(client.id_client_type_fk))
         setInputName(client.name)
         setInputContactName(client.contact_name || '')
         setInputCPF(client.cpf || '')
@@ -54,7 +55,10 @@ export default function UpdateProfile({ closeModal, client }: Params) {
         setErrors(list)
     }
 
-    async function submit(formData: FormData) {
+    async function submit(e: React.SubmitEvent<HTMLFormElement>) {
+        e.preventDefault()
+
+        const formData = new FormData(e.currentTarget)
         const response = await updateClient(formData)
         if (!response.success) {
             setErrors(response.errors)
@@ -65,10 +69,10 @@ export default function UpdateProfile({ closeModal, client }: Params) {
 
     return (
         <div onMouseDown={(e) => e.stopPropagation()} id="modalChild" className="flex flex-col gap-4 max-w-200 mx-auto p-2 rounded-2xl border-4 border-white bg-pink-400">
-            <form action={submit} className="flex flex-col gap-4">
+            <form onSubmit={submit} className="flex flex-col gap-4">
                 <div>
                     <input hidden name="id_client" type="text" defaultValue={client.id_client} />
-                    <input hidden name="id_client_category_fk" type="text" defaultValue={client.id_client_type_fk} />
+                    {/* <input hidden name="id_client_type_fk" type="text" defaultValue={client.id_client_type_fk} /> */}
                     {/* <input hidden name="image_url" type="text" defaultValue={client.image_url || null} /> */}
                     <div className="
                     grid
@@ -108,7 +112,19 @@ export default function UpdateProfile({ closeModal, client }: Params) {
                     [&_.error]:ring-red-500
                     [&_.error]:bg-red-300
                 ">
-                        <div className="col col-2">
+                        <div className="col">
+                            <label className="f-label" htmlFor="f-idtype">Tipo</label>
+                            <select
+                                onInput={(e) => setInputIdClientTypeFk(e.currentTarget.value)} name="id_client_type_fk" id="f-idtype" value={inputIdClientTypeFk}
+                                className="campo"
+                            >
+                                {clientTypes.map(t => (
+                                    <option key={t.id_client_type} value={t.id_client_type}>{t.name}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className={`col ${inputIdClientTypeFk === '1' && 'col-2'}`}>
                             <label className="f-label" htmlFor="f-name">Nome</label>
                             <input
                                 onInput={(e) => { setInputName(e.currentTarget.value); removeError('name') }} value={inputName}
@@ -116,27 +132,38 @@ export default function UpdateProfile({ closeModal, client }: Params) {
                             />
                         </div>
 
+                        {inputIdClientTypeFk === '1'
+                            ? <div className="col">
+                                <label className="f-label" htmlFor="f-cpf">CPF</label>
+                                <input
+                                    onInput={(e) => { setInputCPF(e.currentTarget.value); removeError('cpf') }} value={inputCPF}
+                                    id="f-cpf" name="cpf" type="text" className={`${errors?.cpf && 'error'} campo`}
+                                />
+                            </div>
+                            : <>
+                                <div className="col col">
+                                    <label className="f-label" htmlFor="f-contactName">Responsável</label>
+                                    <input
+                                        onInput={(e) => { setInputContactName(e.currentTarget.value); removeError('contact_name') }} value={inputContactName}
+                                        id="f-contactName" name="contact_name" type="text" className={`${errors?.contact_name && 'error'} campo`}
+                                    />
+                                </div>
+
+                                <div className="col">
+                                    <label className="f-label" htmlFor="f-cnpj">CNPJ</label>
+                                    <input
+                                        onInput={(e) => { setInputCNPJ(e.currentTarget.value); removeError('cnpj') }} value={inputCNPJ}
+                                        id="f-cnpj" name="cnpj" type="text" className={`${errors?.cnpj && 'error'} campo`}
+                                    />
+                                </div>
+                            </>
+                        }
+
                         <div className="col">
                             <label className="f-label" htmlFor="f-email">E-Mail</label>
                             <input
                                 onInput={(e) => { setInputEmail(e.currentTarget.value); removeError('email') }} value={inputEmail}
                                 id="f-email" name="email" type="text" className={`${errors?.email && 'error'} campo`}
-                            />
-                        </div>
-
-                        <div className="col">
-                            <label className="f-label" htmlFor="f-cpf">CPF</label>
-                            <input
-                                onInput={(e) => { setInputCPF(e.currentTarget.value); removeError('cpf') }} value={inputCPF}
-                                id="f-cpf" name="cpf" type="text" className={`${errors?.cpf && 'error'} campo`}
-                            />
-                        </div>
-
-                        <div className="col">
-                            <label className="f-label" htmlFor="f-cnpj">CNPJ</label>
-                            <input
-                                onInput={(e) => { setInputCNPJ(e.currentTarget.value); removeError('cnpj') }} value={inputCNPJ}
-                                id="f-cnpj" name="cnpj" type="text" className={`${errors?.cnpj && 'error'} campo`}
                             />
                         </div>
 

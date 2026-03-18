@@ -90,6 +90,21 @@ export default function CreateAddress({ closeModal, client, address }: Params) {
         closeModal();
     }
 
+        async function reqZip(z: string) {
+            if(z.length > 8) return
+            setZip(z)
+            if (z.length === 8) {
+                const response = await fetch(`https://viacep.com.br/ws/${z}/json/`)
+                if(!response.ok) {console.log('errou');return}
+                const data = await response.json()
+
+                setStreet(data.logradouro);
+                setDistrict(data.bairro);
+                setCity(data.localidade);
+                setState(data.estado);
+            }
+        }
+
     return (
         <div onMouseDown={(e) => e.stopPropagation()} id="modalChild" className="flex flex-col gap-4 max-w-200 mx-auto p-2 rounded-2xl border-4 border-white bg-pink-400">
             <form action={submit} className="flex flex-col gap-4">
@@ -143,8 +158,8 @@ export default function CreateAddress({ closeModal, client, address }: Params) {
                         <div className="col col-1">
                             <label htmlFor="zip" className="f-label">CEP</label>
                             <input
-                                onInput={(e) => setZip(e.currentTarget.value)} value={zip}
-                                name="zip" id="zip" type="number" min={0} className={`${errors?.zip && 'error'} campo`}
+                                onInput={(e) => reqZip(e.currentTarget.value)} value={zip}
+                                name="zip" id="zip" type="number" className={`${errors?.zip && 'error'} campo`}
                             />
                         </div>
                         <div className="col col-1">
