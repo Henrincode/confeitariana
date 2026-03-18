@@ -71,7 +71,7 @@ export default function UpdateImage({ name, image, clientId }: { name: string, i
     }
 
     return (
-        <form>
+        <form className='w-full md:w-auto'>
             <label
                 htmlFor="updateImage"
                 className={`relative cursor-pointer block group ${pending ? 'opacity-50 pointer-events-none' : ''}`}
