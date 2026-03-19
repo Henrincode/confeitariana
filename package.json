@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.96.0",
+    "bcrypt": "^6.0.0",
     "browser-image-compression": "^2.0.2",
     "next": "^16.1.6",
     "next-auth": "^5.0.0-beta.30",
