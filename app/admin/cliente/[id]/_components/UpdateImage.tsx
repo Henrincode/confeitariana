@@ -60,7 +60,7 @@ export default function UpdateImage({ name, image, clientId }: { name: string, i
             //     setNewComp(c => c + 1)
             // }
 
-        } catch (error: any) {
+        } catch (error) {
             console.error("Erro na compressão:", error);
             setError('Erro desconhecido')
         }
