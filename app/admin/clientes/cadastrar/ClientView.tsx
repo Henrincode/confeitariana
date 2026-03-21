@@ -24,7 +24,7 @@ export default function ClientView({ types }: Params) {
         e.preventDefault()
         setCreating(true)
 
-        if (name.length < 3 || (selectType !== '1' && contactName.length < 3)) {
+        if (name.length < 3 || (selectType !== '1' && contactName.length < 3 && contactName !== '')) {
             setError(true)
             return
         }

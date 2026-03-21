@@ -219,14 +219,19 @@ export default function ClientView({ idPage, client, clientTypes, clientAddresse
                         <div className="col-1">
                             <div className="list-tittle"><FaAddressCard /> Documentos</div>
                             <ul>
-                                <li>
-                                    <div className="list-subtittle">CPF</div>
-                                    <div onClick={() => { setEditing('cpf'); setValue(client.cpf || '') }} className="list-info">{client.cpf ? client.cpf : 'Não informado'}</div>
-                                </li>
-                                <li>
-                                    <div className="list-subtittle">CNPJ</div>
-                                    <div className="list-info">{client.cnpj ? client.cnpj : 'Não informado'}</div>
-                                </li>
+                                {client.id_client_type_fk === 1
+                                    ? (
+                                        <li>
+                                            <div className="list-subtittle">CPF</div>
+                                            <div onClick={() => { setEditing('cpf'); setValue(client.cpf || '') }} className="list-info">{client.cpf ? client.cpf : 'Não informado'}</div>
+                                        </li>
+                                    )
+                                    : (
+                                        <li>
+                                            <div className="list-subtittle">CNPJ</div>
+                                            <div className="list-info">{client.cnpj ? client.cnpj : 'Não informado'}</div>
+                                        </li>
+                                    )}
                                 <li>
                                     <div className="list-subtittle">Conta criada</div>
                                     <div className="list-info">{new Date(client.created_at).toLocaleDateString(navigator.language, { timeZone: 'UTC' })}</div>
