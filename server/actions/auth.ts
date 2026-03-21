@@ -10,13 +10,21 @@
 import { signIn, signOut } from "@/auth"
 import { AuthError } from "next-auth"
 
-export async function authenticate(formData: FormData) {
+export async function authenticate(params: FormData | { username: string, password: string }) {
+
+    console.log('server start')
+    const paramsToObj = params instanceof FormData
+        ? Object.fromEntries(params.entries())
+        : params
+
+        console.log('server', paramsToObj)
+
     try {
         // O primeiro parâmetro "credentials" deve bater com o nome 
         // que você deu ao provider no seu arquivo auth.ts
         await signIn("credentials", {
-            username: formData.get("username"),
-            password: formData.get("password"),
+            username: paramsToObj.username,
+            password: paramsToObj.password,
             redirectTo: "/admin/clientes", // Para onde ele vai se der certo
         })
     } catch (error) {
@@ -34,5 +42,5 @@ export async function authenticate(formData: FormData) {
 
 // configurar o signout
 export async function logout() {
-    await signOut()
+    await signOut({redirectTo: '/'})
 }

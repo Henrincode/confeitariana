@@ -1,5 +1,6 @@
 'use client'
 
+import { logout } from "@/server/actions/auth";
 import Link from "next/link";
 
 interface Props {
@@ -16,26 +17,22 @@ export default function NavBarView({ className, session }: Props) {
                     <img src="/cookie-01.png" alt="" className="w-8" />
                     <p className="hidden sm:block font-bold text-3xl text-pink-400 group-hover:text-pink-500">Confeitariana</p>
                 </Link>
-                <ul className="flex flex-row gap-2 font text-amber-800 [&_.link]:hover:text-amber-500">
-                    <li><Link className="link" href="/admin/clientes">Clientes</Link></li>
-                    <li className="w-1 rounded-full bg-amber-50"></li>
-                    <li><Link className="link" href="/admin/clientes/cadastrar">Cadastrar cliente</Link></li>
-                    <li className="w-1 rounded-full bg-amber-50"></li>
-                    <li>
-                        {session ? (
+                {session && (
+                    <ul className="flex flex-row gap-2 font text-amber-800 [&_.link]:hover:text-amber-500">
+                        <li><Link className="link" href="/admin/clientes">Clientes</Link></li>
+                        <li className="w-1 rounded-full bg-amber-50"></li>
+                        <li><Link className="link" href="/admin/clientes/cadastrar">Cadastrar cliente</Link></li>
+                        <li className="w-1 rounded-full bg-amber-50"></li>
+                        <li>
                             <div className="flex gap-4 items-center">
                                 <span>Olá, {session.user?.name || 'sem nome'}</span>
-                                <form action={''}>
-                                    <button className="text-red-400">Sair</button>
+                                <form action={logout}>
+                                    <button className="text-red-400 hover:text-red-600 cursor-pointer">Sair</button>
                                 </form>
                             </div>
-                        ) : (
-                            <Link href="/" className="bg-pink-600 px-4 py-1 rounded text-white">
-                                Logar
-                            </Link>
-                        )}
-                    </li>
-                </ul>
+                        </li>
+                    </ul>
+                )}
             </div>
         </div>
     )

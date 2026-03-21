@@ -11,6 +11,6 @@ export default async function NavBar({ className }: Props) {
   const session = await auth()
 
   return (
-    <NavBarView className={className}/>
+    <NavBarView className={className} session={session}/>
   )
 }

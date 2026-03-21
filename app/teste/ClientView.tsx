@@ -20,7 +20,7 @@ export default function ClientTeste() {
 
     return (
         <div>
-            <p onClick={() => hashPassword('faster//')}>teste</p>
+            <p onClick={() => hashPassword('admin')}>teste</p>
             {String(senha)}
         </div>
     )
