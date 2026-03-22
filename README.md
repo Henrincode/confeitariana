@@ -1,4 +1,4 @@
-# 🎂 Confeitariana - Gestão de Pedidos (Integrador Backend)
+# Integrador Backend - Confeitariana
 
 Este projeto foi desenvolvido como parte do **Desafio do Projeto Integrador de Backend do SENAC**. O foco principal é a construção de uma API sólida e um banco de dados inteligente para gerenciar o ecossistema de uma confeitaria.
 
