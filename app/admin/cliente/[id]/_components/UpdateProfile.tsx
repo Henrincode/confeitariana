@@ -12,6 +12,7 @@ interface Params {
 
 export default function UpdateProfile({ closeModal, client, clientTypes }: Params) {
 
+    const [loading, setLoading] = useState(false)
     const [errors, setErrors] = useState<Record<string, string[]> | null>()
 
     const [inputIdClientTypeFk, setInputIdClientTypeFk] = useState<string>('')
@@ -58,13 +59,17 @@ export default function UpdateProfile({ closeModal, client, clientTypes }: Param
     async function submit(e: React.SubmitEvent<HTMLFormElement>) {
         e.preventDefault()
 
+        setLoading(true)
+
         const formData = new FormData(e.currentTarget)
         const response = await updateClient(formData)
         if (!response.success) {
             setErrors(response.errors)
+            setLoading(false)
             return
         }
         closeModal()
+        setLoading(false)
     }
 
     return (
@@ -213,7 +218,7 @@ export default function UpdateProfile({ closeModal, client, clientTypes }: Param
                     </div>
                 )}
 
-                <div className="
+                <div className={`
                     flex
                     flex-row
                     justify-center
@@ -231,8 +236,9 @@ export default function UpdateProfile({ closeModal, client, clientTypes }: Param
                     [&_button]:hover:bg-pink-800
                     [&_button]:cursor-pointer
                     [&_button]:transition-all
-                ">
-                    <button type="submit">Atualizar</button>
+                    ${loading && "[&_.submit]:opacity-30 [&_.submit]:hover:bg-pink-500"}
+                `}>
+                    <button type="submit" disabled={loading} className="submit">{loading ? 'Aguarde' : 'Atualizar'}</button>
                     <button onClick={formDefault} type="button">Desfazer</button>
                     <button onClick={() => closeModal()} type="button">Cancelar</button>
                 </div>
