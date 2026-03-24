@@ -1,11 +1,12 @@
 'use client'
 
 import { logout } from "@/server/actions/auth";
+import { Session } from "next-auth";
 import Link from "next/link";
 
 interface Props {
     className?: string
-    session?: any
+    session?: Session | null
 }
 
 export default function NavBarView({ className, session }: Props) {
@@ -25,7 +26,7 @@ export default function NavBarView({ className, session }: Props) {
                         <li className="w-1 rounded-full bg-amber-50"></li>
                         <li>
                             <div className="flex gap-4 items-center">
-                                <span>Olá, {session.user?.name || 'sem nome'}</span>
+                                <span>Olá, {session.user.name || 'sem nome'}</span>
                                 <form action={logout}>
                                     <button className="text-red-400 hover:text-red-600 cursor-pointer">Sair</button>
                                 </form>
