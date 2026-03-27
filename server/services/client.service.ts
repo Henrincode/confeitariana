@@ -80,9 +80,24 @@ async function update(params: UpdateClient): Promise<ClientDB> {
 // DELETE
 async function remove(id: number): Promise<ClientDB> {
     const [row] = await sql<ClientDB[]>`
-        delete from ana_clients
+        UPDATE ana_clients
+        SET deleted_at = NOW()
         where id_client = ${id}
         returning *
+    `
+    return {
+        ...row,
+        id_client: Number(row.id_client),
+        id_client_type_fk: Number(row.id_client_type_fk)
+    }
+}
+
+async function restore(id: number): Promise<ClientDB> {
+    const [row] = await sql<ClientDB[]>`
+        UPDATE ana_clients
+        SET deleted_at = NULL
+        WHERE id_client = ${id}
+        RETURNING *
     `
     return {
         ...row,
@@ -228,17 +243,46 @@ async function uploadImage(params: ClientUploadImage): Promise<ClientDB> {
 
     const { id_client, file } = params
 
+    // se existir imagem anterior ele move para a lixeira
+    const client = await findById(id_client)
+
+    if (client?.image_url) {
+        await storageServices.moveToTrash(client.image_url)
+    }
+
+    // prepara o arquivo e caminho para a nova imagem
     const fileExt = file.name.split('.').pop()
     const fileName = `${Math.random().toString().slice(2)}.${fileExt}`
     const filePath = `clients/${id_client}/${fileName}`
 
-    const image_url = await storageServices.image({ file, filePath })
+    const image_url = await storageServices.upload({ file, filePath })
 
     const [row] = await sql<ClientDB[]>`
-    UPDATE ana_clients 
-    SET image_url = ${image_url} 
-    WHERE id_client = ${id_client}
-    returning *
+        UPDATE ana_clients 
+        SET image_url = ${image_url} 
+        WHERE id_client = ${id_client}
+        returning *
+    `
+    return {
+        ...row,
+        id_client: Number(row.id_client),
+        id_client_type_fk: Number(row.id_client_type_fk)
+    }
+}
+
+async function deleteImage(id: number): Promise<ClientDB> {
+
+    // se existir imagem anterior ele move para a lixeira
+    const client = await findById(id)
+    if (client?.image_url) {
+        await storageServices.moveToTrash(client.image_url)
+    }
+
+    const [row] = await sql<ClientDB[]>`
+        UPDATE ana_clients
+        SET image_url = NULL
+        WHERE id_client = ${id}
+        RETURNING *
     `
     return {
         ...row,
@@ -253,6 +297,7 @@ const clientService = {
     create,
     update,
     delete: remove,
+    restore,
 
     // addresses
     findAddressesByClient,
@@ -268,7 +313,8 @@ const clientService = {
     deleteType,
 
     // image
-    uploadImage
+    uploadImage,
+    deleteImage
 }
 
 export default clientService

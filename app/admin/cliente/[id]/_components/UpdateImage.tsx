@@ -1,7 +1,7 @@
 'use client'
 
 import imageCompression from 'browser-image-compression';
-import { uploadClientImage } from "@/server/actions/client.action";
+import { deleteClientImage, uploadClientImage } from "@/server/actions/client.action";
 import { useActionState, startTransition, useState, useEffect } from "react"; // 1. Importe o startTransition
 import Image from 'next/image';
 
@@ -101,6 +101,8 @@ export default function UpdateImage({ name, image, clientId }: { name: string, i
                     disabled={pending}
                 />
             </label>
+
+            <button onClick={() => deleteClientImage(clientId)} type='button'>apagar</button>
 
             {error && (
                 <p className="text-red-500 text-xs mt-2 text-center font-semibold">{error}</p>

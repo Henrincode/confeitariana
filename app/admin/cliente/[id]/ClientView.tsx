@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { CgDetailsMore } from "react-icons/cg"
 import { FaAddressCard, FaEdit, FaUserCircle } from "react-icons/fa"
 import { RiContactsBookFill } from "react-icons/ri"
-import { MdDelete } from "react-icons/md"
+import { MdDelete, MdRestore } from "react-icons/md"
 import UpdateImage from "./_components/UpdateImage"
 import UpdateProfile from "./_components/UpdateProfile"
 import DeleteProfile from "./_components/DeleteProfile"
@@ -92,7 +92,9 @@ export default function ClientView({ idPage, client, clientTypes, clientAddresse
                         transition-all
                         select-none
                     ">
-                        <MdDelete /> <span className="hidden md:block">apagar</span>
+                        {!client.deleted_at
+                            ? <><MdDelete /> <span className="hidden md:block">apagar</span></>
+                            : <><MdRestore /> <span className="hidden md:block">Restaurar</span></>}
                     </div>
 
                     <div id="name" className="flex-1 flex flex-col items-center sm:items-start">

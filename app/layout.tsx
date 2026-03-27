@@ -38,9 +38,10 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body
-        className={`${fontPoppins.className} ${geistSans.variable} ${geistMono.variable} antialiased min-h-dvh pt-20 bg-amber-100`}
+        className={`${fontPoppins.className} ${geistSans.variable} ${geistMono.variable} antialiased min-h-dvh bg-amber-100`}
       >
         <NavBar className="fixed top-0 w-full" />
+        <div className="h-20"></div>
         {children}
       </body>
     </html>

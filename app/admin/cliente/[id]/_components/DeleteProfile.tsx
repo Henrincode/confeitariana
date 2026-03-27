@@ -1,5 +1,5 @@
 'use client'
-import { deleteClient } from "@/server/actions/client.action";
+import { deleteClient, restoreClient } from "@/server/actions/client.action";
 import { Client } from "@/types/client.types";
 import { useRouter } from "next/navigation";
 
@@ -13,7 +13,9 @@ export default function UpdateProfile({ closeModal, client }: Params) {
     const router = useRouter()
 
     async function confirm() {
-        await deleteClient(client.id_client)
+        !client.deleted_at
+            ? await deleteClient(client.id_client)
+            : await restoreClient(client.id_client)
         router.push('/admin/clientes/')
     }
 

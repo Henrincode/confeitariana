@@ -1,8 +1,8 @@
 'use server'
-import { createClientAddressSchema, CreateClient, CreateClientAddress,   createClientSchema, UpdateClient,   updateClientSchema, UploadClientImage, uploadClientImageSchema, UpdateClientAddress, updateClientAddressSchema, UpdateClientType, updateClientTypeSchema, CreateClientType, createClientTypeSchema } from "@/schemas/client.schema";
+import { createClientAddressSchema, CreateClient, CreateClientAddress, createClientSchema, UpdateClient, updateClientSchema, UploadClientImage, uploadClientImageSchema, UpdateClientAddress, updateClientAddressSchema, UpdateClientType, updateClientTypeSchema, CreateClientType, createClientTypeSchema } from "@/schemas/client.schema";
 import clientService from "@/server/services/client.service";
 import { ApiResponse } from "@/types/ApiResponse";
-import { ClientAddressDB,  ClientDB, ClientTypeDB } from "@/types/client.types";
+import { ClientAddressDB, ClientDB, ClientTypeDB } from "@/types/client.types";
 import { updateTag } from "next/cache";
 import z, { success } from "zod";
 
@@ -80,6 +80,20 @@ export async function deleteClient(id: number): ApiResponse<ClientDB> {
     }
 }
 
+// restore
+export async function restoreClient(id: number): ApiResponse<ClientDB> {
+    if (!id || isNaN(id) || id < 1) return { success: false, message: 'ID não informado ou não é do tipo Number' }
+
+    try {
+        const data = await clientService.restore(id)
+        updateTag('clients')
+        return { success: true, data }
+    } catch (error) {
+        console.error('ERROR ACTION deleteClient', error)
+        return { success: false, message: 'Erro interno do servidor' }
+    }
+}
+
 
 // 
 // ADDRESS
@@ -146,13 +160,13 @@ export async function deleteClientAddress(id: number): ApiResponse<ClientAddress
         updateTag('clients')
         return { success: true, data }
     } catch (error) {
-        console.log('ERROR ACTION deleteClientAddress', error)
+        console.error('ERROR ACTION deleteClientAddress', error)
         return { success: false, message: 'Erro interno do servidor' }
     }
 }
 
 // 
-// CATEGORIES
+// Types
 // 
 
 // CREAT
@@ -209,14 +223,14 @@ export async function updateClientType(params: FormData | UpdateClientType): Api
 }
 
 // DELETE
-export async function deleteClientType(id: number) {
+export async function deleteClientType(id: number): ApiResponse<ClientTypeDB> {
     try {
-        await clientService.deleteType(id)
+        const data = await clientService.deleteType(id)
         updateTag('clients')
-        return { success: true }
-    } catch (error: any) {
-        console.error(error)
-        return { success: false, error: error.code }
+        return { success: true, data }
+    } catch (error) {
+        console.error('ERROR ACTION deleteClientType', error)
+        return { success: false, message: 'Erro interno do servidor' }
     }
 }
 
@@ -244,8 +258,23 @@ export async function uploadClientImage(params: FormData | UploadClientImage): A
         updateTag('clients')
         return { success: true, data }
 
-    } catch (error: any) {
-        console.error(error.message)
+    } catch (error) {
+        console.error('ERROR ACTION uploadClientImage', error)
         return { success: false, message: 'Erro ao enviar imagem' }
+    }
+}
+
+// delete image
+export async function deleteClientImage(id: number): ApiResponse<ClientDB> {
+
+    if (!id || isNaN(id) || id < 1) return { success: false, message: "ID informado inválido" }
+
+    try {
+        const data = await clientService.deleteImage(id)
+        updateTag('clients')
+        return { success: true, data }
+    } catch (error) {
+        console.error('ERROR ACTION deleteClientImage', error)
+        return { success: false, message: 'Erro ao apagar imagem' }
     }
 }
