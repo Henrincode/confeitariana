@@ -3,8 +3,10 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Client } from "@/types/client.types"
+import { useEffect } from "react"
 
 export default function ClientView({ clients }: { clients: Client[] }) {
+
     return (
         <>
             <ul className="box flex flex-col justify-center sm:grid sm:grid-cols-3 gap-4 sm:gap-8 pb-20">

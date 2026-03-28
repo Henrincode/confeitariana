@@ -102,7 +102,7 @@ export default function UpdateImage({ name, image, clientId }: { name: string, i
                 />
             </label>
 
-            <button onClick={() => deleteClientImage(clientId)} type='button'>apagar</button>
+            {/* <button onClick={() => deleteClientImage(clientId)} type='button'>apagar</button> */}
 
             {error && (
                 <p className="text-red-500 text-xs mt-2 text-center font-semibold">{error}</p>

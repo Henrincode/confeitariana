@@ -13,10 +13,14 @@ export default function UpdateProfile({ closeModal, client }: Params) {
     const router = useRouter()
 
     async function confirm() {
-        !client.deleted_at
-            ? await deleteClient(client.id_client)
-            : await restoreClient(client.id_client)
-        router.push('/admin/clientes/')
+
+        if (client.deleted_at) {
+            await restoreClient(client.id_client)
+            closeModal()
+        } else {
+            await deleteClient(client.id_client)
+            router.push('/admin/clientes/')
+        }
     }
 
     return (
@@ -26,9 +30,9 @@ export default function UpdateProfile({ closeModal, client }: Params) {
             border-white text-white bg-pink-400
         ">
             <div className="text-center">
-                <p>Deseja realmente apagar o usuário</p>
-                <p className="text-pink-900 animate-pulse">
-                    {client.name.split(' ')[0]}
+                <p>Deseja realmente {client.deleted_at ? 'restaurar' : 'apagar'} o usuário:</p>
+                <p className="font-bold text-pink-900 animate-[pulse_300ms_infinite]">
+                    {client.name.split(' ')[0].toUpperCase()}
                 </p>
             </div>
             <div className="

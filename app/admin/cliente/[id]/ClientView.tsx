@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { CgDetailsMore } from "react-icons/cg"
-import { FaAddressCard, FaEdit, FaUserCircle } from "react-icons/fa"
+import { FaAddressCard, FaEdit, FaMapMarkedAlt, FaUserCircle } from "react-icons/fa"
 import { RiContactsBookFill } from "react-icons/ri"
 import { MdDelete, MdRestore } from "react-icons/md"
 import UpdateImage from "./_components/UpdateImage"
@@ -94,7 +94,7 @@ export default function ClientView({ idPage, client, clientTypes, clientAddresse
                     ">
                         {!client.deleted_at
                             ? <><MdDelete /> <span className="hidden md:block">apagar</span></>
-                            : <><MdRestore /> <span className="hidden md:block">Restaurar</span></>}
+                            : <><MdRestore /> <span className="hidden md:block">restaurar</span></>}
                     </div>
 
                     <div id="name" className="flex-1 flex flex-col items-center sm:items-start">
@@ -273,13 +273,26 @@ export default function ClientView({ idPage, client, clientTypes, clientAddresse
 
             {/* address */}
             <div className=" p-5 sm:px-10 mt-10 rounded-xl shadow-2xl shadow-black/50 bg-white">
-                <div className="mb-4">Endereço</div>
+                <div className="flex flex-row justify-center items-center gap-2 pb-4 mb-4 border-b border-gray-200 font-semibold text-3xl text-gray-500"><FaMapMarkedAlt />Endereços</div>
                 <ul className={`${clientAddresses.length ? "grid grid-cols-1 md:grid-cols-4" : "flex justify-center mb-4"} gap-4`}>
-                    {clientAddresses.map((a: any, i: number) => (
+                    {clientAddresses.map((a, i: number) => (
                         <li key={i} onClick={() => { setAddressModal(a); openModal('address') }} className="group relative p-2 rounded-lg ring-2 text-gray-600 ring-pink-500/50 bg-pink-50 hover:bg-pink-100 cursor-pointer">
-                            {a.name} <br /> {a.number && `${a.number}, `}{a.street}
+                            {a.name}
+                            <br />
+                            {a.number && a.number}
+                            {a.street && ', ' + a.street}
+                            {a.condominium && ', ' + a.condominium}
+                            {a.building_block && ', ' + a.building_block}
+                            {a.unit_number && ', ' + a.unit_number}
+                            {a.district && ', ' + a.district}
+                            {a.city && ', ' + a.city}
+                            .
                             {/* update / delete address */}
                             <div className="absolute md:hidden group-hover:flex top-2 right-2 flex flex-row gap-1.5">
+                                <button type="button"
+                                    className="p-1 rounded-full text-white bg-green-500 hover:bg-green-600 cursor-pointer">
+                                    <AiFillEdit />
+                                </button>
                                 <button type="button" onClick={(e) => { e.stopPropagation(); deleteClientAddress(a.id_client_address) }}
                                     className="p-1 rounded-full text-white bg-red-500 hover:bg-red-600 cursor-pointer">
                                     <AiFillDelete />

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Poppins } from "next/font/google";
 import "./globals.css";
 import NavBar from "@/components/NavBar";
+import ScrollRestorer from "@/components/ScrollRestorer";
 
 const fontPoppins = Poppins({
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900']
@@ -40,6 +41,7 @@ export default function RootLayout({
       <body
         className={`${fontPoppins.className} ${geistSans.variable} ${geistMono.variable} antialiased min-h-dvh bg-amber-100`}
       >
+        <ScrollRestorer />
         <NavBar className="fixed top-0 w-full" />
         <div className="h-20"></div>
         {children}
