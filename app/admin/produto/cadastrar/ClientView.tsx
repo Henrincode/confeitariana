@@ -1,20 +1,33 @@
 'use client'
 
+import { useState } from "react"
 import { FaBoxOpen } from "react-icons/fa"
 
 export default function ViewCreateProduct() {
+
+    const [img, setImg] = useState('')
+
+    function convertImage() {
+        setImg('https://www.receiteria.com.br/wp-content/uploads/bolo-simples-de-chocolate.jpeg')
+    }
+
     return (
-        <div className="max-w-md px-2 pb-10 mx-auto drop-shadow-2xl drop-shadow-black/30">
+        <div className="max-w-sm px-2 pb-4 mx-auto drop-shadow-2xl drop-shadow-black/30">
+
+            {/* título */}
             <div className="
                 flex flex-row justify-center items-center gap-2
                 py-5 px-2 rounded-t-xl
                 font-semibold text-2xl italic
                 text-white bg-pink-400
-            "><FaBoxOpen /> Cadastrar novo produto</div>
+            "><FaBoxOpen /> Cadastrar produto</div>
+
+            {/* corpo */}
             <div className="
                 p-2 rounded-b
                 bg-white
             ">
+                {/* formulário */}
                 <form action="" className="
                     grid grid-cols-2 gap-2
                 
@@ -34,9 +47,12 @@ export default function ViewCreateProduct() {
                     [&_.input]:bg-pink-100
                 ">
                     {/* foto */}
-                    <label htmlFor="image_url" className="col-span-2 input w-full aspect-video bg-amber-100">
-                        Enviar imagem
-                        <input hidden id="image_url" name="image_url" type="file" />
+                    <label htmlFor="image_url" className="relative col-span-2 input w-full aspect-video bg-amber-100">
+                        {img
+                            ? <img src={img} className="absolute top-0 left-0 size-full object-cover object-center" />
+                            : 'Enviar imagem'
+                        }
+                        <input onChange={convertImage} hidden id="image_url" name="image_url" type="file" />
                     </label>
 
                     {/* nome */}
@@ -88,9 +104,8 @@ export default function ViewCreateProduct() {
                     </div>
 
                     {/* Tipo de unidade */}
-                    {/* marca */}
                     <div className="item">
-                        <label htmlFor="id_unit_fk" className="label">Marca</label>
+                        <label htmlFor="id_unit_fk" className="label">Tipo unidade</label>
                         <select
                             name="id_unit_fk" id="id_unit_fk"
                             className="input"
