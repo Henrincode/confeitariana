@@ -71,15 +71,39 @@ export default function NavBarView({ className, session }: Props) {
                                 [&_.link]:hover:text-amber-800
                                 [&_.link]:whitespace-nowrap
                             ">
+                                {/* links */}
                                 <li className="relative cursor-pointer group">
                                     Clientes
                                     <div className="
                                     absolute left-1/2 -translate-x-1/2
                                     hidden group-hover:block
                                     ">
-                                        <div className="p-2 mt-1 rounded-lg bg-amber-500 shadow-md shadow-black/30">
-                                            <Link className="block link" href="/admin/clientes">Clientes</Link>
+                                        <div className="
+                                            p-2 mt-1 rounded-lg
+                                            border-2
+                                            border-amber-500 bg-amber-600
+                                            shadow-md shadow-black/30
+                                        ">
+                                            <Link className="block link" href="/admin/clientes">Ver todos</Link>
                                             <Link className="block link" href="/admin/clientes/cadastrar">Cadastrar cliente</Link>
+                                        </div>
+                                    </div>
+                                </li>
+                                    <li className="w-1 rounded-full bg-amber-400"></li>
+                                <li className="relative cursor-pointer group">
+                                    Produtos
+                                    <div className="
+                                    absolute left-1/2 -translate-x-1/2
+                                    hidden group-hover:block
+                                    ">
+                                        <div className="
+                                            p-2 mt-1 rounded-lg
+                                            border-2
+                                            border-amber-500 bg-amber-600
+                                            shadow-md shadow-black/30
+                                        ">
+                                            <Link className="block link" href="/admin/produtos">Ver todos</Link>
+                                            <Link className="block link" href="/admin/produto/cadastrar">Cadastrar produto</Link>
                                         </div>
                                     </div>
                                 </li>
