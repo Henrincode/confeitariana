@@ -1,0 +1,3 @@
+- Preciso fazer o schema da tabela produtos
+- Preciso fazer a service dos produtos
+- Preciso criar a coluna deleted_at na tabela ana_units
