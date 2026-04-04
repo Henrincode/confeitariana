@@ -8,6 +8,7 @@ export interface ProductDB {
     price_original: number
     price_discount: number
     price_cost: number
+    amount: number
     image_url: string | null
     created_at: Date
     deleted_at: Date | null

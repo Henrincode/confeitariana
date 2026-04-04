@@ -1,2 +1,2 @@
-- Preciso criar a coluna deleted_at na tabela ana_units
 - Fazer o helper do product.schema.ts ser global
+- fazer upload de imagem para Brand / marca

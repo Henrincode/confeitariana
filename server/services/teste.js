@@ -1,1 +1,0 @@
-console.log('testeteste2'.split('/').pop())

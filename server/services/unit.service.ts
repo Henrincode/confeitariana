@@ -73,3 +73,5 @@ const unitService = {
     create,
     update
 }
+
+export default unitService

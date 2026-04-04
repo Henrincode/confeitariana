@@ -95,12 +95,12 @@ CREATE TABLE ana_suppliers (
     state VARCHAR(50),
     country_code CHAR(2) DEFAULT 'BR',
 
-    condominium VARCHAR(100),              -- Nome do Condomínio (Ex: Residencial Flores)
-    building_block VARCHAR(20),            -- Bloco / Torre
-    unit_number VARCHAR(20),               -- Número do Apto / Número da Casa interna
-    internal_street VARCHAR(255),          -- Rua interna (para condomínios grandes de casas)
+    condominium VARCHAR(100), --------------- Nome do Condomínio (Ex: Residencial Flores)
+    building_block VARCHAR(20), ------------- Bloco / Torre
+    unit_number VARCHAR(20), ---------------- Número do Apto / Número da Casa interna
+    internal_street VARCHAR(255), ----------- Rua interna (para condomínios grandes de casas)
 
-    details TEXT,                          -- Ponto de referência ou instruções de entrega
+    details TEXT, --------------------------- Ponto de referência ou instruções de entrega
     image_url TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     deleted_at TIMESTAMPTZ
@@ -159,7 +159,7 @@ CREATE TABLE ana_supplies (
     id_brand_fk BIGINT REFERENCES ana_brands(id_brand),
     id_unit_fk BIGINT NOT NULL REFERENCES ana_units(id_unit),
     name VARCHAR(100) NOT NULL,
-    size_value NUMERIC(10,3),
+    amount NUMERIC(10,3),
     image_url TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     deleted_at TIMESTAMPTZ
@@ -199,11 +199,12 @@ CREATE TABLE ana_products (
     id_product BIGSERIAL PRIMARY KEY,
     id_product_category_fk BIGINT NOT NULL REFERENCES ana_product_categories(id_product_category),
     id_brand_fk BIGINT REFERENCES ana_brands(id_brand),
-    id_unit_fk BIGINT NOT NULL REFERENCES ana_units(id_unit),
+    id_unit_fk BIGINT DEFAULT 1 NOT NULL REFERENCES ana_units(id_unit),
     name VARCHAR(255) NOT NULL,
     price_original NUMERIC(10,2) NOT NULL DEFAULT 0,
     price_discount NUMERIC(10,2) DEFAULT 0,
     price_cost NUMERIC(10,2) NOT NULL DEFAULT 0,
+    amount NUMERIC(10,3) NOT NULL DEFAULT 1,
     image_url TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     deleted_at TIMESTAMPTZ

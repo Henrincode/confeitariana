@@ -1,4 +1,3 @@
-// app/login/actions.ts
 'use server'
 
 // para desativar o redirecionamento

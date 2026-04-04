@@ -2,6 +2,9 @@ import { z } from 'zod'
 
 // Helper para tratar boolena
 const toBoolean = (val: unknown) => {
+
+    if (typeof val === 'boolean') return val
+
     if (typeof val === 'string') {
         if (val.toLowerCase() === 'true') return true
         if (val.toLowerCase() === 'false') return false
@@ -10,80 +13,80 @@ const toBoolean = (val: unknown) => {
         if (val === 1) return true
         if (val === 0) return false
     }
-    return val === 'boolean' ? val : undefined
+    return null
 }
 
 // Helper para tratar strings vazias vindas de formulários
 const emptyToNull = (val: unknown) => {
 
-    if (typeof val === 'boolean') return String(val)
-    if (typeof val === "string" && val.trim() === "") return null
+    if (typeof val !== 'number' && typeof val !== 'string') return null
 
-    return val
+    const valString = String(val).trim()
+
+    return valString === '' ? null : valString
 }
 
-const emptyToUndefined = (val: unknown) =>
-    emptyToNull(val) === null ? undefined : val
-
 // create product schema
-export const createProduct = z.object({
-    id_product_category_fk: z.preprocess(emptyToUndefined, // se fosse null converteria para 0
+export const createProductSchema = z.object({
+    id_product_category_fk: z.preprocess(emptyToNull, // se fosse null converteria para 0
         z.coerce.number("Campo deve ser um número").positive("Deve ser um número positivo")
     ),
-    id_brand_fk: z.preprocess(emptyToUndefined,
+    id_brand_fk: z.preprocess(emptyToNull,
         z.coerce.number("Campo deve ser um número").positive("Deve ser um número positivo")
     ),
-    id_unit_fk: z.preprocess(emptyToUndefined,
+    id_unit_fk: z.preprocess(emptyToNull,
         z.coerce.number("Campo deve ser um número").positive("Deve ser um número positivo")
     ),
-    name: z.preprocess(emptyToUndefined,
-        z.coerce.string().trim().min(3, 'Mínimo 3 caracteres')
+    name: z.preprocess(emptyToNull,
+        z.string('Mínimo 3 caracteres').trim().min(3, 'Mínimo 3 caracteres')
     ),
-    price_original: z.preprocess(emptyToUndefined,
+    price_original: z.preprocess(emptyToNull,
         z.coerce.number('Preço original precisa ser número').min(0, 'Preço original >= 0')
     ),
-    price_discount: z.preprocess(emptyToUndefined,
-        z.coerce.number('Preço original precisa ser número').min(0, 'Preço original precisa ser >= 0').optional()
-    ),
-    price_cost: z.preprocess(emptyToUndefined,
+    price_discount: z.coerce.number('Preço original precisa ser número').min(0, 'Preço original precisa ser >= 0').optional()
+    ,
+    price_cost: z.preprocess(emptyToNull,
         z.coerce.number('Preço de custo precisa ser número').min(0, 'Preço de custo deve ser >= 0')
+    ),
+    amount: z.preprocess(emptyToNull,
+        z.coerce.number('Quantidade precisa ser um número').min(1, 'A quantidade precisa ser no mínimo 1 ou 0.001').optional()
     ),
     image_url: z.url('Precisa ser um link url https válido').optional()
 })
 
 // update product schema
-export const updateProduct = createProduct.partial().extend({
+export const updateProductSchema = createProductSchema.partial().extend({
     id_product: z.preprocess(emptyToNull,
         z.coerce.number().positive()
     )
 })
 
 // types
-export type CreateProduct = z.infer<typeof createProduct>
-export type UpdateProduct = z.infer<typeof updateProduct>
+export type CreateProduct = z.infer<typeof createProductSchema>
+export type UpdateProduct = z.infer<typeof updateProductSchema>
 
 // -------------------------------------------------------
 
 // create product category schema
-export const createProductCategory = z.object({
+export const createProductCategorySchema = z.object({
     id_parent_fk: z.preprocess(emptyToNull,
         z.coerce.number().positive().nullable().optional()
     ),
-    name: z.preprocess(emptyToUndefined,
+    name: z.preprocess(emptyToNull,
         z.string().min(3, 'Mínimo 3 caracteres')
     )
 })
 
 // update product category schema
-export const updateProductCategory = createProductCategory.partial().extend({
-    id_product_category: z.preprocess(emptyToUndefined,
+export const updateProductCategorySchema = createProductCategorySchema.partial().extend({
+    id_product_category: z.preprocess(emptyToNull,
         z.coerce.number("Campo deve ser um número").positive("Deve ser um número positivo")
     )
 })
 
 // types
-export type CreateProductCategory = z.infer<typeof createProductCategory>
-export type UpdateProductCategory = z.infer<typeof updateProductCategory>
+export type CreateProductCategory = z.infer<typeof createProductCategorySchema>
+export type UpdateProductCategory = z.infer<typeof updateProductCategorySchema>
 
 // -------------------------------------------------------
 

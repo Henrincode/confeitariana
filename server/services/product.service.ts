@@ -18,7 +18,7 @@ const find = unstable_cache(
                     'image_url', b.image_url
                 ) brand,
                 u.name unit
-            FROM ana_product p
+            FROM ana_products p
             inner join ana_product_categories c
                 on p.id_product_category_fk = c.id_product_category
             inner join ana_brands b
@@ -50,7 +50,7 @@ const findById = unstable_cache(
                     'image_url', b.image_url
                 ) brand,
                 u.name unit
-            FROM ana_product p
+            FROM ana_products p
             inner join ana_product_categories c
                 on p.id_product_category_fk = c.id_product_category
             inner join ana_brands b
@@ -170,7 +170,7 @@ async function uploadImage(params: uploadProductImage): Promise<ProductDB> {
 }
 
 //  remove image
-async function removeImage(id: number): Promise<ProductDB> {
+async function deleteImage(id: number): Promise<ProductDB> {
 
     const [row] = await sql<ProductDB[]>`
         UPDATE ana_products
@@ -284,3 +284,22 @@ async function restoreCategory(id: number): Promise<ProductCategoryDB> {
         id_parent_fk: Number(row.id_parent_fk)
     }
 }
+
+const productService = {
+    find,
+    findById,
+    create,
+    update,
+    uploadImage,
+    deleteImage,
+    delete: remove,
+    restore,
+    // category
+    findCategories,
+    findCategoryById,
+    updateCategory,
+    deleteCategory,
+    restoreCategory
+}
+
+export default productService
