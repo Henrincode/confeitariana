@@ -16,7 +16,10 @@ export interface ProductDB {
 // view: products
 export interface Product extends ProductDB {
     category: string
-    brand: string
+    brand: {
+        name: string
+        image_url: string | null
+    }
     unit: string
 }
 

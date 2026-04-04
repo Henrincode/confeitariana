@@ -31,7 +31,8 @@ CREATE TABLE ana_auth_staff (
 CREATE TABLE ana_client_types (
     id_client_type BIGSERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
-    created_at TIMESTAMPTZ DEFAULT NOW()
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ
 );
 
 -- Entidades de Consumo: Cadastro central de clientes.
@@ -138,7 +139,8 @@ CREATE TABLE ana_units (
     id_unit BIGSERIAL PRIMARY KEY,
     name VARCHAR(50), 
     short_name VARCHAR(10) NOT NULL UNIQUE, 
-    created_at TIMESTAMPTZ DEFAULT NOW()
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ
 );
 
 -- Organização de Insumos.
@@ -146,7 +148,8 @@ CREATE TABLE ana_supply_categories (
     id_supply_category BIGSERIAL PRIMARY KEY,
     id_parent_fk BIGINT REFERENCES ana_supply_categories(id_supply_category),
     name VARCHAR(100) NOT NULL,
-    created_at TIMESTAMPTZ DEFAULT NOW()
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ
 );
 
 -- Catálogo de Insumos.
@@ -167,19 +170,24 @@ CREATE TABLE ana_product_categories (
     id_product_category BIGSERIAL PRIMARY KEY,
     id_parent_fk BIGINT REFERENCES ana_product_categories(id_product_category),
     name VARCHAR(100) NOT NULL,
-    created_at TIMESTAMPTZ DEFAULT NOW()
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ
 );
 
 -- Modalidades Financeiras.
 CREATE TABLE ana_payment_methods (
     id_payment_method BIGSERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL UNIQUE
+    name VARCHAR(100) NOT NULL UNIQUE,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ
 );
 
 -- Status do pagamento
 CREATE TABLE ana_payment_status (
     id_payment_status BIGSERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL UNIQUE
+    name VARCHAR(100) NOT NULL UNIQUE,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ
 );
 
 -- ==========================================================
@@ -205,7 +213,8 @@ CREATE TABLE ana_products (
 CREATE TABLE ana_invoice_types (
     id_invoice_type BIGSERIAL PRIMARY KEY,
     name varchar(255) NOT NULL UNIQUE,
-    created_at TIMESTAMPTZ DEFAULT NOW()
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ
 );
 
 -- Documento Fiscal/Comercial: Compras e Vendas.
@@ -257,7 +266,8 @@ CREATE TABLE ana_invoice_supply_items (
 CREATE TABLE ana_payment_types (
     id_payment_type BIGSERIAL PRIMARY KEY,
     name varchar(255) NOT NULL UNIQUE,
-    created_at TIMESTAMPTZ DEFAULT NOW()
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ
 );
 
 -- Conciliação Bancária.
