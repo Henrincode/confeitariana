@@ -62,6 +62,26 @@ export default function MobileNav({ pathname, closeModal }: Params) {
                     </li>
                 </ul>
             </div>
+            <div className="area">
+                <div className="area-border"></div>
+                <ul>
+                    <p>Produtos</p>
+                    <li>
+                        <Link
+                            onClick={() => pathname === '/admin/clientes' && closeModal()}
+                            href={'/admin/produtos'}>
+                            Ver todos
+                        </Link>
+                    </li>
+                    <li>
+                        <Link
+                            onClick={() => pathname === '/admin/clientes/cadastrar' && closeModal()}
+                            href={'/admin/produto/cadastrar'}>
+                            Cadastrar novo
+                        </Link>
+                    </li>
+                </ul>
+            </div>
 
             {/* divider */}
             {/* <div className="divider"></div> */}
