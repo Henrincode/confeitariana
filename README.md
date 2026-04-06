@@ -39,17 +39,27 @@ O projeto utiliza **PostgreSQL** (via Supabase) com uma estrutura normalizada de
 
     Uma representação visual do "passo a passo" lógico do sistema, ex:
 
-    - Autenticação do Staff (Login).
+    - Autenticação do Staff (frontend).
 
-    ![alt text](<docs/Fluxogramas das 3 principais funcionalidades/login.png>)
+    ![alt text](<docs/Fluxogramas das 3 principais funcionalidades/01 fluxo de login.png>)
 
-    - Cadastro de novo Cliente.
+    - Autenticação do Staff (backend - action).
 
-    - Cadastro de novo Produto.
+        Valida dados no backend com a biblioteca zod evitando técnicas de invazão como query injection
+
+    ![alt text](<docs/Fluxogramas das 3 principais funcionalidades/02 fluxo de login - auth.action.png>)
+
+    - Autenticação do Staff (backend - service).
+
+        Depois que a action valida os dados a service consulta o banco de dados com segurança.
+
+    ![alt text](<docs/Fluxogramas das 3 principais funcionalidades/03 fluxo de login - auth.service.png>)
 
 - DER(diagrama entidade relacionamento)
 
     É o mapa do banco de dados. Ele mostra como as tabelas montadas (Clientes, Produtos, Categorias, ...) se conectam através das Primary Keys e Foreign Keys. É a estrutura que sustenta toda a aplicação.
+
+    Para ver o fluxograma do banco com animação das chaves estrangeiras [clique aqui!](https://dbdiagram.io/e/690938a26735e111700f9551/69d42a64808962968430803c)
 
     ![alt text](<docs/DER - diagrama entidade relacionamento/database.png>)
 
@@ -92,8 +102,3 @@ O projeto utiliza **PostgreSQL** (via Supabase) com uma estrutura normalizada de
     *Eu escolhi:*
 
     - Vercel
-
-
-## Estrutura do banco de dados
-
-Para ver o fluxograma do banco [clique aqui!](https://dbdiagram.io/e/696d62b3d6e030a02462527c/696db5aad6e030a02467400d)

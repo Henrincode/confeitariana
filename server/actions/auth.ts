@@ -7,23 +7,27 @@
 // signOut({ redirectTo: "/login" })
 
 import { signIn, signOut } from "@/auth"
+import { authSchema } from "@/schemas/auth.schema"
 import { AuthError } from "next-auth"
 
 export async function authenticate(params: FormData | { username: string, password: string }) {
 
-    console.log('server start')
     const paramsToObj = params instanceof FormData
         ? Object.fromEntries(params.entries())
         : params
 
-        console.log('server', paramsToObj)
+    const paramsValidate = authSchema.safeParse(paramsToObj)
+
+    if (!paramsValidate.success) {
+        return "Campo usuário e senha devem ser preenchidos corretamente. USUÁRIO mínimo 3 caracteres, SENHA mínimo 4 caracteres"
+    }
 
     try {
         // O primeiro parâmetro "credentials" deve bater com o nome 
         // que você deu ao provider no seu arquivo auth.ts
-        await signIn("credentials", {
-            username: paramsToObj.username,
-            password: paramsToObj.password,
+        await signIn("staff", {
+            username: paramsValidate.data.username,
+            password: paramsValidate.data.password,
             redirectTo: "/admin/clientes", // Para onde ele vai se der certo
         })
     } catch (error) {
@@ -41,5 +45,5 @@ export async function authenticate(params: FormData | { username: string, passwo
 
 // configurar o signout
 export async function logout() {
-    await signOut({redirectTo: '/'})
+    await signOut({ redirectTo: '/' })
 }

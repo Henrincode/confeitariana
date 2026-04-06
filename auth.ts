@@ -7,6 +7,8 @@ import { Staff } from "./types/staff.types"
 export const { handlers, auth, signIn, signOut } = NextAuth({
     providers: [
         Credentials({
+            id: 'staff',
+            name: 'staff login',
             async authorize(credentials) {
                 // 1. Aqui você busca no banco. O nome 'staff' é apenas uma variável sua.
                 const [staff] = await sql<Staff[]>`
@@ -39,7 +41,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             if (user) {
                 // Se o user existe (primeiro login), passamos a role do 'user' para o 'token'
                 token.id = user.id
-                token.role = user.role
+                token.id_role = user.id_role
             }
             return token
         },
@@ -48,7 +50,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             if (session.user) {
                 // Passamos a role que estava guardada no token para a sessão final
                 session.user.id = token.id
-                session.user.role = token.role
+                session.user.id_role = token.id_role
             }
             return session
         }
