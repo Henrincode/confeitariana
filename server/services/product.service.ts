@@ -1,7 +1,7 @@
 import { Product, ProductCategory, ProductCategoryDB, ProductDB } from "@/types/product.types";
 import { unstable_cache } from "next/cache";
 import sql from "../db";
-import { CreateProduct, CreateProductCategory, UpdateProduct, UpdateProductCategory, uploadProductImage } from "@/schemas/product.schema";
+import { CreateProduct, CreateProductCategory, UpdateProduct, UpdateProductCategory, UploadProductImage } from "@/schemas/product.schema";
 import storageServices from "./storage.service";
 
 // ------------------- product
@@ -17,7 +17,7 @@ const find = unstable_cache(
                     'name', b.name,
                     'image_url', b.image_url
                 ) brand,
-                u.name unit
+                u.short_name unit
             FROM ana_products p
             inner join ana_product_categories c
                 on p.id_product_category_fk = c.id_product_category
@@ -49,7 +49,7 @@ const findById = unstable_cache(
                     'name', b.name,
                     'image_url', b.image_url
                 ) brand,
-                u.name unit
+                u.short_name unit
             FROM ana_products p
             inner join ana_product_categories c
                 on p.id_product_category_fk = c.id_product_category
@@ -139,7 +139,7 @@ async function restore(id: number): Promise<ProductDB> {
 }
 
 // upload image
-async function uploadImage(params: uploadProductImage): Promise<ProductDB> {
+async function uploadImage(params: UploadProductImage): Promise<ProductDB> {
 
     const { id_product, file } = params
 
@@ -158,7 +158,7 @@ async function uploadImage(params: uploadProductImage): Promise<ProductDB> {
         UPDATE ana_products
         SET image_url = ${image_url}
         WHERE id_product = ${id_product}
-        RETURINIG *
+        RETURNING *
     `
     return {
         ...row,

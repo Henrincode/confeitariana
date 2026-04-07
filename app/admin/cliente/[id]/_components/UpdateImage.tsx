@@ -27,7 +27,7 @@ export default function UpdateImage({ name, image, clientId }: { name: string, i
         setPending(true)
 
         const options = {
-            maxSizeMB: 2,
+            maxSizeMB: 0.1,
             maxWidthOrHeight: 1000,
             useWebWorker: true,
         };

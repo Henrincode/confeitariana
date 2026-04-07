@@ -1,8 +1,8 @@
 'use server'
-import { CreateProduct, createProductSchema } from "@/schemas/product.schema";
+import { CreateProduct, createProductSchema, UploadProductImage, uploadProductImageSchema } from "@/schemas/product.schema";
 import { ApiResponse } from "@/types/ApiResponse";
 import { ProductDB } from "@/types/product.types";
-import z from "zod";
+import z, { object } from "zod";
 import productService from "../services/product.service";
 import { updateTag } from "next/cache";
 
@@ -37,6 +37,33 @@ export async function createProduct(params: FormData | CreateProduct): ApiRespon
 
 // update
 // uploadImage
+export async function uploadProductImage(params: FormData | UploadProductImage): ApiResponse<ProductDB> {
+
+    const paramsToObj = params instanceof FormData
+        ? Object.fromEntries(params.entries())
+        : params
+
+    const paramsValidate = uploadProductImageSchema.safeParse(paramsToObj)
+
+    if (!paramsValidate.success) {
+        return {
+            success: false,
+            message: "Erro ao enviar o arquivo",
+            errors: z.flattenError(paramsValidate.error).fieldErrors
+        }
+    }
+
+    try {
+        console.log(paramsValidate.data)
+        const data = await productService.uploadImage(paramsValidate.data)
+        updateTag('products')
+        return { success: true, data }
+
+    } catch (error) {
+        console.error('ERROR ACTION uploadProductImage', error)
+        return { success: false, message: 'Erro interno do servidor' }
+    }
+}
 // deleteImage
 // delete
 // restore

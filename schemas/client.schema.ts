@@ -131,7 +131,7 @@ export type UpdateClientAddress = z.infer<typeof updateClientAddressSchema>
 export const uploadClientImageSchema = z.object({
     id_client: z.coerce.number().positive("ID do cliente é obrigatório"),
     file: z.instanceof(File, { message: 'Selecione uma imagem válida' })
-        .refine((file) => file.size <= 5 * 1024 * 1024, 'O arquivo deve ter no máximo 5MB')
+        .refine((file) => file.size <= 0.15 * 1024 * 1024, 'O arquivo deve ter no máximo 100KB')
         .refine((file) => ['image/jpeg', 'image/png', 'image/webp'].includes(file.type), 'Formato de imagem inválido')
 })
 

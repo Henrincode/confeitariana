@@ -73,7 +73,7 @@ export default function NavBarView({ className, session }: Props) {
                             ">
                                 {/* links */}
                                 <li className="relative cursor-pointer group">
-                                    Clientes
+                                    <Link href="/admin/clientes">Clientes</Link>
                                     <div className="
                                     absolute left-1/2 -translate-x-1/2
                                     hidden group-hover:block
@@ -89,9 +89,9 @@ export default function NavBarView({ className, session }: Props) {
                                         </div>
                                     </div>
                                 </li>
-                                    <li className="w-1 rounded-full bg-amber-400"></li>
+                                <li className="w-1 rounded-full bg-amber-400"></li>
                                 <li className="relative cursor-pointer group">
-                                    Produtos
+                                    <Link href="/admin/produtos">Produtos</Link>
                                     <div className="
                                     absolute left-1/2 -translate-x-1/2
                                     hidden group-hover:block
