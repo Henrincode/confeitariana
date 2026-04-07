@@ -2,11 +2,11 @@
 
 Este projeto foi desenvolvido como parte do **Desafio do Projeto Integrador de Backend do SENAC**. O foco principal é a construção de uma API sólida e um banco de dados inteligente para gerenciar o ecossistema de uma confeitaria.
 
-## 🚀 O Projeto
+## O Projeto
 
 O sistema permite que a confeiteira tenha controle total sobre seu cardápio e vendas, garantindo que os dados históricos sejam preservados mesmo com o passar dos anos.
 
-### 🛠️ Principais Funcionalidades (Backend)
+### Principais Funcionalidades (Backend)
 
 * **Gestão de Inventário:** Cadastro de produtos com suporte a categorias hierárquicas (subcategorias).
 * **CRM de Clientes:** Cadastro completo de clientes com múltiplos endereços vinculados.
@@ -15,7 +15,7 @@ O sistema permite que a confeiteira tenha controle total sobre seu cardápio e v
 * **Integridade Referencial:** Uso estratégico de `ON DELETE CASCADE` e `RESTRICT` para evitar dados órfãos.
 * **Segurança de Login:** Uso de `(LOWER(valor))` para garantir que e-mails e nomes de usuário sejam únicos e insensíveis a maiúsculas/minúsculas.
 
-## 🗄️ Arquitetura do Banco de Dados
+## Arquitetura do Banco de Dados
 
 O projeto utiliza **PostgreSQL** (via Supabase) com uma estrutura normalizada de alta performance.
 
@@ -112,3 +112,32 @@ O projeto utiliza **PostgreSQL** (via Supabase) com uma estrutura normalizada de
     *Eu escolhi:*
 
     - Vercel
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### Considerações Finais
+
+Este projeto foi o maior divisor de águas na minha jornada como desenvolvedor, marcando minha transição do nível iniciante para o intermediário. 
+
+**O Desafio Técnico** Iniciei o desenvolvimento com uma base sólida em HTML, CSS e JavaScript, mas com o grande desafio de conectar o sistema a um banco de dados de forma segura. Após explorar o Express e entender as particularidades de deploy na Vercel, encontrei no **Next.js** a solução ideal. A arquitetura Full Stack do framework me permitiu unir o poder do **React** no frontend com a segurança de funções rodando no servidor, garantindo proteção para informações sensíveis e um SEO otimizado através da renderização no backend.
+
+**Segurança e Arquitetura** Aprofundando meus estudos, implementei uma estrutura de segurança em três camadas que hoje considero fundamentais em meus projetos:
+1.  **Persistência:** PostgreSQL (Supabase) com uma camada de **Services** para lógica de dados.
+2.  **Validação:** Uso da biblioteca **Zod** integrada a **Server Actions**, garantindo que nenhum dado chegue ao banco sem estar devidamente tipado e sanitizado.
+3.  **Interface:** Frontend dinâmico com React e Hooks (**useState**, **useEffect**, etc), focado na experiência do usuário.
+
+**Evolução e Aprendizado** Embora o plano inicial fosse um sistema completo (incluindo fornecedores e vendas), o tempo investido em aprender e aplicar corretamente tecnologias como **Tailwind CSS**, **NextAuth** e a integração com o **Supabase** foi recompensador. Até o momento, entreguei com sucesso os módulos de autenticação, gestão de clientes e a estrutura base de produtos.
+
+Hoje, finalizo este integrador com a certeza de que sei construir sistemas complexos, seguros e escaláveis. O que antes parecia um obstáculo, como o uso de ORMs ou validações de esquema, agora faz parte do meu kit básico de ferramentas.
