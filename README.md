@@ -69,6 +69,16 @@ O projeto utiliza **PostgreSQL** (via Supabase) com uma estrutura normalizada de
 
     O "esqueleto" das telas. Não precisa de cores ou imagens finais; o objetivo aqui é definir onde os botões, tabelas e formulários ficarão posicionados antes de começar a codar o CSS/Tailwind.
 
+    Para ver o Wireframe diretamente no Figma [clique aqui!](https://www.figma.com/design/THe9i9YVrhxVQjOfZSOIxs/Sem-t%C3%ADtulo?node-id=8-92&m=dev&t=4hGhHSoKV1wVYz8Z-1)
+
+    - Página de lista de clientes
+
+    ![alt text](<docs/Wireframe/Lista de clientes.png>)
+
+    - Página de perfil de cliente
+
+    ![alt text](<docs/Wireframe/Perfil do cliente.png>)
+
 ### 3. Desenvolvimento Técnico (O "Mão na Massa")
 
 - #### Aplicação Back-end
