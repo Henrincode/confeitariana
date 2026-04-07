@@ -113,21 +113,7 @@ O projeto utiliza **PostgreSQL** (via Supabase) com uma estrutura normalizada de
 
     - Vercel
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-### Considerações Finais
+## Considerações Finais
 
 Este projeto foi o maior divisor de águas na minha jornada como desenvolvedor, marcando minha transição do nível iniciante para o intermediário. 
 
