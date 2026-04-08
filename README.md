@@ -55,7 +55,7 @@ O projeto utiliza **PostgreSQL** (via Supabase) com uma estrutura normalizada de
 
     ![alt text](<docs/Fluxogramas das 3 principais funcionalidades/03 fluxo de login - auth.service.png>)
 
-- DER(diagrama entidade relacionamento)
+- DER (diagrama entidade relacionamento)
 
     É o mapa do banco de dados. Ele mostra como as tabelas montadas (Clientes, Produtos, Categorias, ...) se conectam através das Primary Keys e Foreign Keys. É a estrutura que sustenta toda a aplicação.
 
