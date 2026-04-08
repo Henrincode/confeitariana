@@ -45,7 +45,7 @@ O projeto utiliza **PostgreSQL** (via Supabase) com uma estrutura normalizada de
 
     - Autenticação do Staff (backend - action).
 
-        Valida dados no backend com a biblioteca zod evitando técnicas de invazão como query injection
+        Valida dados no backend com a biblioteca zod evitando técnicas de invasão como query injection
 
     ![alt text](<docs/Fluxogramas das 3 principais funcionalidades/02 fluxo de login - auth.action.png>)
 
