@@ -25,6 +25,7 @@ const find = unstable_cache(
                 on p.id_brand_fk = b.id_brand
             inner join ana_units u
                 on p.id_unit_fk = u.id_unit
+            ORDER BY name
         `
         return rows.map(r => ({
             ...r,

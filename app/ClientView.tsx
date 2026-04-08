@@ -74,9 +74,9 @@ export default function ClientViewHome() {
                 )}
                 <div className="coluna">
                     <button type="submit">Entrar</button>
-                    <button type="button">Cadastrar</button>
+                    {/* <button type="button">Cadastrar</button> */}
                 </div>
-                <p className="text-center text-sm text-pink-800 hover:text-pink-600 cursor-pointer">Esqueci minha senha</p>
+                {/* <p className="text-center text-sm text-pink-800 hover:text-pink-600 cursor-pointer">Esqueci minha senha</p> */}
             </form>
         </div>
     )

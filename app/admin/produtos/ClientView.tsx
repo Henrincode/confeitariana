@@ -1,58 +1,99 @@
 'use client'
 
+import { deleteProduct } from "@/server/actions/products.action"
 import { Product } from "@/types/product.types"
 import Image from "next/image"
+import { useState } from "react"
+import { AiFillDelete } from "react-icons/ai"
+import { MdEditNote, MdOutlineNoPhotography } from "react-icons/md"
 
 interface Params {
     products: Product[]
 }
 
 export default function ViewProducts({ products }: Params) {
+
+    const [search, setSearch] = useState('')
+
     return (
-        <div className="box grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {products.map(p =>
-                <div key={p.id_product} className="group relative overflow-hidden aspect-video p-2 rounded-2xl bg-white">
-                    <Image
-                        src={p.image_url || '#'}
-                        alt=""
-                        width={310}
-                        height={180}
-                        className="absolute size-full inset-0 object-cover"
-                    />
+        <>
+            <div className="box flex flex-col items-center mb-4">
+                <input
+                    onInput={(e) => setSearch(e.currentTarget.value)} value={search}
+                    type="text" placeholder="🔍 Buscar"
+                    className="
+                    w-full max-w-100
+                    py-2 px-4
+                    border border-gray-400 rounded-full outline-none
+                    text-2xl text-gray-700
+                    bg-amber-50
+            "/>
+            </div>
 
+            {/* rolagem x da table */}
+            <div className="overflow-x-auto">
+                <div className="box">
+                    <table className="
+                        w-full
+                        border-separate border-spacing-2
 
-                    <div className="
-                        relative
-                        flex flex-col justify-between
-                        size-full
-                        group-hover:opacity-0 transition-all
-                        cursor-pointer
+                        **:whitespace-nowrap
+
+                        [&_td]:overflow-hidden
+                        [&_td]:font-light
+                        [&_td]:text-xl
+                        [&_td]:text-gray-800
+                        [&_td]:rounded-md
                     ">
-                        <div className="
-                            mx-auto
-                            w-fit
-                            py-1 px-3 rounded-xl 
-                            text-white bg-gray-700/80 
-                        ">
-                            {p.name}
-                        </div>
-                        <div className="flex flex-row justify-between items-end">
-                            <div className="flex flex-col items-start gap-2">
-                                <div className="py-1 px-3 rounded-xl  text-white bg-gray-700/80">
-                                    {p.brand.name}
-                                </div>
-                                <div className="py-1 px-3 rounded-xl  text-white bg-gray-700/80">
-                                    {p.category}
-                                </div>
-                            </div>
-                            {p.price_original > 0 && (
-                                <div className="py-1 px-3 rounded-xl text-xl  text-white bg-gray-700/60">R${p.price_original}/{p.unit}</div>
-                            )}
-                        </div>
-                    </div>
-
+                        <thead className="bg-pink-400">
+                            <tr className="*:py-2 *:px-4 *:rounded-md *:font-normal text-white">
+                                <th className="w-20">Imagem</th>
+                                <th className="w-full">Nome</th>
+                                <th>Categoria</th>
+                                <th>Marca</th>
+                                <th>Custo</th>
+                                <th>Preço</th>
+                                <th>Desconto</th>
+                                <th>Preço final</th>
+                                <th>Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {products.filter(p =>
+                                (
+                                    p.name.toLowerCase().includes(search.toLowerCase())
+                                    || p.category.toLowerCase().includes(search.toLowerCase())
+                                    || p.brand.name.toLowerCase().includes(search.toLowerCase())
+                                    || p.price_cost.toString().toLowerCase().includes(search.toLowerCase())
+                                    || p.price_discount.toString().toLowerCase().includes(search.toLowerCase())
+                                    || p.price_original.toString().toLowerCase().includes(search.toLowerCase())
+                                )
+                                && !p.deleted_at
+                            ).map(p => (
+                                <tr key={p.id_product} className=" bg-pink-200 hover:bg-pink-300">
+                                    <td className="relative">
+                                        {!p.image_url && <MdOutlineNoPhotography className="absolute top-1/2 left-1/2 -translate-1/2" />}
+                                        <img src={p.image_url || '#'} alt="" className="aspect-video object-cover" />
+                                    </td>
+                                    <td className="px-2">{p.name}</td>
+                                    <td className="px-2 text-center">{p.category}</td>
+                                    <td className="px-2 text-center">{p.brand.name}</td>
+                                    <td className="px-2 text-right">R${p.price_cost}</td>
+                                    <td className="px-2 text-right">R${p.price_original}</td>
+                                    <td className="px-2 text-right">R${p.price_discount}</td>
+                                    <td className="px-2 text-right">R${p.price_original - p.price_discount}</td>
+                                    <td onClick={() => deleteProduct(p.id_product)} className="group cursor-pointer">
+                                        <div className=" flex flex-row justify-center items-center gap-1 ">
+                                            {/* <MdEditNote className="hover:text-green-700" /> */}
+                                            <AiFillDelete className="group-hover:text-red-500" />
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
-            )}
-        </div>
+            </div>
+        </>
     )
 }

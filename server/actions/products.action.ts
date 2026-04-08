@@ -1,7 +1,7 @@
 'use server'
 import { CreateProduct, createProductSchema, UploadProductImage, uploadProductImageSchema } from "@/schemas/product.schema";
 import { ApiResponse } from "@/types/ApiResponse";
-import { ProductDB } from "@/types/product.types";
+import { ProductCategory, ProductDB } from "@/types/product.types";
 import z, { object } from "zod";
 import productService from "../services/product.service";
 import { updateTag } from "next/cache";
@@ -66,9 +66,32 @@ export async function uploadProductImage(params: FormData | UploadProductImage):
 }
 // deleteImage
 // delete
+export async function deleteProduct(id: number): ApiResponse<ProductDB> {
+    if (!id || id < 1 || isNaN(id)) return { success: false, message: "ID deve ser um número" }
+
+    try {
+        const data = await productService.delete(id)
+        updateTag('products')
+        return { success: true, data }
+    } catch (error) {
+        console.error("ERROR ACTION productDelete", error)
+        return { success: false, message: 'Erro interno do servidor' }
+    }
+}
 // restore
 
 // ------------------- category
+
+// find
+export async function findProductCategories(): ApiResponse<ProductCategory[]> {
+    try {
+        const data = await productService.findCategories()
+        return { success: true, data }
+    } catch (error) {
+        console.error("ERROR ACTION findPRoductCategories", error)
+        return { success: false, message: 'Erro interno do servidor' }
+    }
+}
 
 // create
 // update
