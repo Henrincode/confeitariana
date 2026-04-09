@@ -15,13 +15,20 @@ O sistema permite que a confeiteira tenha controle total sobre seu cardápio e v
 * **Integridade Referencial:** Uso estratégico de `ON DELETE CASCADE` e `RESTRICT` para evitar dados órfãos.
 * **Segurança de Login:** Uso de `(LOWER(valor))` para garantir que e-mails e nomes de usuário sejam únicos e insensíveis a maiúsculas/minúsculas.
 
-## Arquitetura do Banco de Dados
+## Principais Tecnologias
 
-O projeto utiliza **PostgreSQL** (via Supabase) com uma estrutura normalizada de alta performance.
-
-### Principais Tecnologias
-
-* **Banco de Dados:** PostgreSQL
+* **Motor:** Node.js
+* **Backend:** Framework Next.js TS
+* **Frontend**: Biblioteca React TS
+* **Bibliotecas backend:**
+    * @supabase/supabase-js
+    * postgres
+    * zod
+    * bcryptjs
+    * next-auth
+* **Bibliotecas frontend:** browser-image-compression
+* **Banco de Dados:** Supabase PostgreSQL
+* **Banco de Arquivos:** Supabase Storage buckets
 * **Ferramentas de Modelagem:** dbdiagram.io, excalidraw, figma
 
 
