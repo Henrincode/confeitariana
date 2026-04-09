@@ -48,15 +48,15 @@ export default function MobileNav({ pathname, closeModal }: Params) {
                     <p>Clientes</p>
                     <li>
                         <Link
-                            onClick={() => pathname === '/admin/clientes' && closeModal()}
-                            href={'/admin/clientes'}>
+                            onClick={() => pathname === '/admin/clientes/' && closeModal()}
+                            href={'/admin/clientes/'}>
                             Ver todos
                         </Link>
                     </li>
                     <li>
                         <Link
-                            onClick={() => pathname === '/admin/clientes/cadastrar' && closeModal()}
-                            href={'/admin/clientes/cadastrar'}>
+                            onClick={() => pathname === '/admin/clientes/cadastrar/' && closeModal()}
+                            href={'/admin/clientes/cadastrar/'}>
                             Cadastrar novo
                         </Link>
                     </li>
@@ -68,15 +68,15 @@ export default function MobileNav({ pathname, closeModal }: Params) {
                     <p>Produtos</p>
                     <li>
                         <Link
-                            onClick={() => pathname === '/admin/clientes' && closeModal()}
-                            href={'/admin/produtos'}>
+                            onClick={() => pathname === '/admin/clientes/' && closeModal()}
+                            href={'/admin/produtos/'}>
                             Ver todos
                         </Link>
                     </li>
                     <li>
                         <Link
-                            onClick={() => pathname === '/admin/clientes/cadastrar' && closeModal()}
-                            href={'/admin/produto/cadastrar'}>
+                            onClick={() => pathname === '/admin/clientes/cadastrar/' && closeModal()}
+                            href={'/admin/produto/cadastrar/'}>
                             Cadastrar novo
                         </Link>
                     </li>

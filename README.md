@@ -27,9 +27,9 @@ O sistema permite que a confeiteira tenha controle total sobre seu cardápio e v
     * bcryptjs
     * next-auth
 * **Bibliotecas frontend:** browser-image-compression
-* **Servidor de hospedagem:** Vercel
 * **Servidor de banco de dados:** Supabase - PostgreSQL
 * **Servidor de banco de arquivos:** Supabase - Storage buckets
+* **Servidor de hospedagem:** Vercel
 * **Ferramentas de Modelagem:** dbdiagram.io, excalidraw, figma
 
 

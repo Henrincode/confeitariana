@@ -1,5 +1,5 @@
 'use server'
-import { CreateProduct, createProductSchema, UploadProductImage, uploadProductImageSchema } from "@/schemas/product.schema";
+import { CreateProduct, createProductSchema, UpdateProduct, updateProductSchema, UploadProductImage, uploadProductImageSchema } from "@/schemas/product.schema";
 import { ApiResponse } from "@/types/ApiResponse";
 import { ProductCategory, ProductDB } from "@/types/product.types";
 import z, { object } from "zod";
@@ -16,12 +16,10 @@ export async function createProduct(params: FormData | CreateProduct): ApiRespon
 
     const paramsValidate = createProductSchema.safeParse(paramsToObj)
 
-    if (!paramsValidate.success) {
-        return {
-            success: false,
-            message: 'Existem erros de validação',
-            errors: z.flattenError(paramsValidate.error).fieldErrors
-        }
+    if (!paramsValidate.success) return {
+        success: false,
+        message: 'Existem erros de validação',
+        errors: z.flattenError(paramsValidate.error).fieldErrors
     }
 
     try {
@@ -36,6 +34,30 @@ export async function createProduct(params: FormData | CreateProduct): ApiRespon
 }
 
 // update
+export async function updateProduct(params: FormData | UpdateProduct): ApiResponse<ProductDB> {
+
+    const paramsToObj = params instanceof FormData
+        ? Object.fromEntries(params.entries())
+        : params
+
+    const paramsValidate = updateProductSchema.safeParse(paramsToObj)
+
+    if (!paramsValidate.success) return {
+        success: false,
+        message: 'Existem erros de validação',
+        errors: z.flattenError(paramsValidate.error).fieldErrors
+    }
+
+    try {
+        const data = await productService.update(paramsValidate.data)
+        updateTag('products')
+        return {success: true, data}
+    } catch(error) {
+        console.error("ERROR ACTION updateProduct", error)
+        return {success: false, message: 'Erro interno do servidor'}
+    }
+}
+
 // uploadImage
 export async function uploadProductImage(params: FormData | UploadProductImage): ApiResponse<ProductDB> {
 

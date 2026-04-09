@@ -1,5 +1,6 @@
 'use client'
 
+import ModalCreateOrUpdateProduct from "@/components/modals/products/CreateOrUpdate"
 import { deleteProduct } from "@/server/actions/products.action"
 import { Product } from "@/types/product.types"
 import Image from "next/image"
@@ -14,6 +15,13 @@ interface Params {
 export default function ViewProducts({ products }: Params) {
 
     const [search, setSearch] = useState('')
+    const [modal, setModal] = useState<Product | undefined>(undefined)
+    // const [productToUpdate, setProductToUpdate] = useState<Product | undefined>(undefined)
+    
+    function closeModal() {
+        setModal(undefined)
+        // setProductToUpdate(undefined)
+    }
 
     return (
         <>
@@ -70,12 +78,12 @@ export default function ViewProducts({ products }: Params) {
                                 )
                                 && !p.deleted_at
                             ).map(p => (
-                                <tr key={p.id_product} className=" bg-pink-200 hover:bg-pink-300">
+                                <tr onClick={() => setModal(p)} key={p.id_product} className=" bg-pink-200 hover:bg-pink-300 cursor-pointer">
                                     <td className="relative">
                                         {!p.image_url && <MdOutlineNoPhotography className="absolute top-1/2 left-1/2 -translate-1/2" />}
                                         <img src={p.image_url || '#'} alt="" className="aspect-video object-cover" />
                                     </td>
-                                    <td className="px-2">{p.name}</td>
+                                    <td className="px-2">{p.id_product} - {p.name}</td>
                                     <td className="px-2 text-center">{p.category}</td>
                                     <td className="px-2 text-center">{p.brand.name}</td>
                                     <td className="px-2 text-right">R${p.price_cost}</td>
@@ -94,6 +102,7 @@ export default function ViewProducts({ products }: Params) {
                     </table>
                 </div>
             </div>
+            {modal && <ModalCreateOrUpdateProduct closeModal={closeModal} product={modal} />}
         </>
     )
 }

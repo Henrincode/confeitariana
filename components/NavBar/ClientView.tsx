@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { FaBars } from "react-icons/fa";
 import MobileNav from "./_components/MobileNav";
 import { usePathname } from "next/navigation";
+import ModalCreateOrUpdateProduct from "../modals/products/CreateOrUpdate";
 
 interface Props {
     className?: string
@@ -17,20 +18,20 @@ export default function NavBarView({ className, session }: Props) {
 
     const pathname = usePathname()
 
-    const [modal, setModal] = useState(false)
+    const [modal, setModal] = useState('')
 
     function closeModal() {
-        setModal(false)
+        setModal('')
     }
 
-    useEffect(() => {
-        if (modal) {
-            document.body.classList.add('overflow-hidden')
-        } else {
-            document.body.classList.remove('overflow-hidden')
-        }
-        return () => document.body.classList.remove('overflow-hidden')
-    }, [modal])
+    // useEffect(() => {
+    //     if (modal) {
+    //         document.body.classList.add('overflow-hidden')
+    //     } else {
+    //         document.body.classList.remove('overflow-hidden')
+    //     }
+    //     return () => document.body.classList.remove('overflow-hidden')
+    // }, [modal])
 
     useEffect(() => {
         closeModal()
@@ -39,8 +40,8 @@ export default function NavBarView({ className, session }: Props) {
     return (
         <>
             {/* Modal */}
-            {modal && (
-                <div onMouseDown={() => setModal(false)} className="z-200 flex flex-col justify-top items-center fixed w-full h-dvh bg-gray-600/80 md:backdrop-blur-xl">
+            {modal === 'nav' && (
+                <div onMouseDown={() => setModal('')} className="z-200 flex flex-col justify-top items-center fixed w-full h-dvh bg-gray-600/80 md:backdrop-blur-xl">
                     <div className="overflow-auto flex flex-col items-center w-full p-2">
                         {/* component */}
                         <div onMouseDown={(e) => e.stopPropagation()} className="w-full">
@@ -50,7 +51,7 @@ export default function NavBarView({ className, session }: Props) {
                 </div>
             )}
 
-            <div className={`${className} z-100 p-2 border-b-2 border-amber-300 bg-amber-300/50 backdrop-blur`}>
+            <div className={`${className} z-100 p-2 border-b-2 border-amber-300 bg-amber-300/50 md:backdrop-blur`}>
                 <div className="box flex flex-row justify-between items-center gap-2">
                     <Link href="/" id="nav-logo" className="flex flex-row items-center gap-2 group">
                         <img src="/cookie-01.png" alt="" className="w-8 brightness-95 saturate-140" />
@@ -73,7 +74,7 @@ export default function NavBarView({ className, session }: Props) {
                             ">
                                 {/* links */}
                                 <li className="relative cursor-pointer group">
-                                    <Link href="/admin/clientes">Clientes</Link>
+                                    <Link href="/admin/clientes/">Clientes</Link>
                                     <div className="
                                     absolute left-1/2 -translate-x-1/2
                                     hidden group-hover:block
@@ -84,14 +85,14 @@ export default function NavBarView({ className, session }: Props) {
                                             border-amber-500 bg-amber-600
                                             shadow-md shadow-black/30
                                         ">
-                                            <Link className="block link" href="/admin/clientes">Ver todos</Link>
-                                            <Link className="block link" href="/admin/clientes/cadastrar">Cadastrar cliente</Link>
+                                            <Link className="block link" href="/admin/clientes/">Ver todos</Link>
+                                            <Link className="block link" href="/admin/clientes/cadastrar/">Cadastrar cliente</Link>
                                         </div>
                                     </div>
                                 </li>
                                 <li className="w-1 rounded-full bg-amber-400"></li>
                                 <li className="relative cursor-pointer group">
-                                    <Link href="/admin/produtos">Produtos</Link>
+                                    <Link href="/admin/produtos/">Produtos</Link>
                                     <div className="
                                     absolute left-1/2 -translate-x-1/2
                                     hidden group-hover:block
@@ -102,8 +103,8 @@ export default function NavBarView({ className, session }: Props) {
                                             border-amber-500 bg-amber-600
                                             shadow-md shadow-black/30
                                         ">
-                                            <Link className="block link" href="/admin/produtos">Ver todos</Link>
-                                            <Link className="block link" href="/admin/produto/cadastrar">Cadastrar produto</Link>
+                                            <Link className="block link" href="/admin/produtos/">Ver todos</Link>
+                                            <Link className="block link" href="/admin/produto/cadastrar/">Cadastrar produto</Link>
                                         </div>
                                     </div>
                                 </li>
@@ -119,11 +120,14 @@ export default function NavBarView({ className, session }: Props) {
                             </ul>
 
                             {/* mobile */}
-                            <button onClick={() => setModal(true)} className="md:hidden p-2 rounded text-amber-200 bg-amber-600"><FaBars /></button>
+                            <button onClick={() => setModal('nav')} className="md:hidden p-2 rounded text-amber-200 bg-amber-600"><FaBars /></button>
                         </>
                     )}
                 </div>
             </div>
+
+
+            {modal === 'createProduct' && <ModalCreateOrUpdateProduct closeModal={closeModal} />}
         </>
     )
 }
