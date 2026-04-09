@@ -83,7 +83,7 @@ export default function ViewProducts({ products }: Params) {
                                         {!p.image_url && <MdOutlineNoPhotography className="absolute top-1/2 left-1/2 -translate-1/2" />}
                                         <img src={p.image_url || '#'} alt="" className="aspect-video object-cover" />
                                     </td>
-                                    <td className="px-2">{p.id_product} - {p.name}</td>
+                                    <td className="px-2">{p.name}</td>
                                     <td className="px-2 text-center">{p.category}</td>
                                     <td className="px-2 text-center">{p.brand.name}</td>
                                     <td className="px-2 text-right">R${p.price_cost}</td>
