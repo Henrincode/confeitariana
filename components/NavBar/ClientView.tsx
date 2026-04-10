@@ -104,7 +104,8 @@ export default function NavBarView({ className, session }: Props) {
                                             shadow-md shadow-black/30
                                         ">
                                             <Link className="block link" href="/admin/produtos/">Ver todos</Link>
-                                            <Link className="block link" href="/admin/produto/cadastrar/">Cadastrar produto</Link>
+                                            <div onClick={() => setModal('createProduct')} className="block link">Cadastrar produto</div>
+                                            {/* <Link className="block link" href="/admin/produto/cadastrar/">Cadastrar produto</Link> */}
                                         </div>
                                     </div>
                                 </li>

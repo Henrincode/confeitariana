@@ -146,13 +146,13 @@ export default function ModalCreateOrUpdateProduct({ closeModal, product }: Para
             await uploadProductImage(productImage)
         }
 
-        // router.push('/admin/produtos')
+        router.push('/admin/produtos')
         closeModal()
     }
 
     return (
         <Modals closeModal={closeModal}>
-            <div onMouseDown={(e) => e.stopPropagation()} className="max-w-xl px-2 pb-4 mx-auto drop-shadow-2xl drop-shadow-black/30">
+            <div onMouseDown={(e) => e.stopPropagation()} className="max-w-xl px-2 pb-4 mx-auto drop-shadow-x drop-shadow-black/30">
 
                 {/* título */}
                 <div className="
