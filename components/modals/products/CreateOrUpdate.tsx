@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { FaBoxOpen } from "react-icons/fa"
 import Modals from ".."
+import Image from "next/image"
 
 interface Params {
     closeModal: () => void
@@ -84,6 +85,7 @@ export default function ModalCreateOrUpdateProduct({ closeModal, product }: Para
             maxSizeMB: 0.1,
             maxWidthOrHeight: 1000,
             useWebWorker: true,
+            fileType: 'image/webp',
         }
 
         try {
@@ -92,13 +94,16 @@ export default function ModalCreateOrUpdateProduct({ closeModal, product }: Para
 
             // cria url para preview
             const url = URL.createObjectURL(compressedBlob)
+
             setImageUrl(url)
 
+            const newName = imageFile.name.split('.').slice(0, -1).join('.') + '.webp'
+
             // cria obj para tratar no backend
-            const finalFile = new File([compressedBlob], imageFile.name, {
-                type: imageFile.type,
+            const finalFile = new File([compressedBlob], newName, {
+                type: compressedBlob.type,
                 lastModified: Date.now(),
-            });
+            })
 
             // salva no hook
             setFileUpload(finalFile)
@@ -159,13 +164,13 @@ export default function ModalCreateOrUpdateProduct({ closeModal, product }: Para
                     flex flex-row justify-center items-center gap-2
                     py-5 px-2 rounded-t-xl
                     font-semibold text-2xl italic
-                    text-white bg-pink-400
-                "><FaBoxOpen /> Cadastrar produto</div>
+                    text-white bg-pink-500
+                "><FaBoxOpen /> {product ? 'Editar produto' : 'Cadastrar produto'}</div>
 
                 {/* corpo */}
                 <div className="
                     p-2 rounded-b
-                    bg-white
+                    bg-gray-50
                 ">
                     {/* formulário */}
                     <form onSubmit={submit} className="
@@ -189,12 +194,16 @@ export default function ModalCreateOrUpdateProduct({ closeModal, product }: Para
                         [&_.input]:hover:bg-pink-200
                     ">
                         {/* foto */}
-                        <label htmlFor="image_url" className="input overflow-hidden relative col-span-2 flex justify-center items-center w-full aspect-video cursor-pointer">
+                        <label htmlFor="image_url" className="input overflow-hidden relative col-span-2 flex justify-center items-center w-full aspect-square cursor-pointer">
                             {imageUrl
-                                ? <img src={imageUrl} className="absolute top-0 left-0 size-full object-cover object-center" />
+                                ? <Image
+                                    alt={formName ? formName : 'Produto sem foto'}
+                                    width={444}
+                                    height={444}
+                                    src={imageUrl} className="absolute top-0 left-0 size-full object-cover object-center" />
                                 : 'Enviar imagem'
                             }
-                            <input onChange={renderImage} hidden id="image_url" name="image_url" type="file" />
+                            <input onChange={renderImage} hidden id="image_url" name="image_url" type="file" accept="image/*" />
                         </label>
 
                         {/* nome */}

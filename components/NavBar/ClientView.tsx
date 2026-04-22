@@ -41,7 +41,7 @@ export default function NavBarView({ className, session }: Props) {
         <>
             {/* Modal */}
             {modal === 'nav' && (
-                <div onMouseDown={() => setModal('')} className="z-200 flex flex-col justify-top items-center fixed w-full h-dvh bg-gray-600/80 md:backdrop-blur-xl">
+                <div onMouseDown={() => setModal('')} className="z-200 flex flex-col justify-top items-center fixed w-full h-dvh bg-gray-600/80 backdrop-blur-sm">
                     <div className="overflow-auto flex flex-col items-center w-full p-2">
                         {/* component */}
                         <div onMouseDown={(e) => e.stopPropagation()} className="w-full">
@@ -51,8 +51,11 @@ export default function NavBarView({ className, session }: Props) {
                 </div>
             )}
 
-            <div className={`${className} z-100 p-2 border-b-2 border-amber-300 bg-amber-300/50 md:backdrop-blur`}>
-                <div className="box flex flex-row justify-between items-center gap-2">
+            <div className={`${className} z-100 p-2 border-b-2 border-amber-300 bg-amber-300/50`}>
+                {/* blur */}
+                <div className="absolute inset-0 backdrop-blur"></div>
+
+                <div className="box relative flex flex-row justify-between items-center gap-2">
                     <Link href="/" id="nav-logo" className="flex flex-row items-center gap-2 group">
                         <img src="/cookie-01.png" alt="" className="w-8 brightness-95 saturate-140" />
                         <p className="flex-1 font-bold text-3xl text-center md:text-left text-pink-500 group-hover:text-pink-400 transition-all">Confeitariana</p>
@@ -68,25 +71,35 @@ export default function NavBarView({ className, session }: Props) {
                             <ul className="
                                 hidden md:flex flex-row gap-2
                                 text-amber-800
-                                [&_.link]:text-white
-                                [&_.link]:hover:text-amber-800
+
+                                [&_.link]:w-fit
                                 [&_.link]:whitespace-nowrap
+                                [&_.link]:cursor-pointer
+                                [&_.link]:text-white
+                                [&_.link]:hover:text-amber-400
+
+                                [&_p]:mt-2
+                                [&_p]:mb-1
+                                [&_p]:font-semibold
+                                [&_p]:text-[12px]
+                                [&_p]:whitespace-nowrap
                             ">
                                 {/* links */}
-                                <li className="relative cursor-pointer group">
+                                <li className="relative group">
                                     <Link href="/admin/clientes/">Clientes</Link>
                                     <div className="
                                     absolute left-1/2 -translate-x-1/2
                                     hidden group-hover:block
                                     ">
                                         <div className="
-                                            p-2 mt-1 rounded-lg
-                                            border-2
-                                            border-amber-500 bg-amber-600
+                                            p-4 mt-1 rounded-lg
+                                            text-yellow-500 bg-amber-800/60
                                             shadow-md shadow-black/30
+                                            backdrop-blur
                                         ">
                                             <Link className="block link" href="/admin/clientes/">Ver todos</Link>
-                                            <Link className="block link" href="/admin/clientes/cadastrar/">Cadastrar cliente</Link>
+                                            <p>add / editar / apagar</p>
+                                            <Link className="block link" href="/admin/clientes/cadastrar/">Novo cliente</Link>
                                         </div>
                                     </div>
                                 </li>
@@ -104,7 +117,7 @@ export default function NavBarView({ className, session }: Props) {
                                             shadow-md shadow-black/30
                                         ">
                                             <Link className="block link" href="/admin/produtos/">Ver todos</Link>
-                                            <div onClick={() => setModal('createProduct')} className="block link">Cadastrar produto</div>
+                                            <button onClick={() => setModal('createProduct')} className="block link">Cadastrar produto</button>
                                             {/* <Link className="block link" href="/admin/produto/cadastrar/">Cadastrar produto</Link> */}
                                         </div>
                                     </div>

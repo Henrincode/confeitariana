@@ -12,6 +12,7 @@ export default function MobileNav({ pathname, closeModal }: Params) {
         <div onMouseDown={(e) => e.stopPropagation()} className="
             flex flex-col gap-8
             w-full lg:w-auto p-8 rounded-2xl text-white bg-gray-800
+            
             [&_p]:text-4xl
             
             [&_.area]:flex

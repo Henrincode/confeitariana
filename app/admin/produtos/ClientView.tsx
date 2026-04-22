@@ -6,6 +6,7 @@ import { Product } from "@/types/product.types"
 import Image from "next/image"
 import { useState } from "react"
 import { AiFillDelete } from "react-icons/ai"
+import { FaCamera } from "react-icons/fa"
 import { MdEditNote, MdOutlineNoPhotography } from "react-icons/md"
 
 interface Params {
@@ -16,11 +17,25 @@ export default function ViewProducts({ products }: Params) {
 
     const [search, setSearch] = useState('')
     const [modal, setModal] = useState<Product | undefined>(undefined)
-    // const [productToUpdate, setProductToUpdate] = useState<Product | undefined>(undefined)
-    
+    const [productToUpdate, setProductToUpdate] = useState<number | undefined>()
+
     function closeModal() {
         setModal(undefined)
         // setProductToUpdate(undefined)
+    }
+
+    async function clickDelete(id: number) {
+        if (!id) return
+
+        setProductToUpdate(id)
+
+        try {
+            const productDeleted = await deleteProduct(id)
+            setProductToUpdate(undefined)
+        } catch {
+            setProductToUpdate(undefined)
+            return
+        }
     }
 
     return (
@@ -55,7 +70,7 @@ export default function ViewProducts({ products }: Params) {
                     ">
                         <thead className="bg-pink-400">
                             <tr className="*:py-2 *:px-4 *:rounded-md *:font-normal text-white">
-                                <th className="w-20">Imagem</th>
+                                <th className="w-20"><FaCamera /></th>
                                 <th className="w-full">Nome</th>
                                 <th>Categoria</th>
                                 <th>Marca</th>
@@ -63,7 +78,7 @@ export default function ViewProducts({ products }: Params) {
                                 <th>Preço</th>
                                 <th>Desconto</th>
                                 <th>Preço final</th>
-                                <th>Ação</th>
+                                <th>Apagar</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -78,10 +93,12 @@ export default function ViewProducts({ products }: Params) {
                                 )
                                 && !p.deleted_at
                             ).map(p => (
-                                <tr onClick={() => setModal(p)} key={p.id_product} className=" bg-pink-200 hover:bg-pink-300 cursor-pointer">
-                                    <td className="relative">
-                                        {!p.image_url && <MdOutlineNoPhotography className="absolute top-1/2 left-1/2 -translate-1/2" />}
-                                        <img src={p.image_url || '#'} alt="" className="aspect-video object-cover" />
+                                <tr onClick={() => setModal(p)} key={p.id_product} className={`${productToUpdate === p.id_product && "animate-[pulse_300ms_infinite]"} bg-pink-200 hover:bg-pink-300 cursor-pointer`}>
+                                    <td className="relative h-12">
+                                        {p.image_url
+                                            ? <Image src={p.image_url} width={50} height={50} alt="" className="size-full aspect-video object-cover" />
+                                            : <MdOutlineNoPhotography className="absolute top-1/2 left-1/2 -translate-1/2" />
+                                        }
                                     </td>
                                     <td className="px-2">{p.name}</td>
                                     <td className="px-2 text-center">{p.category}</td>
@@ -90,7 +107,7 @@ export default function ViewProducts({ products }: Params) {
                                     <td className="px-2 text-right">R${p.price_original}</td>
                                     <td className="px-2 text-right">R${p.price_discount}</td>
                                     <td className="px-2 text-right">R${p.price_original - p.price_discount}</td>
-                                    <td onClick={() => deleteProduct(p.id_product)} className="group cursor-pointer">
+                                    <td onClick={(e) => { e.stopPropagation(); productToUpdate !== p.id_product && clickDelete(p.id_product) }} className="group cursor-pointer">
                                         <div className=" flex flex-row justify-center items-center gap-1 ">
                                             {/* <MdEditNote className="hover:text-green-700" /> */}
                                             <AiFillDelete className="group-hover:text-red-500" />
