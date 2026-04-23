@@ -41,7 +41,7 @@ export default function Modals({ children, closeModal }: Readonly<Props>) {
             transition-all duration-500 opacity-0
             bg-gray-600/80 md:backdrop-blur
         ">
-            <div ref={modalRef} className="drop-shadow-xl drop-shadow-black/30 py-4 -translate-y-10 opacity-0 transition-all duration-500">
+            <div ref={modalRef} className="w-full drop-shadow-xl drop-shadow-black/30 py-4 -translate-y-10 opacity-0 transition-all duration-500">
                 {children}
             </div>
         </div>

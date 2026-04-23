@@ -8,6 +8,7 @@ import { FaBars } from "react-icons/fa";
 import MobileNav from "./_components/MobileNav";
 import { usePathname } from "next/navigation";
 import ModalCreateOrUpdateProduct from "../modals/products/CreateOrUpdate";
+import ModalProductCategories from "../modals/products/categories";
 
 interface Props {
     className?: string
@@ -118,6 +119,7 @@ export default function NavBarView({ className, session }: Props) {
                                         ">
                                             <Link className="block link" href="/admin/produtos/">Ver todos</Link>
                                             <button onClick={() => setModal('createProduct')} className="block link">Cadastrar produto</button>
+                                            <button onClick={() => setModal('productCategories')} className="block link">Categorias</button>
                                             {/* <Link className="block link" href="/admin/produto/cadastrar/">Cadastrar produto</Link> */}
                                         </div>
                                     </div>
@@ -142,6 +144,7 @@ export default function NavBarView({ className, session }: Props) {
 
 
             {modal === 'createProduct' && <ModalCreateOrUpdateProduct closeModal={closeModal} />}
+            {modal === 'productCategories' && <ModalProductCategories closeModal={closeModal} />}
         </>
     )
 }
