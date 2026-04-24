@@ -157,7 +157,7 @@ export default function ModalCreateOrUpdateProduct({ closeModal, product }: Para
 
     return (
         <Modals closeModal={closeModal}>
-            <div onMouseDown={(e) => e.stopPropagation()} className="max-w-xl px-2 pb-4 mx-auto drop-shadow-x drop-shadow-black/30">
+            <div onMouseDown={(e) => e.stopPropagation()} className="max-w-xl mx-auto drop-shadow-x drop-shadow-black/30">
 
                 {/* título */}
                 <div className="
