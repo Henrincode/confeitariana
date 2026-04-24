@@ -79,6 +79,7 @@ export default function ModalProductCategories({ closeModal }: Props) {
 
                     {/* line */}
                     <div className="h-0.5 my-2 -mx-2 bg-gray-300"></div>
+                    
                     {/* formulários */}
 
                     {btnSelected === 'create' && (
@@ -89,9 +90,10 @@ export default function ModalProductCategories({ closeModal }: Props) {
                             <p className="text-gray-500">
                                 Escreva o nome da categoria no campo abaixo e clique em criar.
                             </p>
+
                             <form action="#" className="
-                                grid grid-cols-5 items-end gap-4
-                                mt-4
+                                grid grid-cols-5 items-end gap-2
+                                mt-8
 
                                 [&_.label]:pl-2
                                 [&_.label]:text-sm
@@ -120,7 +122,7 @@ export default function ModalProductCategories({ closeModal }: Props) {
                                 </div>
                                 <div className="flex flex-col col-span-2">
                                     <label htmlFor="category" className="label">Nova categoria</label>
-                                    <input name="category" id="category" type="text" placeholder="Nome da categoria" className="input" />
+                                    <input name="category" id="category" type="text"  className="input" />
                                 </div>
                                 <div className="flex flex-col col-span-1">
                                     <button className="w-full p-1 border-2 rounded-lg text-pink-600 border-pink-400 bg-pink-200 hover:bg-pink-300 cursor-pointer">
