@@ -19,6 +19,9 @@ export default function ModalProductCategories({ closeModal }: Props) {
     const [categoriesDB, setCategoriesDB] = useState<ProductCategory[]>()
     const [btnSelected, setBtnSelected] = useState('create')
 
+    const [formCategory, setFormCategory] = useState<string>()
+    const [formCategories, setFormCategories] = useState<string>()
+
     async function load() {
         try {
             const response = await findProductCategories()
@@ -26,6 +29,10 @@ export default function ModalProductCategories({ closeModal }: Props) {
         } catch (error) {
             console.log('Erro interno do servidor')
         }
+    }
+
+    async function submit(){
+        '...'
     }
 
     return (
@@ -92,40 +99,40 @@ export default function ModalProductCategories({ closeModal }: Props) {
                             </p>
 
                             <form action="#" className="
-                                grid grid-cols-5 items-end gap-2
-                                mt-8
+                                grid grid-cols-1 items-end gap-4
+                                mt-4
 
                                 [&_.label]:pl-2
-                                [&_.label]:text-sm
                                 [&_.label]:font-semibold
+                                [&_.label]:text-sm
                                 [&_.label]:text-gray-500
 
-                                [&_.input]:outline-pink-400
-                                [&_.input]:bg-gray-200
+                                [&_.input]:p-2
                                 [&_.input]:border-2
-                                [&_.input]:border-gray-400
-                                [&_.input]:p-1
                                 [&_.input]:rounded-lg
+                                [&_.input]:border-gray-400
+                                [&_.input]:outline-pink-400
                                 [&_.input]:text-gray-800
+                                [&_.input]:bg-gray-200
                             ">
 
-                                <div className="flex flex-col col-span-2">
+                                <div className="flex flex-col gap-1 col-span-1">
 
                                     <label htmlFor="categories" className="label">Categoria pai</label>
 
                                     <select name="categories" id="categories" className="input">
-                                        <option value="0">--</option>
+                                        <option value="0">Nenhuma (Categoria Principal)</option>
                                         {categoriesDB?.map(c => (
                                             <option key={c.id_product_category} value={c.id_product_category}>{c.name}</option>
                                         ))}
                                     </select>
                                 </div>
-                                <div className="flex flex-col col-span-2">
+                                <div className="flex flex-col gap-1 col-span-1">
                                     <label htmlFor="category" className="label">Nova categoria</label>
                                     <input name="category" id="category" type="text"  className="input" />
                                 </div>
                                 <div className="flex flex-col col-span-1">
-                                    <button className="w-full p-1 border-2 rounded-lg text-pink-600 border-pink-400 bg-pink-200 hover:bg-pink-300 cursor-pointer">
+                                    <button className="w-20 mx-auto p-1 border-2 rounded-lg text-pink-600 border-pink-400 bg-pink-200 hover:bg-pink-300 cursor-pointer">
                                         Criar
                                     </button>
                                 </div>
